@@ -33,6 +33,7 @@ const day1: Workout = {
   id: 'foundation-w1-d1',
   name: 'Push and Core',
   day: 'monday' satisfies Weekday,
+  kind: 'training',
   weekIndex: WEEK,
   focus: 'push',
   estimatedMinutes: 26,
@@ -125,6 +126,7 @@ const day2: Workout = {
   id: 'foundation-w1-d2',
   name: 'Legs and Mobility',
   day: 'tuesday' satisfies Weekday,
+  kind: 'training',
   weekIndex: WEEK,
   focus: 'lower-body',
   estimatedMinutes: 26,
@@ -210,6 +212,7 @@ const day3: Workout = {
   id: 'foundation-w1-d3',
   name: 'Upper Body and Core',
   day: 'thursday' satisfies Weekday,
+  kind: 'training',
   weekIndex: WEEK,
   focus: 'upper-body',
   estimatedMinutes: 27,
@@ -301,6 +304,7 @@ const day4: Workout = {
   id: 'foundation-w1-d4',
   name: 'Full Body',
   day: 'saturday' satisfies Weekday,
+  kind: 'training',
   weekIndex: WEEK,
   focus: 'full-body',
   estimatedMinutes: 26,
@@ -395,4 +399,6 @@ export const workoutForDay = (day: Weekday): Workout | undefined =>
   PROGRAM.find((workout) => workout.day === day);
 
 /** The days the program trains on, in week order. */
-export const PROGRAM_DAYS: Weekday[] = PROGRAM.map((workout) => workout.day);
+export const PROGRAM_DAYS: Weekday[] = PROGRAM.flatMap((workout) =>
+  workout.day === null ? [] : [workout.day],
+);

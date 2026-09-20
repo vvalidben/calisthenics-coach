@@ -11,6 +11,8 @@ interface TodayScreenProps {
   /** ISO date; injected so the screen is deterministic in tests. */
   today: string;
   workouts: Workout[];
+  /** Mobility sessions finished in the last seven days. */
+  mobilityThisWeek?: number;
 }
 
 const LONG_DATE = new Intl.DateTimeFormat('en-GB', {
@@ -68,6 +70,42 @@ const Block = ({ id, title, items }: { id: string; title: string; items: Workout
     </section>
   );
 
+/**
+ * The optional mobility routines.
+ *
+ * Offered, never scheduled. Shown as a quiet list rather than a call to action,
+ * because a rest day that feels like a missed workout is a rest day that stops
+ * happening.
+ */
+const Routines = ({
+  routines,
+  done,
+}: {
+  routines: Workout[];
+  done: number;
+}) => (
+  <section className="routines" aria-labelledby="routines-heading">
+    <h2 className="routines__heading" id="routines-heading">
+      Optional mobility
+    </h2>
+    <p className="routines__lede">
+      {done === 0
+        ? 'Short and restorative. None of this counts toward your program, and skipping it costs you nothing.'
+        : `${done} done in the last seven days. Short and restorative — none of it counts toward your program.`}
+    </p>
+    <ul className="routines__list">
+      {routines.map((routine) => (
+        <li key={routine.id}>
+          <Link className="routines__item" to={`/workout/${routine.id}`}>
+            <span className="routines__name">{routine.name}</span>
+            <span className="routines__time">{routine.estimatedMinutes} min</span>
+          </Link>
+        </li>
+      ))}
+    </ul>
+  </section>
+);
+
 /** The seven-day strip, so the shape of the week is visible at a glance. */
 const Week = ({ workouts, today }: { workouts: Workout[]; today: Weekday }) => (
   <section className="week" aria-labelledby="week-heading">
@@ -96,15 +134,22 @@ const Week = ({ workouts, today }: { workouts: Workout[]; today: Weekday }) => (
  * What to do today. On a training day that is the whole session; on a rest day
  * it says so and names what is next, so the week never feels like a gap.
  */
-export const TodayScreen = ({ profile, today, workouts }: TodayScreenProps) => {
+export const TodayScreen = ({
+  profile,
+  today,
+  workouts,
+  mobilityThisWeek = 0,
+}: TodayScreenProps) => {
   const weekday = weekdayOf(today);
-  const workout = workouts.find((w) => w.day === weekday);
+  const scheduled = workouts.filter((w) => w.kind === 'training');
+  const routines = workouts.filter((w) => w.kind === 'mobility');
+  const workout = scheduled.find((w) => w.day === weekday);
 
   if (!workout) {
     // Walk forward through the week, wrapping, to find the next session.
     const startIndex = WEEKDAYS.indexOf(weekday);
     const next = WEEKDAYS.map((_, offset) => WEEKDAYS[(startIndex + offset + 1) % 7]!)
-      .map((day) => workouts.find((w) => w.day === day))
+      .map((day) => scheduled.find((w) => w.day === day))
       .find((w): w is Workout => w !== undefined);
 
     return (
@@ -117,12 +162,14 @@ export const TodayScreen = ({ profile, today, workouts }: TodayScreenProps) => {
 
         {next && (
           <p className="today__next">
-            <strong>Next: {titleCase(next.day)}</strong>
+            <strong>Next: {next.day === null ? 'whenever you like' : titleCase(next.day)}</strong>
             {next.name}, about {next.estimatedMinutes} minutes
           </p>
         )}
 
-        <Week workouts={workouts} today={weekday} />
+        {routines.length > 0 && <Routines routines={routines} done={mobilityThisWeek} />}
+
+        <Week workouts={scheduled} today={weekday} />
       </div>
     );
   }
@@ -147,7 +194,9 @@ export const TodayScreen = ({ profile, today, workouts }: TodayScreenProps) => {
       <Block id="main" title="Main workout" items={workout.mainWork} />
       <Block id="mobility" title="Mobility" items={workout.mobility} />
 
-      <Week workouts={workouts} today={weekday} />
+      {routines.length > 0 && <Routines routines={routines} done={mobilityThisWeek} />}
+
+      <Week workouts={scheduled} today={weekday} />
     </div>
   );
 };

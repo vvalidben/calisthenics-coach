@@ -56,6 +56,8 @@ export const HINGE_EXERCISES: Exercise[] = [
       'Lower under control until your hips almost touch the floor.',
       'Start the next rep without resting your hips down fully.',
     ],
+    rangeOfMotion:
+      'Up until your body is a straight line from knees to shoulders, and no further. Extra height comes from arching the lower back, not from the glutes.',
     breathing: {
       inhale: 'As you lower.',
       exhale: 'As you lift and squeeze.',
@@ -138,6 +140,8 @@ export const HINGE_EXERCISES: Exercise[] = [
       'Squeeze at the top for two seconds, then lower under control.',
       'Finish all reps on one side before switching.',
     ],
+    rangeOfMotion:
+      'The same straight line from knee to shoulder, with both hip bones level. Level hips matter more than height.',
     breathing: {
       inhale: 'As you lower.',
       exhale: 'As you lift.',
@@ -220,6 +224,8 @@ export const HINGE_EXERCISES: Exercise[] = [
       'Lower until you feel a strong stretch in the standing hamstring, then stop.',
       'Squeeze the glute to return to standing, then finish all reps before switching.',
     ],
+    rangeOfMotion:
+      'Down until you feel a strong stretch in the standing hamstring and the back is about to round. That point is your range and it will move over the weeks.',
     breathing: {
       inhale: 'As you hinge forward.',
       exhale: 'As you stand back up.',

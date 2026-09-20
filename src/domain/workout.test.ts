@@ -6,6 +6,7 @@ const validWorkout: Workout = {
   id: 'foundation-w1-d1',
   name: 'Full Body A',
   day: 'monday',
+  kind: 'training',
   weekIndex: 1,
   focus: 'full-body',
   estimatedMinutes: 26,
@@ -103,6 +104,33 @@ describe('workoutSchema', () => {
       mainWork: [{ ...validWorkout.mainWork[0]!, target: { min: 10, max: 6 } }],
     });
     expect(result.success).toBe(false);
+  });
+});
+
+describe('restorative routines', () => {
+  const routine = {
+    ...validWorkout,
+    id: 'mobility-hips',
+    kind: 'mobility' as const,
+    day: null,
+    focus: 'mobility' as const,
+    warmUp: [],
+  };
+
+  it('may have no warm-up, because the work is the warm-up', () => {
+    expect(workoutSchema.safeParse(routine).success).toBe(true);
+  });
+
+  it('is not pinned to a weekday', () => {
+    expect(workoutSchema.safeParse({ ...routine, day: 'monday' }).success).toBe(false);
+  });
+
+  it('still refuses a training workout with no warm-up', () => {
+    expect(workoutSchema.safeParse({ ...validWorkout, warmUp: [] }).success).toBe(false);
+  });
+
+  it('still refuses a training workout with no day', () => {
+    expect(workoutSchema.safeParse({ ...validWorkout, day: null }).success).toBe(false);
   });
 });
 

@@ -1,4 +1,5 @@
 import { PROGRAM } from '../content/program';
+import { ROUTINES } from '../content/routines';
 import { SEED_PROFILE } from '../content/seed-profile';
 import { SEED_PROGRESSION } from '../content/seed-progression';
 import type { UserProfile } from '../domain/profile';
@@ -43,7 +44,7 @@ export const bootstrap = async (
 
   const existingWorkouts = await repositories.workouts.list();
   const storedIds = new Set(existingWorkouts.map((w) => w.id));
-  const missingWorkouts = PROGRAM.filter((w) => !storedIds.has(w.id));
+  const missingWorkouts = [...PROGRAM, ...ROUTINES].filter((w) => !storedIds.has(w.id));
   await Promise.all(missingWorkouts.map((w) => repositories.workouts.save(w)));
 
   const workouts = await repositories.workouts.list();

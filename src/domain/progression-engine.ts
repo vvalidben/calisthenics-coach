@@ -297,6 +297,12 @@ export const progressWorkout = (
   const decisions: Decision[] = [];
   const nextStates = new Map(states.map((s) => [s.family, s]));
 
+  // A restorative routine is not training. Driving mobility drills upward would
+  // turn a rest day into a fifth workout, which is exactly what it is not.
+  if (workout.kind === 'mobility') {
+    return { workout, states, decisions };
+  }
+
   const mainWork = workout.mainWork.map((item) => {
     const performed = session.exercises.find(
       (e) => e.exerciseId === item.exerciseId && e.block === 'main',

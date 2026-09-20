@@ -59,6 +59,8 @@ export const SQUAT_EXERCISES: Exercise[] = [
       'Keep your heels flat and your chest up throughout.',
       'Drive through your whole foot to stand back up.',
     ],
+    rangeOfMotion:
+      'Thighs at least parallel to the floor. The support exists so you can reach depth, so use it and go lower than you could unaided.',
     breathing: {
       inhale: 'As you descend.',
       exhale: 'As you drive back up to standing.',
@@ -142,6 +144,8 @@ export const SQUAT_EXERCISES: Exercise[] = [
       'Keep your heels flat, your knees tracking over your toes and your chest up.',
       'Drive through your whole foot to stand back up and squeeze your glutes at the top.',
     ],
+    rangeOfMotion:
+      'Thighs at least parallel to the floor, heels flat throughout. If your heels lift before parallel, ankle range is the limit, not strength.',
     breathing: {
       inhale: 'At the top, then hold it lightly as you descend.',
       exhale: 'As you drive up, finishing as you stand tall.',
@@ -224,6 +228,8 @@ export const SQUAT_EXERCISES: Exercise[] = [
       'Stand up over one second.',
       'Begin the next rep straight away rather than resting at the top.',
     ],
+    rangeOfMotion:
+      'The same depth as a normal squat, held for the full pause. Shortening the depth to survive the tempo defeats the point.',
     breathing: {
       inhale: 'Before you begin the descent, and hold it lightly through the lowering.',
       exhale: 'As you stand up.',
@@ -307,6 +313,8 @@ export const SQUAT_EXERCISES: Exercise[] = [
       'Push through your front heel to bring the back foot forward to standing.',
       'Finish all reps on one side, or alternate, then repeat on the other.',
     ],
+    rangeOfMotion:
+      'Back knee to within a couple of centimetres of the floor, front shin close to vertical. Do not bounce the knee off the ground.',
     breathing: {
       inhale: 'As you step back and lower.',
       exhale: 'As you drive back up to standing.',
@@ -389,6 +397,8 @@ export const SQUAT_EXERCISES: Exercise[] = [
       'Drive through your front heel to return to the start.',
       'Finish all reps on one side before switching.',
     ],
+    rangeOfMotion:
+      'Back knee almost touches the floor while the front shin stays vertical. If the shin tips forward, lengthen the stride instead of reducing the depth.',
     breathing: {
       inhale: 'On the way down.',
       exhale: 'As you drive back up.',
@@ -471,6 +481,8 @@ export const SQUAT_EXERCISES: Exercise[] = [
       'Keep your torso tall and your front heel planted.',
       'Drive through your front heel back to the start, then finish all reps before switching.',
     ],
+    rangeOfMotion:
+      'Front thigh to roughly parallel with the floor. Foot position sets the range: get it right before the first rep, not during.',
     breathing: {
       inhale: 'On the way down.',
       exhale: 'As you drive up.',
@@ -554,6 +566,8 @@ export const SQUAT_EXERCISES: Exercise[] = [
       'Keep your standing heel flat on the floor throughout.',
       'Drive through your standing heel back to standing, then finish the reps before switching.',
     ],
+    rangeOfMotion:
+      'As deep as you can control, working toward the full bottom over months. Descend only as far as you can come back up without the support taking over.',
     breathing: {
       inhale: 'As you descend.',
       exhale: 'As you drive up.',
@@ -637,6 +651,8 @@ export const SQUAT_EXERCISES: Exercise[] = [
       'Drive back up without touching the raised foot down.',
       'Finish all reps on one side before switching.',
     ],
+    rangeOfMotion:
+      'All the way down until your hamstring touches your calf, heel flat, then all the way back up without the free foot touching down.',
     breathing: {
       inhale: 'Before and during the descent.',
       exhale: 'Hard on the way up.',

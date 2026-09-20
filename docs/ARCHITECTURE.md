@@ -169,6 +169,27 @@ pulling needs something safe to hang from, names the improvisations that fail
 under load, and says the whole ladder unlocks at once when a real bar exists.
 **Skill** states that the handstand is deliberately absent from the programme.
 
+### Mobility
+
+`content/routines.ts` holds six optional restorative routines: one per mobility
+area plus a combined reset. They are `Workout` records like any other, so they
+play through the same player, but two fields separate them:
+
+- `kind: 'mobility'` — the progression engine returns early on them, and
+  `mobilitySessionsInLastWeek` counts them on their own. Mixing mobility into
+  the training count would let a good week of stretching disguise a missed
+  workout.
+- `day: null` — offered, never scheduled. A rest day that feels like a missed
+  workout is a rest day that stops happening.
+
+The schema enforces both directions: a training workout must have a day and a
+warm-up; a routine must have neither. Routines run 5 to 9 minutes, mostly a
+single set of each position, and a test asserts the longest is less than half
+the shortest training session.
+
+`rangeOfMotion` is its own field on every exercise rather than a line buried in
+step four, because "how far do I go" is the question people actually get wrong.
+
 ### Availability vs. ability
 
 Two separate ideas, deliberately not merged:
@@ -203,6 +224,11 @@ error.
 `storage/migrations.ts` versions the stored data. Bump `CURRENT_SCHEMA_VERSION`
 and add a migration whenever a stored shape changes. A failed migration leaves
 the version at the last one that succeeded, so a retry resumes.
+
+Version 2 added `kind` to workouts and sessions; its migration stamps anything
+already stored as `training`, since it predates the idea of mobility sessions.
+`app/migration-flow.test.tsx` boots the real app against a version 1 store to
+prove an existing athlete's history survives the upgrade.
 
 Reserved key namespaces: `meta:`, `profile:`, `workout:`, `session:`,
 `progression:`.

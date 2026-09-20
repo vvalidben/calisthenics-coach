@@ -37,6 +37,7 @@ export const anExercise = (overrides: Partial<Exercise> = {}): Exercise => ({
     hips: 'Level with shoulders and heels.',
   },
   steps: ['Set your hands.', 'Lower your chest.', 'Press back up.'],
+  rangeOfMotion: 'Down until your upper arms are parallel to the floor, up to straight arms.',
   breathing: { inhale: 'On the way down.', exhale: 'As you press up.' },
   sensation: {
     working: 'The chest and triceps.',
@@ -86,6 +87,7 @@ export const aWorkout = (overrides: Partial<Workout> = {}): Workout => ({
   id: 'foundation-w1-d1',
   name: 'Full Body A',
   day: 'monday',
+  kind: 'training',
   weekIndex: 1,
   focus: 'full-body',
   estimatedMinutes: 25,
@@ -116,6 +118,7 @@ export const aWorkout = (overrides: Partial<Workout> = {}): Workout => ({
 export const aSession = (overrides: Partial<WorkoutSession> = {}): WorkoutSession => ({
   id: '2026-09-21-foundation-w1-d1',
   workoutId: 'foundation-w1-d1',
+  kind: 'training',
   date: '2026-09-21',
   status: 'completed',
   startedAt: '2026-09-21T18:30:00.000Z',

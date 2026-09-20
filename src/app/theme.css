@@ -1598,3 +1598,65 @@ a {
 .pathways .ladder__steps {
   margin-left: 34px;
 }
+
+/* ---- range of motion --------------------------------------------------- */
+
+.detail__range {
+  margin-top: 12px;
+  max-width: 52ch;
+  padding: 12px 14px;
+  border-left: 3px solid var(--signal-quiet);
+  background: var(--steel-1);
+  line-height: 1.55;
+}
+
+/* ---- optional mobility routines ---------------------------------------- */
+
+.routines {
+  margin-top: 40px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+.routines__heading {
+  font-size: var(--step-1);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.routines__lede {
+  margin-top: 4px;
+  max-width: 48ch;
+  font-size: var(--step--1);
+  color: var(--chalk-faint);
+}
+
+.routines__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.routines__item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  text-decoration: none;
+}
+
+.routines__name {
+  font-weight: 600;
+  font-size: var(--step--1);
+}
+
+.routines__time {
+  flex: none;
+  font-size: var(--step--1);
+  font-variant-numeric: tabular-nums;
+  color: var(--chalk-faint);
+}

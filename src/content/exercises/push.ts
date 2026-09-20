@@ -61,6 +61,8 @@ export const PUSH_EXERCISES: Exercise[] = [
       'Press the wall away until your elbows are straight again.',
       'Reset your brace and begin the next rep without resting against the wall.',
     ],
+    rangeOfMotion:
+      'Chest to within a few centimetres of the wall, then all the way back to straight arms. If you cannot reach the wall, step in closer rather than shortening the rep.',
     breathing: {
       inhale: 'As you bend your elbows and travel toward the wall.',
       exhale: 'As you press the wall away and your elbows straighten.',
@@ -147,6 +149,8 @@ export const PUSH_EXERCISES: Exercise[] = [
       'Touch your chest lightly to the surface, or come within a couple of centimetres.',
       'Press back up until your elbows are straight, keeping the line unbroken.',
     ],
+    rangeOfMotion:
+      'Chest touches the edge of the surface, arms fully straight at the top. If the chest cannot reach, raise the surface rather than stopping short.',
     breathing: {
       inhale: 'On the way down, as your chest approaches the surface.',
       exhale: 'As you press back up to straight arms.',
@@ -233,6 +237,8 @@ export const PUSH_EXERCISES: Exercise[] = [
       'Stop when your upper arms are roughly parallel to the floor.',
       'Press the floor away until your elbows are straight, keeping the knee-to-head line unbroken.',
     ],
+    rangeOfMotion:
+      'Down until your upper arms are roughly parallel to the floor, up to fully straight arms. Chest should come within a fist of the floor.',
     breathing: {
       inhale: 'On the descent, as your chest approaches the floor.',
       exhale: 'As you press the floor away.',
@@ -319,6 +325,8 @@ export const PUSH_EXERCISES: Exercise[] = [
       'Stop when your upper arms are roughly parallel to the floor.',
       'Press the floor away until your elbows are straight, holding the line the whole way.',
     ],
+    rangeOfMotion:
+      'Down until your upper arms are roughly parallel to the floor — chest within a fist of it — and up to fully locked arms. Half reps build half the strength.',
     breathing: {
       inhale: 'On the descent, filling your ribs as your chest nears the floor.',
       exhale: 'Forcefully as you press up, finishing as your elbows lock out.',
@@ -410,6 +418,8 @@ export const PUSH_EXERCISES: Exercise[] = [
       'Press back up over one second.',
       'Begin the next rep without resting at the top.',
     ],
+    rangeOfMotion:
+      'The same full range as a standard push-up, held a centimetre clear of the floor at the bottom rather than resting on it.',
     breathing: {
       inhale: 'Through the three-second descent.',
       exhale: 'As you press up, after the pause.',
@@ -494,6 +504,8 @@ export const PUSH_EXERCISES: Exercise[] = [
       'Press back up until your elbows are straight.',
       'Keep your hips level throughout; they will try to rise as you tire.',
     ],
+    rangeOfMotion:
+      'Chest lightly touches the back of your hands, then all the way to straight arms. The range is shorter than a standard push-up by design.',
     breathing: {
       inhale: 'As you lower toward your hands.',
       exhale: 'As you press back up.',
@@ -579,6 +591,8 @@ export const PUSH_EXERCISES: Exercise[] = [
       'Stop when your upper arms are roughly parallel to the floor.',
       'Press back up to straight arms without letting the hips drop.',
     ],
+    rangeOfMotion:
+      'Down until your upper arms are parallel to the floor, up to straight arms, with the hips never dropping out of line.',
     breathing: {
       inhale: 'On the way down.',
       exhale: 'As you press up, finishing at lockout.',
@@ -665,6 +679,8 @@ export const PUSH_EXERCISES: Exercise[] = [
       'Press back up through the bent arm only.',
       'Finish all reps on one side, then repeat on the other.',
     ],
+    rangeOfMotion:
+      'Chest travels toward the bending hand until that upper arm is parallel to the floor. The straight arm sets the limit: stop before it has to bend.',
     breathing: {
       inhale: 'As you lower toward the working arm.',
       exhale: 'As you press back up to the centre.',

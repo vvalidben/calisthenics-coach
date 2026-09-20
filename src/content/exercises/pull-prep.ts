@@ -66,6 +66,8 @@ export const PULL_PREP_EXERCISES: Exercise[] = [
       'Release slowly and let the shoulder blades spread apart again.',
       'Pause for a moment before the next rep so each squeeze starts from relaxed.',
     ],
+    rangeOfMotion:
+      'The shoulder blades move; nothing else does. A couple of centimetres of travel is the whole range.',
     breathing: {
       inhale: 'As you release and the shoulder blades spread.',
       exhale: 'As you squeeze the shoulder blades together.',
@@ -146,6 +148,8 @@ export const PULL_PREP_EXERCISES: Exercise[] = [
       'Hold the top for two seconds without letting your lower back arch.',
       'Lower slowly under control until your hands touch the floor.',
     ],
+    rangeOfMotion:
+      'Arms lift only as far as your hips stay pressed into the floor — often just a few centimetres. Height is not the measure.',
     breathing: {
       inhale: 'As you lower the arms.',
       exhale: 'As you lift.',
@@ -227,6 +231,8 @@ export const PULL_PREP_EXERCISES: Exercise[] = [
       'Keep the arms hovering throughout; touching down ends the set.',
       'Stop as soon as the arms drag on the floor.',
     ],
+    rangeOfMotion:
+      'A full arc from hips to overhead, with the hands hovering the whole way. If they touch down mid-sweep, that is your current range and the set ends.',
     breathing: {
       inhale: 'As the arms return to your sides.',
       exhale: 'As the arms travel overhead.',
@@ -308,6 +314,8 @@ export const PULL_PREP_EXERCISES: Exercise[] = [
       'Hold for the target time, breathing steadily.',
       'Lower everything together at the end of the hold.',
     ],
+    rangeOfMotion:
+      'Lift only until you feel the back working, not until you feel the lower back compressing. A few centimetres is plenty.',
     breathing: {
       inhale: 'Shallow and steady through the hold.',
       exhale: 'Shallow and steady through the hold.',

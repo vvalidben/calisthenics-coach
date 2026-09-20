@@ -9,6 +9,7 @@ import type { WorkoutSession } from './session';
 const completedSession: WorkoutSession = {
   id: '2026-09-21-foundation-w1-d1',
   workoutId: 'foundation-w1-d1',
+  kind: 'training',
   date: '2026-09-21',
   status: 'completed',
   startedAt: '2026-09-21T18:30:00.000Z',
@@ -45,6 +46,7 @@ const completedSession: WorkoutSession = {
 const missedSession: WorkoutSession = {
   id: '2026-09-22-foundation-w1-d2',
   workoutId: 'foundation-w1-d2',
+  kind: 'training',
   date: '2026-09-22',
   status: 'missed',
   startedAt: null,

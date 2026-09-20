@@ -152,6 +152,12 @@ export const exerciseSchema = z
     // --- the instruction experience ---
     startingPosition: startingPositionSchema,
     steps: z.array(z.string().min(1)).min(3),
+    /**
+     * How far to go, and how to know you have gone far enough. Separate from
+     * the steps because "how deep" is the question people actually get wrong,
+     * and burying it in step four hides it.
+     */
+    rangeOfMotion: z.string().min(1),
     breathing: breathingSchema,
     tempo: tempoSchema.optional(),
     sensation: sensationSchema,

@@ -56,6 +56,8 @@ export const DIP_EXERCISES: Exercise[] = [
       'Stop when your upper arms are roughly parallel to the floor.',
       'Press through your palms until your elbows are straight again.',
     ],
+    rangeOfMotion:
+      'Down until your upper arms are roughly parallel to the floor, and no further. Depth past parallel loads the shoulder joint rather than the triceps.',
     breathing: {
       inhale: 'As you lower your hips.',
       exhale: 'As you press back up to straight arms.',
@@ -137,6 +139,8 @@ export const DIP_EXERCISES: Exercise[] = [
       'Stop when your upper arms reach roughly parallel to the floor.',
       'Press back up to straight arms without snapping the elbows.',
     ],
+    rangeOfMotion:
+      'Stop at parallel, exactly as in the bent-knee version. Straight legs add load, not depth.',
     breathing: {
       inhale: 'On the way down.',
       exhale: 'As you press back up.',
@@ -219,6 +223,8 @@ export const DIP_EXERCISES: Exercise[] = [
       'Press back up to a straight-arm support hold.',
       'Reset the shoulder position before the next rep.',
     ],
+    rangeOfMotion:
+      'Down until your upper arms reach roughly parallel to the bars. Build depth over months; the bottom of a dip is the most vulnerable position in the library.',
     breathing: {
       inhale: 'As you descend.',
       exhale: 'Hard through the press back up.',

@@ -58,8 +58,41 @@ describe('runMigrations', () => {
     await expect(adapter.get(StorageKeys.profile)).resolves.toEqual({ goals: ['build-muscle'] });
   });
 
+  it('stamps existing workouts and sessions as training when upgrading to v2', async () => {
+    await adapter.set('meta:schemaVersion', 1);
+    await adapter.set('workout:old', { id: 'old', name: 'Old' });
+    await adapter.set('session:old', { id: 'old', workoutId: 'old' });
+
+    await runMigrations(adapter);
+
+    await expect(adapter.get('workout:old')).resolves.toMatchObject({ kind: 'training' });
+    await expect(adapter.get('session:old')).resolves.toMatchObject({ kind: 'training' });
+  });
+
+  it('leaves a record that already states its kind alone', async () => {
+    await adapter.set('meta:schemaVersion', 1);
+    await adapter.set('workout:new', { id: 'new', kind: 'mobility' });
+
+    await runMigrations(adapter);
+
+    await expect(adapter.get('workout:new')).resolves.toMatchObject({ kind: 'mobility' });
+  });
+
+  it('preserves everything else on the record it stamps', async () => {
+    await adapter.set('meta:schemaVersion', 1);
+    await adapter.set('session:old', { id: 'old', notes: 'Shoulder felt tight.' });
+
+    await runMigrations(adapter);
+
+    await expect(adapter.get('session:old')).resolves.toMatchObject({
+      id: 'old',
+      notes: 'Shoulder felt tight.',
+      kind: 'training',
+    });
+  });
+
   it('refuses to run against a store written by a newer version of the app', async () => {
-    await adapter.set(StorageKeys.schemaVersion, 99);
+    await adapter.set(StorageKeys.schemaVersion, 999);
     await expect(runMigrations(adapter)).rejects.toThrow(/newer version/i);
   });
 

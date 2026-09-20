@@ -67,6 +67,8 @@ export const SKILL_EXERCISES: Exercise[] = [
       'Move slowly and keep your elbows straight throughout.',
       'Finish by turning your hands to face your knees and rocking gently back.',
     ],
+    rangeOfMotion:
+      'Rock forward only to the edge of a stretch across the front of the wrist, never into a pinch. The range grows over weeks and cannot be forced.',
     breathing: {
       inhale: 'As you rock back.',
       exhale: 'As you rock forward into the stretch.',
@@ -159,6 +161,8 @@ export const SKILL_EXERCISES: Exercise[] = [
       'Bend your knees if your hamstrings limit how high the hips go.',
       'Hold for the target time with your elbows locked straight, then walk back to a plank.',
     ],
+    rangeOfMotion:
+      'Hips as high as your hamstrings allow with the elbows locked. Bend the knees to get the hips higher; hip height matters more than straight legs.',
     breathing: {
       inhale: 'Steadily through the hold.',
       exhale: 'Steadily through the hold.',
@@ -233,6 +237,8 @@ export const SKILL_EXERCISES: Exercise[] = [
       'Squeeze your glutes, pull your ribs down and push tall through your shoulders.',
       'Hold for the target time, then walk back down the same way you came up.',
     ],
+    rangeOfMotion:
+      'Walk up until your body is close to vertical and your shoulders stack over your wrists. Stopping short is fine; falling short of control is not.',
     breathing: {
       inhale: 'Steadily through the hold.',
       exhale: 'Steadily through the hold.',
@@ -309,6 +315,8 @@ export const SKILL_EXERCISES: Exercise[] = [
       'Hold for the target time, breathing steadily.',
       'Walk back down the same way you came up, never dropping off.',
     ],
+    rangeOfMotion:
+      'Hands about a hand’s width from the wall with the body vertical. Further out is a pike, not a handstand.',
     breathing: {
       inhale: 'Steadily through the hold.',
       exhale: 'Steadily through the hold.',
@@ -396,6 +404,8 @@ export const SKILL_EXERCISES: Exercise[] = [
       'Alternate sides. One rep is one tap.',
       'Walk down the wall the moment your shoulders start to give.',
     ],
+    rangeOfMotion:
+      'The hand lifts a centimetre and taps the opposite shoulder. The hips do not rotate at all — that stillness is the range being trained.',
     breathing: {
       inhale: 'As you reset between taps.',
       exhale: 'As you shift and tap.',

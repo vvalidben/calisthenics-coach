@@ -131,6 +131,10 @@ export const ExerciseDetail = ({ exercise, profile }: ExerciseDetailProps) => {
         </ol>
       </Section>
 
+      <Section id="range" title="Range of motion">
+        <p className="detail__range">{exercise.rangeOfMotion}</p>
+      </Section>
+
       <Section id="breathing" title="Breathing">
         <dl className="detail__pairs">
           <div className="detail__pair">

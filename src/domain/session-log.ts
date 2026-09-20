@@ -72,6 +72,7 @@ export const startSession = (
 ): WorkoutSession => ({
   id: sessionIdFor(workout.id, date),
   workoutId: workout.id,
+  kind: workout.kind,
   date,
   status: 'in-progress',
   startedAt,
@@ -242,4 +243,26 @@ export const compareToPrevious = (
       },
     ];
   });
+};
+
+/**
+ * Mobility sessions finished in the seven days up to `today`.
+ *
+ * Counted separately from training on purpose: mobility is a habit measured in
+ * frequency, and mixing it into the training count would let a good week of
+ * stretching disguise a missed workout.
+ */
+export const mobilitySessionsInLastWeek = (
+  sessions: WorkoutSession[],
+  today: string,
+): number => {
+  const end = new Date(`${today}T12:00:00`).getTime();
+  const start = end - 6 * 24 * 60 * 60 * 1000;
+
+  return sessions.filter((session) => {
+    if (session.kind !== 'mobility') return false;
+    if (session.status !== 'completed' && session.status !== 'partial') return false;
+    const at = new Date(`${session.date}T12:00:00`).getTime();
+    return at >= start && at <= end;
+  }).length;
 };

@@ -1,10 +1,10 @@
-import { StorageKeys, type StorageAdapter } from './adapter';
+import { StorageKeys, StoragePrefixes, type StorageAdapter } from './adapter';
 
 /**
  * Bump this whenever a stored shape changes, and add the matching migration
  * below. Version 1 is the baseline introduced in Sprint 1.
  */
-export const CURRENT_SCHEMA_VERSION = 1;
+export const CURRENT_SCHEMA_VERSION = 2;
 
 export interface Migration {
   /** The schema version this migration produces. */
@@ -13,11 +13,29 @@ export interface Migration {
 }
 
 /**
- * Migrations for the real store. Empty at version 1 — the runner exists now so
- * that later sprints can evolve stored data without discarding training
- * history.
+ * Migrations for the real store.
+ *
+ * Version 2 introduced `kind` on workouts and sessions so mobility can be
+ * counted separately from training. Anything already stored predates the idea
+ * and is therefore training.
  */
-export const MIGRATIONS: Migration[] = [];
+export const MIGRATIONS: Migration[] = [
+  {
+    to: 2,
+    async migrate(adapter) {
+      const stamp = async (prefix: string) => {
+        for (const key of await adapter.keys(prefix)) {
+          const record = await adapter.get<Record<string, unknown>>(key);
+          if (record && record['kind'] === undefined) {
+            await adapter.set(key, { ...record, kind: 'training' });
+          }
+        }
+      };
+      await stamp(StoragePrefixes.workout);
+      await stamp(StoragePrefixes.session);
+    },
+  },
+];
 
 /**
  * Brings a store up to `target`, applying each pending migration in ascending

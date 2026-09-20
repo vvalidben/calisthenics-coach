@@ -85,6 +85,8 @@ export const SHOULDER_MOBILITY_EXERCISES: Exercise[] = [
       'Slide back down until your elbows are level with your ribs.',
       'Keep every contact point on the wall for the whole rep.',
     ],
+    rangeOfMotion:
+      'Slide up only as far as every contact point stays on the wall. The moment a hand or your lower back lifts, that is the top of your range today.',
     breathing: {
       inhale: 'As you slide down.',
       exhale: 'As you slide up.',
@@ -166,6 +168,8 @@ export const SHOULDER_MOBILITY_EXERCISES: Exercise[] = [
       'Reverse the path slowly back to the front.',
       'Narrow your grip by a few centimetres only once the full arc is smooth.',
     ],
+    rangeOfMotion:
+      'A full arc from the front of your thighs to behind your hips, elbows locked. Widen the grip until the whole arc is smooth; narrow it only as the range improves.',
     breathing: {
       inhale: 'As the towel returns to the front.',
       exhale: 'As it travels overhead and behind.',
@@ -248,6 +252,8 @@ export const SHOULDER_MOBILITY_EXERCISES: Exercise[] = [
       'Adjust the arm height slightly until you feel the chest rather than the shoulder joint.',
       'Hold, then roll back and repeat on the other side.',
     ],
+    rangeOfMotion:
+      'Roll only as far as it is a broad stretch across the chest. A pinch at the front of the shoulder means you have gone past your range.',
     breathing: {
       inhale: 'Slowly and deeply into the ribs.',
       exhale: 'Slowly, letting yourself settle a little further each time.',
@@ -326,6 +332,8 @@ export const THORACIC_MOBILITY_EXERCISES: Exercise[] = [
       'Move slowly through the full range, one segment at a time.',
       'Keep your hips over your knees the whole time; the spine does the moving.',
     ],
+    rangeOfMotion:
+      'Full rounding and full arching, moving one segment at a time. The middle of the back is where range is usually missing and where the effort should go.',
     breathing: {
       inhale: 'As you arch and open the chest.',
       exhale: 'As you round the spine toward the ceiling.',
@@ -406,6 +414,8 @@ export const THORACIC_MOBILITY_EXERCISES: Exercise[] = [
       'Unwind and reach that same arm up toward the ceiling, following it with your eyes.',
       'Return to the start and repeat, then switch sides.',
     ],
+    rangeOfMotion:
+      'Thread through until the shoulder and the side of your head rest on the floor, and open up until the chest faces the ceiling — as far as the hips stay over the knees.',
     breathing: {
       inhale: 'As you open upward.',
       exhale: 'As you thread the arm through.',
@@ -487,6 +497,8 @@ export const THORACIC_MOBILITY_EXERCISES: Exercise[] = [
       'Stop where your knees start to lift, and hold for three seconds.',
       'Sweep back to the start and repeat, then switch sides.',
     ],
+    rangeOfMotion:
+      'Sweep the arm until your knees start to lift. That point is the honest end of your upper-back rotation; the floor is not the target.',
     breathing: {
       inhale: 'As the arm opens and the chest turns.',
       exhale: 'As the arm returns.',
@@ -572,6 +584,8 @@ export const HIP_MOBILITY_EXERCISES: Exercise[] = [
       'Pause for two seconds in the end position.',
       'Rotate back to the first side. One rep is one full switch.',
     ],
+    rangeOfMotion:
+      'Rotate until both knees reach the floor in the mirrored position, as far as you can stay sitting tall. Knee discomfort means stop short, always.',
     breathing: {
       inhale: 'In the end position.',
       exhale: 'As you rotate across.',
@@ -652,6 +666,8 @@ export const HIP_MOBILITY_EXERCISES: Exercise[] = [
       'Hold, feeling the stretch across the front of the kneeling hip.',
       'Come out of it slowly, then set up on the other side and repeat.',
     ],
+    rangeOfMotion:
+      'A shift of a couple of centimetres with the tailbone tucked. If you can lunge a long way and feel nothing, the tuck is missing, not the range.',
     breathing: {
       inhale: 'Slowly and deeply.',
       exhale: 'Slowly, letting the hip soften with each breath out.',
@@ -726,6 +742,8 @@ export const HIP_MOBILITY_EXERCISES: Exercise[] = [
       'Relax into the position rather than holding yourself in it.',
       'Breathe deeply and let each exhale settle you a little lower.',
     ],
+    rangeOfMotion:
+      'Hips below the knees with the heels flat. Raise the heels on a folded towel to reach that depth while the ankles catch up.',
     breathing: {
       inhale: 'Deeply into your belly.',
       exhale: 'Slowly, sinking a little lower each time.',
@@ -805,6 +823,8 @@ export const HAMSTRING_MOBILITY_EXERCISES: Exercise[] = [
       'Move smoothly in both directions with no bounce at the bottom.',
       'Finish all reps before switching sides.',
     ],
+    rangeOfMotion:
+      'Fold from the hip only as far as the back stays flat. The moment it rounds, you have left the hamstring and started loading the spine.',
     breathing: {
       inhale: 'As you stand.',
       exhale: 'As you fold forward.',
@@ -885,6 +905,8 @@ export const HAMSTRING_MOBILITY_EXERCISES: Exercise[] = [
       'Return the hand to the floor, then straighten your front leg to stretch the hamstring.',
       'Return to the lunge and repeat, then switch sides.',
     ],
+    rangeOfMotion:
+      'Sink until the back hip stretches, rotate until the chest faces the ceiling, straighten until the hamstring pulls. Three separate end ranges, one per phase.',
     breathing: {
       inhale: 'As you rotate open.',
       exhale: 'As you sink into the lunge and as you fold over the straight leg.',
@@ -967,6 +989,8 @@ export const HAMSTRING_MOBILITY_EXERCISES: Exercise[] = [
       'Hold there and relax into it rather than pulling harder.',
       'Breathe slowly; each exhale should let you fold a little further.',
     ],
+    rangeOfMotion:
+      'Fold at the hip until the back is about to round, and hold there. A shallow fold with a long spine beats a deep one with a rounded back.',
     breathing: {
       inhale: 'Slowly, lengthening the spine.',
       exhale: 'Slowly, folding a little further as the muscle releases.',
@@ -1045,6 +1069,8 @@ export const ANKLE_MOBILITY_EXERCISES: Exercise[] = [
       'Complete the target reps in one direction, then reverse the direction.',
       'Uncross the leg and repeat the whole set on the other foot.',
     ],
+    rangeOfMotion:
+      'The largest circle the ankle will make in every direction, with the shin held still. Range, not speed, is the whole point.',
     breathing: {
       inhale: 'Normally throughout.',
       exhale: 'Normally throughout.',
@@ -1126,6 +1152,8 @@ export const ANKLE_MOBILITY_EXERCISES: Exercise[] = [
       'If it touches easily, slide the foot a centimetre further back and repeat.',
       'Finish all reps before switching feet.',
     ],
+    rangeOfMotion:
+      'Knee travels forward over the second toe with the heel flat. The distance your foot sits from the wall is the measurement: move it back a centimetre at a time.',
     breathing: {
       inhale: 'As the knee returns.',
       exhale: 'As the knee travels forward.',
@@ -1207,6 +1235,8 @@ export const ANKLE_MOBILITY_EXERCISES: Exercise[] = [
       'Use your hands to take weight off whenever it becomes too much.',
       'Come forward onto your hands to release at the end.',
     ],
+    rangeOfMotion:
+      'Sit back only as far as it is a strong stretch across the sole. Your hands control how much weight goes on, so the range is entirely yours to set.',
     breathing: {
       inhale: 'Slowly and deeply.',
       exhale: 'Slowly, letting the foot soften.',

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { workoutKindSchema } from './workout';
 import {
   isoDateSchema,
   isoDateTimeSchema,
@@ -67,6 +68,8 @@ export const workoutSessionSchema = z
     id: z.string().min(1),
     /** The template this came from, or null for an ad-hoc session. */
     workoutId: slugSchema.nullable(),
+    /** Copied from the workout so mobility can be counted on its own. */
+    kind: workoutKindSchema,
     date: isoDateSchema,
     status: sessionStatusSchema,
 

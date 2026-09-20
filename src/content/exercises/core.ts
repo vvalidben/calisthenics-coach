@@ -71,6 +71,8 @@ export const CORE_EXERCISES: Exercise[] = [
       'Return both limbs to the start under control.',
       'Repeat on the other side. One rep is one side.',
     ],
+    rangeOfMotion:
+      'Reach the limbs out only as far as your lower back stays pressed to the floor. That distance is the exercise; it grows as the brace improves.',
     breathing: {
       inhale: 'As the limbs return to the start.',
       exhale: 'As the limbs extend away from you.',
@@ -152,6 +154,8 @@ export const CORE_EXERCISES: Exercise[] = [
       'Return both limbs under control to the start.',
       'Repeat on the other side. One rep is one side.',
     ],
+    rangeOfMotion:
+      'Arm and leg reach to shoulder and hip height, no higher. Lifting above that arches the lower back rather than training it.',
     breathing: {
       inhale: 'As you return to all fours.',
       exhale: 'As you extend the limbs.',
@@ -234,6 +238,8 @@ export const CORE_EXERCISES: Exercise[] = [
       'Push the floor away with your forearms so you do not sink between your shoulders.',
       'Hold for the target time, breathing steadily, and stop the moment the line breaks.',
     ],
+    rangeOfMotion:
+      'There is no travel: hold one straight line from knees to head. The hold ends when the line breaks, not when the clock says so.',
     breathing: {
       inhale: 'Shallow and continuous through the hold.',
       exhale: 'Shallow and continuous through the hold.',
@@ -309,6 +315,8 @@ export const CORE_EXERCISES: Exercise[] = [
       'Push the floor away with your forearms.',
       'Hold for the target time, then lower when the line breaks rather than pushing past it.',
     ],
+    rangeOfMotion:
+      'No travel — one straight line from heels to head. End the hold the moment the hips drop, however long that took.',
     breathing: {
       inhale: 'Shallow and continuous.',
       exhale: 'Shallow and continuous.',
@@ -384,6 +392,8 @@ export const CORE_EXERCISES: Exercise[] = [
       'Replace the hand and repeat on the other side.',
       'One rep is one tap. Stop when the hips begin to rock.',
     ],
+    rangeOfMotion:
+      'The hand travels to the opposite shoulder and back. The hips travel nowhere at all; that is the actual range being tested.',
     breathing: {
       inhale: 'As the hand returns to the floor.',
       exhale: 'As you lift and tap.',
@@ -467,6 +477,8 @@ export const CORE_EXERCISES: Exercise[] = [
       'Hold, keeping the lower back pressed down the entire time.',
       'Lower everything together at the end of the set rather than collapsing.',
     ],
+    rangeOfMotion:
+      'Lower the legs only as far as the lower back stays pressed into the floor. That height is your range, and it lowers as you get stronger.',
     breathing: {
       inhale: 'Small breaths into the upper chest.',
       exhale: 'Small steady breaths, without letting your ribs flare.',
@@ -541,6 +553,8 @@ export const CORE_EXERCISES: Exercise[] = [
       'Do not let your hands or feet touch the floor.',
       'Stop the set the moment the shape starts to fold.',
     ],
+    rangeOfMotion:
+      'Rock from shoulders to hips without the hands or feet touching down. The body shape does not change through the range.',
     breathing: {
       inhale: 'On one rock.',
       exhale: 'On the next, in a steady rhythm with the movement.',
@@ -625,6 +639,8 @@ export const SIDE_CORE_EXERCISES: Exercise[] = [
       'Hold for the target time, breathing steadily.',
       'Lower under control and repeat on the other side.',
     ],
+    rangeOfMotion:
+      'No travel: hold one line from knees to head with the hips stacked. The hold ends when the hips roll or drop.',
     breathing: {
       inhale: 'Shallow and continuous.',
       exhale: 'Shallow and continuous.',
@@ -700,6 +716,8 @@ export const SIDE_CORE_EXERCISES: Exercise[] = [
       'Hold for the target time, breathing steadily.',
       'Lower under control and repeat on the other side.',
     ],
+    rangeOfMotion:
+      'No travel — one straight line from heels to head. Stop when the line breaks rather than when the target time is reached.',
     breathing: {
       inhale: 'Shallow and continuous.',
       exhale: 'Shallow and continuous.',
@@ -775,6 +793,8 @@ export const SIDE_CORE_EXERCISES: Exercise[] = [
       'Squeeze at the top for a moment, then repeat.',
       'Finish one side before switching.',
     ],
+    rangeOfMotion:
+      'Hips travel down to within a few centimetres of the floor and back up to a straight line. Touching down ends the set; not reaching the line ends it too.',
     breathing: {
       inhale: 'As you lower the hips.',
       exhale: 'As you lift them back into line.',
@@ -864,6 +884,8 @@ export const HANGING_CORE_EXERCISES: Exercise[] = [
       'Lower your legs slowly all the way down.',
       'Pause at the bottom before the next rep.',
     ],
+    rangeOfMotion:
+      'Knees to at least hip height, with a small pelvic curl at the top, then all the way back to a still dead hang.',
     breathing: {
       inhale: 'As you lower your knees.',
       exhale: 'As you raise them.',
@@ -944,6 +966,8 @@ export const HANGING_CORE_EXERCISES: Exercise[] = [
       'Lower slowly all the way to a dead hang without swinging.',
       'Pause for a full second before the next rep.',
     ],
+    rangeOfMotion:
+      'Straight legs to at least parallel with the floor, then a slow descent all the way down. Below parallel is a partial rep.',
     breathing: {
       inhale: 'As you lower.',
       exhale: 'As you raise your legs.',

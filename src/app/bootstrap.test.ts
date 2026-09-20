@@ -4,6 +4,7 @@ import { MemoryAdapter } from '../storage/memory-adapter';
 import { CURRENT_SCHEMA_VERSION } from '../storage/migrations';
 import { SEED_PROFILE } from '../content/seed-profile';
 import { PROGRAM } from '../content/program';
+import { ROUTINES } from '../content/routines';
 import { FAMILIES } from '../domain/primitives';
 import { bootstrap } from './bootstrap';
 
@@ -29,9 +30,22 @@ describe('bootstrap', () => {
     expect(progression.map((s) => s.family).sort()).toEqual([...FAMILIES].sort());
   });
 
-  it('seeds the four program workouts on first run', async () => {
+  it('seeds the program workouts and the optional routines on first run', async () => {
     const { workouts } = await bootstrap(adapter);
-    expect(workouts.map((w) => w.id).sort()).toEqual(PROGRAM.map((w) => w.id).sort());
+    expect(workouts.map((w) => w.id).sort()).toEqual(
+      [...PROGRAM, ...ROUTINES].map((w) => w.id).sort(),
+    );
+  });
+
+  it('keeps training and mobility distinguishable', async () => {
+    const { workouts } = await bootstrap(adapter);
+    expect(workouts.filter((w) => w.kind === 'training')).toHaveLength(PROGRAM.length);
+    expect(workouts.filter((w) => w.kind === 'mobility')).toHaveLength(ROUTINES.length);
+  });
+
+  it('leaves the routines unscheduled', async () => {
+    const { workouts } = await bootstrap(adapter);
+    expect(workouts.filter((w) => w.kind === 'mobility').every((w) => w.day === null)).toBe(true);
   });
 
   it('does not overwrite a workout that has already been changed', async () => {

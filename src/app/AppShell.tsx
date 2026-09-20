@@ -8,6 +8,8 @@ import { WorkoutRoute } from '../features/player/WorkoutRoute';
 import { TodayScreen } from '../features/today/TodayScreen';
 import type { UserProfile } from '../domain/profile';
 import type { StorageAdapter } from '../storage/adapter';
+import { mobilitySessionsInLastWeek } from '../domain/session-log';
+import type { WorkoutSession } from '../domain/session';
 import { bootstrap, type BootstrapResult } from './bootstrap';
 import { localIsoDate } from '../domain/calendar';
 
@@ -90,12 +92,17 @@ const ExerciseRoute = ({ profile }: { profile: UserProfile }) => {
  */
 export const AppShell = ({ adapter, today = localIsoDate() }: AppShellProps) => {
   const [data, setData] = useState<BootstrapResult | null>(null);
+  const [sessions, setSessions] = useState<WorkoutSession[]>([]);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     bootstrap(adapter)
-      .then((result) => !cancelled && setData(result))
+      .then(async (result) => {
+        if (cancelled) return;
+        setData(result);
+        setSessions(await result.repositories.sessions.list());
+      })
       .catch((cause: unknown) => !cancelled && setError(cause as Error));
     return () => {
       cancelled = true;
@@ -126,7 +133,12 @@ export const AppShell = ({ adapter, today = localIsoDate() }: AppShellProps) => 
           <Route
             path="/"
             element={
-              <TodayScreen profile={data.profile} today={today} workouts={data.workouts} />
+              <TodayScreen
+                profile={data.profile}
+                today={today}
+                workouts={data.workouts}
+                mobilityThisWeek={mobilitySessionsInLastWeek(sessions, today)}
+              />
             }
           />
           <Route

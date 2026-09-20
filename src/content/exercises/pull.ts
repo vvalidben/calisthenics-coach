@@ -66,6 +66,8 @@ export const PULL_EXERCISES: Exercise[] = [
       'Hold for the target time, breathing evenly.',
       'Lower your feet to the ground under control rather than dropping off.',
     ],
+    rangeOfMotion:
+      'Arms completely straight, feet clear of the ground. There is no range to travel — the position is the exercise.',
     breathing: {
       inhale: 'Slowly and evenly throughout the hang.',
       exhale: 'Slowly and evenly throughout the hang.',
@@ -140,6 +142,8 @@ export const PULL_EXERCISES: Exercise[] = [
       'Pause at the top for one full second.',
       'Lower slowly back to a relaxed, passive hang.',
     ],
+    rangeOfMotion:
+      'Elbows stay locked and the body rises a few centimetres. If your elbows bend, you have gone past the range of this drill.',
     breathing: {
       inhale: 'As you return to the passive hang.',
       exhale: 'As you pull the shoulder blades down.',
@@ -220,6 +224,8 @@ export const PULL_EXERCISES: Exercise[] = [
       'Touch your chest to the bar if you can.',
       'Lower under control until your arms are completely straight.',
     ],
+    rangeOfMotion:
+      'Chest to the bar at the top, arms completely straight at the bottom. Stopping short at either end halves the exercise.',
     breathing: {
       inhale: 'As you lower back to straight arms.',
       exhale: 'As you pull your chest toward the bar.',
@@ -304,6 +310,8 @@ export const PULL_EXERCISES: Exercise[] = [
       'Finish with your arms completely straight.',
       'Step or climb back to the top for the next rep rather than pulling.',
     ],
+    rangeOfMotion:
+      'Chin above the bar at the top, arms completely straight at the bottom. The last third of the descent is the part most people skip and the part that builds the most.',
     breathing: {
       inhale: 'At the top, before you begin lowering.',
       exhale: 'Slowly through the descent.',
@@ -385,6 +393,8 @@ export const PULL_EXERCISES: Exercise[] = [
       'Lower under control all the way to straight arms.',
       'Pause for a moment at the bottom before the next rep.',
     ],
+    rangeOfMotion:
+      'Chin clears the bar without craning, arms fully straight at the bottom. Partial reps build partial strength.',
     breathing: {
       inhale: 'At the bottom, before you pull.',
       exhale: 'As you pull up, finishing as your chin clears the bar.',
@@ -467,6 +477,8 @@ export const PULL_EXERCISES: Exercise[] = [
       'Lower under control all the way to straight arms.',
       'Pause for a second at the bottom to kill any swing before the next rep.',
     ],
+    rangeOfMotion:
+      'Chin clears the bar at the top, arms completely straight at the bottom, every rep.',
     breathing: {
       inhale: 'At the bottom, before the pull.',
       exhale: 'Through the pull, finishing at the top.',

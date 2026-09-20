@@ -28,7 +28,8 @@ context, which keeps each screen renderable in a test with nothing mocked.
 
 | Model | File | Holds |
 |---|---|---|
-| `Exercise` | `domain/exercise.ts` | One movement: muscles, pattern, difficulty, dosing, progression links, instructions, cues, mistakes, safety, demo spec |
+| `Exercise` | `domain/exercise.ts` | One movement, including the full instruction experience: starting position (seven named body parts), numbered steps, breathing, tempo, what you should feel, mistakes, cues, structured safety, and a demo spec |
+| `Pose` | `domain/pose.ts` | Eight joints plus an optional spine curve, in a 100x100 box with the floor at y=88 |
 | `UserProfile` | `domain/profile.ts` | Goals, level, current abilities, equipment, training days and time, session length, current phase |
 | `Workout` | `domain/workout.ts` | A planned day: focus, warm-up, main work, mobility, each with sets, target range and rest |
 | `WorkoutSession` | `domain/session.ts` | A performed day: per-set reps or seconds, RPE, notes, status, duration |
@@ -56,6 +57,34 @@ the equipment its entry step needs, and an optional `caveat` stating a
 limitation in the data rather than in a comment. The floor-pulling family uses
 `caveat` to say it is not a substitute for pulling; the pull family uses it to
 warn against improvising a bar.
+
+### The instruction experience
+
+`Exercise` carries ten sections, each its own field rather than prose:
+`startingPosition` (hands, feet, body, spine, head, shoulders, hips), `steps`,
+`breathing` (inhale and exhale stated separately), optional `tempo` as named
+phases, `sensation` (what works, what else is normal, what means stop),
+`commonMistakes`, `cues`, `safety` (normal effort, normal fatigue, concerning
+pain, stop if, modify if), and the regression and progression links.
+
+Structure rather than prose is what lets `content/completeness.test.ts` audit
+the library field by field, including that no pain word ever appears in a list
+of normal sensations.
+
+### Drawings
+
+Exercises do not carry drawings. They reference named poses from
+`content/poses.ts`, and one renderer draws any pose, so a push-up top and a
+plank hold are literally the same figure.
+
+A pose is authored as approximate joint positions, but the builder keeps only
+each segment's *direction* and rebuilds it at a fixed length, then scales and
+translates the result into frame. Hand-typed coordinates drift; this makes that
+impossible. `content/poses.test.ts` checks the result is a plausible human in
+every pose and that limb lengths stay consistent from pose to pose.
+
+The captions are always on screen. The drawing supports the written
+instructions and never replaces them.
 
 ### Availability vs. ability
 
@@ -109,7 +138,7 @@ profile or logged sessions.
 | Workout player | Reads a `Workout`, writes a `WorkoutSession` |
 | Progress tracking and calendar | Reads `repositories.sessions.list()`, already ordered by date |
 | Progression engine | Reads sessions, updates `ProgressionState` against its own criteria, moves along the catalog's family chains |
-| Exercise demonstrations | Reads `DemoSpec.keyframes`, which is the contract a renderer fills |
+| Exercise demonstrations | Already built: `features/demo/FigureDemo.tsx`. `videoUrl` is left empty on every exercise because external links could not be verified from the build environment |
 | Anything that prescribes work | Must filter through `isExerciseAvailable` so it never programs an exercise the athlete has no equipment for |
 | Reminders | Reads `profile.trainingDays` and `profile.preferredTrainingTime` |
 

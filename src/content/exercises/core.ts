@@ -1,9 +1,40 @@
 import type { Exercise } from '../../domain/exercise';
+import {
+  BIRD_DOG,
+  DEAD_HANG,
+  FOREARM_PLANK,
+  HANG_KNEES_UP,
+  HANG_LEGS_UP,
+  HOLLOW_HOLD,
+  HOLLOW_ROCK_BACK,
+  HOLLOW_ROCK_FORWARD,
+  KNEE_FOREARM_PLANK,
+  KNEE_SIDE_PLANK_UP,
+  PLANK_SHOULDER_TAP,
+  PLANK_TOP,
+  QUADRUPED,
+  SIDE_PLANK_DOWN,
+  SIDE_PLANK_UP,
+  SUPINE_EXTENDED,
+  SUPINE_TABLETOP,
+} from '../poses';
 
-/**
- * Trunk work on the floor. The chain runs from learning to brace while lying
- * down, through holds, to moving under load.
- */
+const CORE_PAIN = [
+  'Pain in the lower back rather than effort in the abdominals.',
+  'Neck strain from pulling with the head instead of bracing the trunk.',
+  'Any tingling or numbness down the arms or legs.',
+];
+
+const CORE_STOP = [
+  'Anything sharp, stabbing or electric.',
+  'Your lower back arches away from its position and you cannot restore it.',
+  'You cannot keep breathing through the effort.',
+];
+
+const BREATHE_THROUGH =
+  'Holding your breath spikes the pressure in your trunk. Keep breathing even if it feels awkward.';
+
+/** Trunk work on the floor, from learning to brace through to moving under load. */
 export const CORE_EXERCISES: Exercise[] = [
   {
     id: 'dead-bug',
@@ -22,32 +53,65 @@ export const CORE_EXERCISES: Exercise[] = [
     regression: null,
     progression: 'bird-dog',
     summary: 'Lying on your back moving opposite limbs while the lower back stays glued to the floor. The safest way to learn bracing.',
-    instructions: {
-      setup: [
-        'Lie on your back and lift your arms straight up over your shoulders.',
-        'Lift your knees over your hips, bent to ninety degrees.',
-        'Press your lower back flat into the floor and keep it there.',
-      ],
-      execution: [
-        'Slowly lower one arm overhead and the opposite leg toward the floor.',
-        'Stop before your lower back lifts, even slightly.',
-        'Return to the start under control.',
-        'Repeat on the other side. One rep is one side.',
-      ],
+    startingPosition: {
+      hands: 'Reaching straight up toward the ceiling, directly over your shoulders.',
+      feet: 'Off the floor, knees lifted over your hips and bent to 90 degrees, shins parallel to the floor.',
+      body: 'On your back, trunk braced, only the limbs free to move.',
+      spine: 'Lower back pressed flat into the floor and held there for the entire set.',
+      head: 'Resting on the floor, neck relaxed, eyes on the ceiling.',
+      shoulders: 'Flat on the floor, reaching slightly away from your ears.',
+      hips: 'Square and still; they should not rock as the limbs move.',
     },
-    breathing: 'Exhale as the limbs extend, inhale as they return.',
-    cues: [
-      'Your lower back staying down is the entire exercise. Range is secondary.',
-      'Slide a hand under your lower back to check: it should stay pinned.',
+    steps: [
+      'Lie on your back and lift your arms straight up over your shoulders.',
+      'Lift your knees over your hips, bent to about 90 degrees.',
+      'Press your lower back flat into the floor and keep it there.',
+      'Slowly lower one arm overhead and the opposite leg toward the floor.',
+      'Stop the moment your lower back begins to lift, even slightly.',
+      'Return both limbs to the start under control.',
+      'Repeat on the other side. One rep is one side.',
     ],
+    breathing: {
+      inhale: 'As the limbs return to the start.',
+      exhale: 'As the limbs extend away from you.',
+      note: BREATHE_THROUGH,
+    },
+    tempo: {
+      phases: [
+        { label: 'Extend', seconds: 3 },
+        { label: 'Return', seconds: 3 },
+      ],
+      note: 'Slow removes the momentum. If it feels easy, you are going too fast or not reaching far enough.',
+    },
+    sensation: {
+      working: 'The deep abdominals, as a constant low effort holding your back down.',
+      alsoNormal: [
+        'A shaking feeling in the abdominals as the set goes on.',
+        'The hip flexors of the moving leg working.',
+      ],
+      notNormal: CORE_PAIN,
+    },
     commonMistakes: [
       { mistake: 'Lower back arching as the leg lowers.', fix: 'Shorten the range and keep the knee more bent.' },
       { mistake: 'Rushing, so momentum does the work.', fix: 'Take three seconds out and three seconds back.' },
+      { mistake: 'Holding your breath through the whole rep.', fix: 'Exhale as the limbs extend; the breath helps the brace.' },
     ],
+    cues: ['Back stays flat.', 'Slow and long.', 'Keep breathing.'],
+    safety: {
+      normalEffort: 'Light. This is a control drill, not a hard set.',
+      normalFatigue: 'A shaky, working feeling deep in the abdominals.',
+      concerningPain: CORE_PAIN,
+      stopIf: CORE_STOP,
+      modifyIf: [
+        'Your back lifts immediately: move only the arms, keeping both knees up, until you can hold it.',
+        'You cannot tell if your back is flat: slide a hand under it; it should stay pinned.',
+      ],
+    },
     demo: {
+      scene: 'floor',
       keyframes: [
-        { id: 'start', label: 'Tabletop' },
-        { id: 'extended', label: 'Opposite limbs out' },
+        { id: 'start', label: 'Start', caption: 'Arms up, knees over hips, lower back pressed flat.', pose: SUPINE_TABLETOP },
+        { id: 'extended', label: 'Extended', caption: 'Opposite arm and leg reaching away, back still flat.', pose: SUPINE_EXTENDED },
       ],
       loop: 'ping-pong',
     },
@@ -70,31 +134,66 @@ export const CORE_EXERCISES: Exercise[] = [
     regression: 'dead-bug',
     progression: 'knee-plank',
     summary: 'Extending opposite arm and leg on all fours while refusing to twist. Trains the trunk to resist rotation.',
-    instructions: {
-      setup: [
-        'Kneel on all fours with your hands under your shoulders and knees under your hips.',
-        'Set your back flat and brace your abs.',
-      ],
-      execution: [
-        'Reach one arm forward and the opposite leg straight back.',
-        'Stop at shoulder and hip height; do not lift higher.',
-        'Hold for two seconds without letting your hips rotate.',
-        'Return under control and repeat on the other side.',
+    startingPosition: {
+      hands: 'Flat on the floor directly under your shoulders, fingers spread.',
+      feet: 'Toes tucked or flat, knees directly under your hips.',
+      body: 'On all fours with a flat back, like a table top.',
+      spine: 'Neutral and flat, neither sagging nor rounded.',
+      head: 'In line with your spine, eyes on the floor between your hands.',
+      shoulders: 'Pressed away from the floor so you do not sink between them.',
+      hips: 'Level and square to the floor, and staying that way throughout.',
+    },
+    steps: [
+      'Kneel on all fours with your hands under your shoulders and knees under your hips.',
+      'Set your back flat and brace your abs.',
+      'Reach one arm forward and the opposite leg straight back at the same time.',
+      'Stop at shoulder and hip height; do not lift higher.',
+      'Hold for two seconds without letting your hips rotate.',
+      'Return both limbs under control to the start.',
+      'Repeat on the other side. One rep is one side.',
+    ],
+    breathing: {
+      inhale: 'As you return to all fours.',
+      exhale: 'As you extend the limbs.',
+      note: BREATHE_THROUGH,
+    },
+    tempo: {
+      phases: [
+        { label: 'Extend', seconds: 2 },
+        { label: 'Hold', seconds: 2 },
+        { label: 'Return', seconds: 2 },
       ],
     },
-    breathing: 'Exhale as you extend, inhale as you return.',
-    cues: [
-      'Imagine balancing a glass of water on your lower back.',
-      'Reach long rather than lifting high.',
-    ],
+    sensation: {
+      working: 'The abdominals and the muscles either side of the spine, working to stop you twisting.',
+      alsoNormal: [
+        'The glute of the extended leg switching on.',
+        'A feeling of fighting to stay still rather than of moving.',
+      ],
+      notNormal: CORE_PAIN,
+    },
     commonMistakes: [
-      { mistake: 'Hips rotating open as the leg lifts.', fix: 'Lift the leg no higher than hip height and keep both hip bones facing the floor.' },
-      { mistake: 'Lower back sagging into an arch.', fix: 'Brace your abs before you move and keep your ribs down.' },
+      { mistake: 'Hips rotating open as the leg lifts.', fix: 'Lift no higher than hip height and keep both hip bones facing the floor.' },
+      { mistake: 'Lower back sagging into an arch.', fix: 'Brace your abs before you move and keep your ribs pulled down.' },
+      { mistake: 'Reaching so far you lose the flat back.', fix: 'Reach long but stop where the back stays flat.' },
     ],
+    cues: ['Balance a glass on your back.', 'Reach long, not high.', 'Hips stay square.'],
+    safety: {
+      normalEffort: 'Light. The challenge is control, not effort.',
+      normalFatigue: 'Mild work through the trunk and the extended glute.',
+      concerningPain: CORE_PAIN,
+      stopIf: CORE_STOP,
+      modifyIf: [
+        'Your wrists ache: come onto your forearms, or make fists.',
+        'You cannot hold your hips square: extend only the arm, or only the leg, until you can.',
+        'Your knees hurt: kneel on a folded towel.',
+      ],
+    },
     demo: {
+      scene: 'floor',
       keyframes: [
-        { id: 'start', label: 'All fours' },
-        { id: 'extended', label: 'Opposite limbs out' },
+        { id: 'start', label: 'Start', caption: 'All fours, flat back, hands under shoulders.', pose: QUADRUPED },
+        { id: 'extended', label: 'Extended', caption: 'Opposite arm and leg reaching long at shoulder and hip height.', pose: BIRD_DOG },
       ],
       loop: 'ping-pong',
     },
@@ -117,32 +216,61 @@ export const CORE_EXERCISES: Exercise[] = [
     regression: 'bird-dog',
     progression: 'front-plank',
     summary: 'The plank with knees down, shortening the lever so the position can be held properly from day one.',
-    instructions: {
-      setup: [
-        'Lie face down and place your forearms on the floor, elbows under your shoulders.',
-        'Keep your knees on the floor and cross your ankles.',
-      ],
-      execution: [
-        'Lift your hips until your body is a straight line from knees to head.',
-        'Squeeze your glutes and brace your abs.',
-        'Hold for the target time, breathing steadily.',
-      ],
+    startingPosition: {
+      hands: 'Forearms flat on the floor, elbows directly under your shoulders, hands either flat or lightly clasped.',
+      feet: 'Lifted, ankles crossed behind you; the knees carry the lower body.',
+      body: 'One straight line from knees to head.',
+      spine: 'Neutral, with the tailbone tucked slightly so the lower back flattens.',
+      head: 'In line with your spine, eyes on the floor just ahead of your hands.',
+      shoulders: 'Directly over your elbows, pressed away from the floor.',
+      hips: 'In line between knees and shoulders, never sitting back toward the heels.',
     },
-    breathing: 'Breathe shallowly and continuously. Never hold your breath.',
-    cues: [
+    steps: [
+      'Lie face down and place your forearms on the floor with your elbows under your shoulders.',
+      'Keep your knees on the floor and cross your ankles behind you.',
       'Tuck your tailbone slightly so your lower back flattens.',
-      'Push the floor away with your forearms.',
+      'Lift your hips until your body is one straight line from knees to head.',
+      'Squeeze your glutes and brace your abs.',
+      'Push the floor away with your forearms so you do not sink between your shoulders.',
+      'Hold for the target time, breathing steadily, and stop the moment the line breaks.',
     ],
+    breathing: {
+      inhale: 'Shallow and continuous through the hold.',
+      exhale: 'Shallow and continuous through the hold.',
+      note: BREATHE_THROUGH,
+    },
+    sensation: {
+      working: 'The abdominals, as a constant brace across the front of the trunk.',
+      alsoNormal: [
+        'Shaking in the abdominals toward the end of the hold.',
+        'The front of the shoulders working to hold you up.',
+      ],
+      notNormal: CORE_PAIN,
+    },
     commonMistakes: [
       { mistake: 'Hips sitting back toward the heels.', fix: 'Walk your knees back until your hips are in line with your shoulders.' },
       { mistake: 'Holding on past the point where the line breaks.', fix: 'End the set the moment your hips drop. Quality decides the time.' },
+      { mistake: 'Sinking between the shoulder blades.', fix: 'Push the floor away with your forearms throughout.' },
     ],
+    cues: ['Tuck your tailbone.', 'Push the floor away.', 'One line, knee to head.'],
+    safety: {
+      normalEffort: 'Moderate. You should be able to breathe, but not comfortably by the end.',
+      normalFatigue: 'Abdominals shaking and a strong brace feeling across the trunk.',
+      concerningPain: CORE_PAIN,
+      stopIf: CORE_STOP,
+      modifyIf: [
+        'Your knees hurt: kneel on a folded towel or a mat.',
+        'You cannot hold 20 seconds: do more, shorter holds rather than one collapsing one.',
+      ],
+    },
     demo: {
+      scene: 'floor',
       keyframes: [
-        { id: 'hold', label: 'Straight line' },
-        { id: 'brace', label: 'Braced' },
+        { id: 'hold', label: 'Hold', caption: 'Forearms down, knees down, one straight line from knee to head.', pose: KNEE_FOREARM_PLANK },
+        { id: 'brace', label: 'Braced', caption: 'Tailbone tucked, glutes squeezed, hips level.', pose: KNEE_FOREARM_PLANK },
       ],
       loop: 'cycle',
+      alignment: ['knee', 'head'],
     },
     tags: ['beginner', 'core', 'no-equipment'],
   },
@@ -163,32 +291,61 @@ export const CORE_EXERCISES: Exercise[] = [
     regression: 'knee-plank',
     progression: 'plank-shoulder-tap',
     summary: 'The baseline trunk hold: resist your hips sagging for time.',
-    instructions: {
-      setup: [
-        'Lie face down and place your forearms on the floor, elbows under your shoulders.',
-        'Tuck your toes under.',
+    startingPosition: {
+      hands: 'Forearms flat, elbows directly under your shoulders, hands flat or lightly clasped.',
+      feet: 'Toes tucked under, feet hip-width apart.',
+      body: 'One straight line from heels to head, rigid from end to end.',
+      spine: 'Neutral with the tailbone tucked slightly, so the lower back flattens.',
+      head: 'In line with your spine, eyes on the floor just ahead of your hands.',
+      shoulders: 'Over your elbows, pressed away from the floor.',
+      hips: 'Level with shoulders and heels. Neither sagging down nor piked up.',
+    },
+    steps: [
+      'Lie face down and place your forearms on the floor, elbows under your shoulders.',
+      'Tuck your toes under.',
+      'Tuck your tailbone slightly and brace your abs as if bracing for a punch.',
+      'Lift your hips until your body forms one straight line from heels to head.',
+      'Squeeze your glutes to lock the position.',
+      'Push the floor away with your forearms.',
+      'Hold for the target time, then lower when the line breaks rather than pushing past it.',
+    ],
+    breathing: {
+      inhale: 'Shallow and continuous.',
+      exhale: 'Shallow and continuous.',
+      note: BREATHE_THROUGH,
+    },
+    sensation: {
+      working: 'The abdominals, bracing hard across the whole front of the trunk.',
+      alsoNormal: [
+        'Shaking in the abdominals and thighs near the end of a hold.',
+        'The glutes working to keep the hips up.',
       ],
-      execution: [
-        'Lift your hips until your body forms one straight line from heels to head.',
-        'Squeeze your glutes and brace your abs as if bracing for a punch.',
-        'Hold for the target time, breathing steadily.',
+      notNormal: CORE_PAIN,
+    },
+    commonMistakes: [
+      { mistake: 'Hips sag, arching the lower back.', fix: 'End the set the moment your hips drop; a short clean hold beats a long sloppy one.' },
+      { mistake: 'Hips pike up into an easy tent shape.', fix: 'Lower your hips until your body is one flat line.' },
+      { mistake: 'Holding your breath to stay tight.', fix: 'Take small continuous breaths; the brace does not depend on held air.' },
+    ],
+    cues: ['Tuck your tailbone.', 'Squeeze your glutes.', 'Push the floor away.'],
+    safety: {
+      normalEffort: 'Moderate to hard depending on the hold time.',
+      normalFatigue: 'Abdominals shaking hard in the last ten seconds.',
+      concerningPain: CORE_PAIN,
+      stopIf: CORE_STOP,
+      modifyIf: [
+        'Your lower back aches: drop to the knee plank and rebuild.',
+        'Your shoulders tire before your abs: check your elbows are directly under your shoulders.',
       ],
     },
-    breathing: 'Breathe shallowly and continuously through the hold. Never hold your breath.',
-    cues: [
-      'Tuck your tailbone slightly so your lower back flattens.',
-      'Push the floor away with your forearms.',
-    ],
-    commonMistakes: [
-      { mistake: 'Hips sag, arching the lower back.', fix: 'End the set the moment your hips drop; a shorter clean hold beats a long sloppy one.' },
-      { mistake: 'Hips pike up into an easy tent shape.', fix: 'Lower your hips until your body is one flat line.' },
-    ],
     demo: {
+      scene: 'floor',
       keyframes: [
-        { id: 'hold', label: 'Straight line' },
-        { id: 'brace', label: 'Braced' },
+        { id: 'hold', label: 'Hold', caption: 'Forearms down, one straight line from heels to head.', pose: FOREARM_PLANK },
+        { id: 'brace', label: 'Braced', caption: 'Tailbone tucked, glutes squeezed, hips level.', pose: FOREARM_PLANK },
       ],
       loop: 'cycle',
+      alignment: ['toe', 'head'],
     },
     tags: ['staple', 'core', 'untested'],
   },
@@ -209,32 +366,69 @@ export const CORE_EXERCISES: Exercise[] = [
     regression: 'front-plank',
     progression: 'hollow-body-hold',
     summary: 'A straight-arm plank where lifting one hand forces the trunk to resist twisting.',
-    instructions: {
-      setup: [
-        'Start in a straight-arm plank with your hands under your shoulders.',
-        'Widen your feet to about shoulder width for stability.',
-      ],
-      execution: [
-        'Lift one hand and tap the opposite shoulder.',
-        'Keep your hips completely still; they should not rotate at all.',
-        'Replace the hand and repeat on the other side.',
-      ],
+    startingPosition: {
+      hands: 'Flat on the floor directly under your shoulders, arms straight.',
+      feet: 'Wider than a normal plank, about shoulder-width, for a stable base.',
+      body: 'One straight line from heels to head.',
+      spine: 'Neutral with the ribs pulled down.',
+      head: 'In line with your spine, eyes on the floor.',
+      shoulders: 'Stacked over your wrists, pressed away from the floor.',
+      hips: 'Level and completely still. They should not move at all during a tap.',
     },
-    breathing: 'Exhale as you tap, inhale as the hand returns.',
-    cues: [
-      'Wider feet make it easier. Narrow them as you get stronger.',
-      'Slow down until the hips stop moving, then add reps.',
+    steps: [
+      'Start in a straight-arm plank with your hands under your shoulders.',
+      'Widen your feet to about shoulder width for a stable base.',
+      'Brace your abs and squeeze your glutes.',
+      'Shift no weight; simply lift one hand and tap the opposite shoulder.',
+      'Keep your hips completely still; they should not rotate at all.',
+      'Replace the hand and repeat on the other side.',
+      'One rep is one tap. Stop when the hips begin to rock.',
     ],
+    breathing: {
+      inhale: 'As the hand returns to the floor.',
+      exhale: 'As you lift and tap.',
+      note: BREATHE_THROUGH,
+    },
+    tempo: {
+      phases: [
+        { label: 'Lift and tap', seconds: 1 },
+        { label: 'Hold', seconds: 1 },
+        { label: 'Replace', seconds: 1 },
+      ],
+      note: 'Slow it down until the hips stop moving, then add reps.',
+    },
+    sensation: {
+      working: 'The obliques and abdominals, resisting a twist every time a hand leaves the floor.',
+      alsoNormal: [
+        'The supporting shoulder working hard.',
+        'A strong urge to rock the hips, which is the exercise doing its job.',
+      ],
+      notNormal: CORE_PAIN,
+    },
     commonMistakes: [
       { mistake: 'Hips rocking side to side with each tap.', fix: 'Widen your feet and slow the tempo right down.' },
       { mistake: 'Hips piking up to make balance easier.', fix: 'Hold the straight line from heels to head throughout.' },
+      { mistake: 'Rushing to rack up reps.', fix: 'One tap per second at most, with a pause at the top.' },
     ],
+    cues: ['Hips do not move.', 'Wide feet.', 'One tap, one second.'],
+    safety: {
+      normalEffort: 'Hard, mostly as control rather than burn.',
+      normalFatigue: 'Obliques and shoulders working; abs shaking by the end.',
+      concerningPain: [...CORE_PAIN, 'Wrist pain from the straight-arm position.'],
+      stopIf: [...CORE_STOP, 'Your hips rock and you cannot stop them.'],
+      modifyIf: [
+        'Your hips rock: widen your feet further, or go back to the front plank.',
+        'Your wrists ache: make fists and rest on your knuckles with straight wrists.',
+      ],
+    },
     demo: {
+      scene: 'floor',
       keyframes: [
-        { id: 'plank', label: 'Both hands down' },
-        { id: 'tap', label: 'Tapping shoulder' },
+        { id: 'plank', label: 'Start', caption: 'Straight-arm plank, wide feet, hips level.', pose: PLANK_TOP },
+        { id: 'tap', label: 'Tap', caption: 'One hand to the opposite shoulder, hips completely still.', pose: PLANK_SHOULDER_TAP },
       ],
       loop: 'ping-pong',
+      alignment: ['toe', 'head'],
     },
     tags: ['core', 'anti-rotation', 'no-equipment'],
   },
@@ -255,30 +449,58 @@ export const CORE_EXERCISES: Exercise[] = [
     regression: 'plank-shoulder-tap',
     progression: 'hollow-rock',
     summary: 'The gymnastics trunk position that underpins every hanging and handstand skill.',
-    instructions: {
-      setup: [
-        'Lie on your back with your arms by your sides.',
-        'Press your lower back flat into the floor.',
+    startingPosition: {
+      hands: 'By your sides to begin with, or extended overhead once the position is solid.',
+      feet: 'Together, toes pointed, legs straight and lifted off the floor.',
+      body: 'A shallow banana shape with only the lower back and hips touching the floor.',
+      spine: 'Lower back pressed firmly into the floor. This is non-negotiable and defines the position.',
+      head: 'Lifted slightly with the chin tucked, neck long and relaxed.',
+      shoulders: 'Lifted just off the floor, reaching down toward your feet.',
+      hips: 'On the floor, with the tailbone tucked under.',
+    },
+    steps: [
+      'Lie on your back with your arms by your sides.',
+      'Press your lower back flat into the floor and tuck your tailbone.',
+      'Lift your shoulder blades a few centimetres off the floor, chin tucked.',
+      'Lift your straight legs a few centimetres off the floor.',
+      'Find the leg height where your lower back stays flat; that is your working height.',
+      'Hold, keeping the lower back pressed down the entire time.',
+      'Lower everything together at the end of the set rather than collapsing.',
+    ],
+    breathing: {
+      inhale: 'Small breaths into the upper chest.',
+      exhale: 'Small steady breaths, without letting your ribs flare.',
+      note: BREATHE_THROUGH,
+    },
+    sensation: {
+      working: 'The abdominals, in a deep continuous burn along the whole front of the trunk.',
+      alsoNormal: [
+        'The hip flexors working hard to hold the legs up.',
+        'Shaking within 15 seconds early on.',
       ],
-      execution: [
-        'Lift your shoulder blades and legs a few centimetres off the floor.',
-        'Keep your lower back pressed down the whole time.',
-        'Hold, then lower everything together at the end of the set.',
+      notNormal: CORE_PAIN,
+    },
+    commonMistakes: [
+      { mistake: 'Lower back arches off the floor.', fix: 'Raise your legs higher until your back is flat; that is your working height.' },
+      { mistake: 'Straining the neck by lifting with the head.', fix: 'Lift from the shoulder blades and keep your chin tucked.' },
+      { mistake: 'Lowering the legs to look impressive while the back arches.', fix: 'Back flat first, leg height second. Always.' },
+    ],
+    cues: ['Back flat, always.', 'Chin tucked.', 'Legs as low as the back allows.'],
+    safety: {
+      normalEffort: 'Hard. Fifteen seconds is a real hold at first.',
+      normalFatigue: 'A deep abdominal burn and shaking.',
+      concerningPain: CORE_PAIN,
+      stopIf: [...CORE_STOP, 'Your lower back lifts and you cannot press it back down.'],
+      modifyIf: [
+        'Your back lifts: bend your knees, or raise your legs higher.',
+        'Your neck strains: rest your head down and hold only the legs.',
       ],
     },
-    breathing: 'Take small, steady breaths without letting your ribs flare.',
-    cues: [
-      'The lower your legs, the harder the hold.',
-      'If your lower back lifts, raise your legs higher until it flattens again.',
-    ],
-    commonMistakes: [
-      { mistake: 'Lower back arches off the floor.', fix: 'Raise your legs until your back is flat; that is your working height.' },
-      { mistake: 'Straining the neck by lifting with the head.', fix: 'Lift from the shoulder blades and keep your chin tucked.' },
-    ],
     demo: {
+      scene: 'floor',
       keyframes: [
-        { id: 'flat', label: 'Back flat' },
-        { id: 'hollow', label: 'Hollow' },
+        { id: 'flat', label: 'Set up', caption: 'On your back, lower back pressed flat into the floor.', pose: SUPINE_TABLETOP },
+        { id: 'hollow', label: 'Hollow', caption: 'Shoulders and legs lifted, back still pinned down.', pose: HOLLOW_HOLD },
       ],
       loop: 'ping-pong',
     },
@@ -301,31 +523,64 @@ export const CORE_EXERCISES: Exercise[] = [
     regression: 'hollow-body-hold',
     progression: null,
     summary: 'Rocking back and forth in the hollow position, which punishes any loss of tension.',
-    instructions: {
-      setup: [
-        'Take a hollow body position you can hold for at least thirty seconds.',
-        'Extend your arms overhead by your ears.',
-      ],
-      execution: [
-        'Rock back and forth from shoulders to hips, driving from the shoulders.',
-        'Keep the hollow shape rigid; only the contact point with the floor moves.',
-        'Do not let your feet or hands touch the floor.',
+    startingPosition: {
+      hands: 'Extended overhead by your ears, arms straight.',
+      feet: 'Together, toes pointed, legs straight and lifted.',
+      body: 'A rigid hollow shape that must not change while you rock.',
+      spine: 'Lower back pressed down, ribs pulled in.',
+      head: 'Between your arms, chin tucked, neck long.',
+      shoulders: 'Lifted off the floor, reaching past your ears.',
+      hips: 'Tucked under, the contact point you rock across.',
+    },
+    steps: [
+      'Take a hollow body position you can already hold for at least thirty seconds.',
+      'Extend your arms overhead by your ears.',
+      'Begin rocking back and forth from shoulders to hips.',
+      'Drive the rock from your upper back, not by kicking your legs.',
+      'Keep the hollow shape completely rigid; only the contact point moves.',
+      'Do not let your hands or feet touch the floor.',
+      'Stop the set the moment the shape starts to fold.',
+    ],
+    breathing: {
+      inhale: 'On one rock.',
+      exhale: 'On the next, in a steady rhythm with the movement.',
+      note: BREATHE_THROUGH,
+    },
+    tempo: {
+      phases: [
+        { label: 'Rock back', seconds: 1 },
+        { label: 'Rock forward', seconds: 1 },
       ],
     },
-    breathing: 'Breathe steadily in rhythm with the rocking.',
-    cues: [
-      'The shape never changes. If it bends, stop the set.',
-      'Drive the rock from your upper back, not by kicking your legs.',
-    ],
+    sensation: {
+      working: 'The abdominals, held under constant tension with no rest between reps.',
+      alsoNormal: [
+        'A deep burn arriving within a few reps.',
+        'The hip flexors working hard alongside the abs.',
+      ],
+      notNormal: [...CORE_PAIN, 'Discomfort from your spine on a hard floor, which means you need a mat.'],
+    },
     commonMistakes: [
       { mistake: 'Folding in the middle so the body bends with each rock.', fix: 'Go back to static hollow holds until thirty seconds is easy.' },
       { mistake: 'Kicking the legs to generate the rock.', fix: 'Initiate from the shoulders and keep the legs locked in place.' },
+      { mistake: 'Rocking on a hard floor.', fix: 'Use a mat, a carpet or a folded blanket.' },
     ],
-    safetyNotes: ['Rock on a mat or carpet. On a hard floor this is uncomfortable on the spine.'],
+    cues: ['Shape never changes.', 'Rock from the shoulders.', 'Nothing touches down.'],
+    safety: {
+      normalEffort: 'Hard. Eight good rocks beats twenty sloppy ones.',
+      normalFatigue: 'A deep, continuous abdominal burn.',
+      concerningPain: CORE_PAIN,
+      stopIf: [...CORE_STOP, 'The hollow shape folds and you cannot restore it.'],
+      modifyIf: [
+        'You fold at the middle: bring your arms to your sides to shorten the lever.',
+        'Your spine is uncomfortable: use a thicker mat.',
+      ],
+    },
     demo: {
+      scene: 'floor',
       keyframes: [
-        { id: 'back', label: 'Rocked back' },
-        { id: 'forward', label: 'Rocked forward' },
+        { id: 'back', label: 'Rocked back', caption: 'Weight toward the shoulders, shape unchanged.', pose: HOLLOW_ROCK_BACK },
+        { id: 'forward', label: 'Rocked forward', caption: 'Weight toward the hips, shape still rigid.', pose: HOLLOW_ROCK_FORWARD },
       ],
       loop: 'ping-pong',
     },
@@ -352,32 +607,61 @@ export const SIDE_CORE_EXERCISES: Exercise[] = [
     regression: null,
     progression: 'side-plank',
     summary: 'The side plank with knees bent, which is where the side plank should start.',
-    instructions: {
-      setup: [
-        'Lie on one side with your forearm on the floor, elbow under your shoulder.',
-        'Bend your knees to ninety degrees and stack them on top of each other.',
-      ],
-      execution: [
-        'Lift your hips until your body is a straight line from knees to head.',
-        'Keep your top hip stacked directly over the bottom one.',
-        'Hold for the target time, then switch sides.',
-      ],
+    startingPosition: {
+      hands: 'Bottom forearm flat on the floor, elbow directly under your shoulder; top hand on your hip.',
+      feet: 'Behind you, with your knees bent to 90 degrees and stacked on top of each other.',
+      body: 'On your side, one straight line from knees to head.',
+      spine: 'Neutral and long, not side-bending toward the floor.',
+      head: 'In line with your spine, eyes forward.',
+      shoulders: 'Bottom shoulder pressed away from the floor, top shoulder stacked above it.',
+      hips: 'Stacked one directly above the other. Rolling forward makes it easy and pointless.',
     },
-    breathing: 'Breathe steadily; do not hold your breath.',
-    cues: [
-      'Push the floor away with your forearm so your shoulder does not sink.',
-      'Stack the hips. Rolling forward makes it much easier and pointless.',
+    steps: [
+      'Lie on one side with your forearm on the floor and your elbow under your shoulder.',
+      'Bend your knees to about 90 degrees and stack them on top of each other.',
+      'Press your forearm into the floor and lift your ribcage away from it.',
+      'Lift your hips until your body is a straight line from knees to head.',
+      'Stack your top hip directly over the bottom one.',
+      'Hold for the target time, breathing steadily.',
+      'Lower under control and repeat on the other side.',
     ],
+    breathing: {
+      inhale: 'Shallow and continuous.',
+      exhale: 'Shallow and continuous.',
+      note: BREATHE_THROUGH,
+    },
+    sensation: {
+      working: 'The obliques on the underside, holding your hips up against gravity.',
+      alsoNormal: [
+        'The bottom shoulder working hard.',
+        'The underside of the waist burning before anything else.',
+      ],
+      notNormal: [...CORE_PAIN, 'Pain in the bottom shoulder joint rather than muscular effort.'],
+    },
     commonMistakes: [
       { mistake: 'Hips rolling forward toward the floor.', fix: 'Stack your top hip directly over the bottom one and hold it there.' },
-      { mistake: 'Sinking into the bottom shoulder.', fix: 'Actively press the forearm down and lift the ribcage away from the floor.' },
+      { mistake: 'Sinking into the bottom shoulder.', fix: 'Press the forearm down and lift the ribcage away from the floor.' },
+      { mistake: 'Letting the hips drift back behind the line.', fix: 'Squeeze your glutes to push your hips forward into line.' },
     ],
+    cues: ['Stack the hips.', 'Push the floor away.', 'Squeeze your glutes.'],
+    safety: {
+      normalEffort: 'Light to moderate.',
+      normalFatigue: 'The underside of the waist burning and the hips wanting to drop.',
+      concerningPain: CORE_PAIN,
+      stopIf: [...CORE_STOP, 'Your bottom shoulder hurts rather than works.'],
+      modifyIf: [
+        'Your elbow is sore: put a folded towel under it.',
+        'You cannot hold 15 seconds: do more sets of shorter holds.',
+      ],
+    },
     demo: {
+      scene: 'floor',
       keyframes: [
-        { id: 'down', label: 'Hips down' },
-        { id: 'up', label: 'Hips lifted' },
+        { id: 'down', label: 'Start', caption: 'On your side, forearm down, knees bent and stacked.', pose: SIDE_PLANK_DOWN },
+        { id: 'up', label: 'Hold', caption: 'Hips lifted into one line from knee to head, hips stacked.', pose: KNEE_SIDE_PLANK_UP },
       ],
       loop: 'ping-pong',
+      alignment: ['knee', 'head'],
     },
     tags: ['beginner', 'core', 'no-equipment'],
   },
@@ -398,32 +682,61 @@ export const SIDE_CORE_EXERCISES: Exercise[] = [
     regression: 'knee-side-plank',
     progression: 'side-plank-hip-dip',
     summary: 'The full side plank on your feet, holding the body rigid against gravity pulling sideways.',
-    instructions: {
-      setup: [
-        'Lie on one side with your forearm on the floor, elbow under your shoulder.',
-        'Extend your legs and stack your feet, or stagger them for more stability.',
-      ],
-      execution: [
-        'Lift your hips until your body is a straight line from heels to head.',
-        'Keep your top hip stacked over the bottom one.',
-        'Hold for the target time, then switch sides.',
-      ],
+    startingPosition: {
+      hands: 'Bottom forearm flat, elbow directly under your shoulder; top hand on your hip.',
+      feet: 'Legs straight with the feet stacked, or staggered one in front of the other for more stability.',
+      body: 'One straight line from heels to head, side on to the floor.',
+      spine: 'Neutral and long.',
+      head: 'In line with your spine, eyes forward.',
+      shoulders: 'Bottom shoulder pressed away from the floor, top shoulder stacked above.',
+      hips: 'Stacked one over the other and lifted into line.',
     },
-    breathing: 'Breathe steadily throughout the hold.',
-    cues: [
-      'Squeeze your glutes; a side plank sags at the hips first.',
-      'Staggering the feet is a legitimate way to hold the position longer while you build up.',
+    steps: [
+      'Lie on one side with your forearm on the floor and your elbow under your shoulder.',
+      'Extend your legs and stack your feet, or stagger them for a wider base.',
+      'Press your forearm down and lift your ribcage away from the floor.',
+      'Lift your hips until your body is a straight line from heels to head.',
+      'Point your top hip at the ceiling and squeeze your glutes.',
+      'Hold for the target time, breathing steadily.',
+      'Lower under control and repeat on the other side.',
     ],
+    breathing: {
+      inhale: 'Shallow and continuous.',
+      exhale: 'Shallow and continuous.',
+      note: BREATHE_THROUGH,
+    },
+    sensation: {
+      working: 'The obliques on the underside, working hard to keep the hips up.',
+      alsoNormal: [
+        'The bottom shoulder and the outside of the bottom hip working.',
+        'Hips wanting to sag well before you want to stop.',
+      ],
+      notNormal: [...CORE_PAIN, 'Pain in the bottom shoulder joint.'],
+    },
     commonMistakes: [
       { mistake: 'Hips dropping toward the floor as the hold goes on.', fix: 'End the set when the line breaks rather than pushing through.' },
       { mistake: 'Body rotating so it becomes a front plank on one arm.', fix: 'Point your top hip at the ceiling and keep it there.' },
+      { mistake: 'Holding the breath to stay rigid.', fix: 'Breathe shallowly and continuously.' },
     ],
+    cues: ['Top hip to the ceiling.', 'Push the floor away.', 'One line, heel to head.'],
+    safety: {
+      normalEffort: 'Moderate to hard.',
+      normalFatigue: 'A strong burn down the underside of the waist.',
+      concerningPain: CORE_PAIN,
+      stopIf: [...CORE_STOP, 'Your bottom shoulder hurts rather than works.'],
+      modifyIf: [
+        'You cannot hold 20 seconds: stagger your feet, or go back to the knee version.',
+        'Your elbow is sore: put a folded towel under it.',
+      ],
+    },
     demo: {
+      scene: 'floor',
       keyframes: [
-        { id: 'down', label: 'Hips down' },
-        { id: 'up', label: 'Straight line' },
+        { id: 'down', label: 'Start', caption: 'On your side, forearm down, legs straight and stacked.', pose: SIDE_PLANK_DOWN },
+        { id: 'up', label: 'Hold', caption: 'Hips lifted into one line from heel to head.', pose: SIDE_PLANK_UP },
       ],
       loop: 'ping-pong',
+      alignment: ['toe', 'head'],
     },
     tags: ['staple', 'core', 'no-equipment'],
   },
@@ -444,32 +757,68 @@ export const SIDE_CORE_EXERCISES: Exercise[] = [
     regression: 'side-plank',
     progression: null,
     summary: 'A side plank that moves, adding repetitions to what was only a hold.',
-    instructions: {
-      setup: [
-        'Take a full side plank position on your forearm.',
-        'Rest your top hand on your hip.',
-      ],
-      execution: [
-        'Lower your hips toward the floor under control without touching down.',
-        'Drive them back up until your body is a straight line again.',
-        'Squeeze at the top for a moment, then repeat. Finish one side before switching.',
+    startingPosition: {
+      hands: 'Bottom forearm flat, elbow under the shoulder; top hand resting on your hip.',
+      feet: 'Legs straight, feet stacked or staggered.',
+      body: 'A full side plank, one line from heels to head, before the first dip.',
+      spine: 'Neutral and long.',
+      head: 'In line with your spine, eyes forward.',
+      shoulders: 'Bottom shoulder pressed away from the floor.',
+      hips: 'Stacked, and travelling straight down and straight up rather than twisting.',
+    },
+    steps: [
+      'Take a full side plank position on your forearm.',
+      'Rest your top hand on your hip and set your hips into line.',
+      'Lower your hips toward the floor under control without touching down.',
+      'Stop a few centimetres short so the tension never releases.',
+      'Drive your hips back up until your body is a straight line again.',
+      'Squeeze at the top for a moment, then repeat.',
+      'Finish one side before switching.',
+    ],
+    breathing: {
+      inhale: 'As you lower the hips.',
+      exhale: 'As you lift them back into line.',
+      note: BREATHE_THROUGH,
+    },
+    tempo: {
+      phases: [
+        { label: 'Lower', seconds: 2 },
+        { label: 'Lift', seconds: 1 },
+        { label: 'Squeeze at the top', seconds: 1 },
       ],
     },
-    breathing: 'Inhale as you lower, exhale as you lift.',
-    cues: [
-      'Stay on the side. The dip is straight down and straight up, not a twist.',
-      'Stop the set when the top of the rep no longer reaches a straight line.',
-    ],
+    sensation: {
+      working: 'The obliques on the underside, now working through a range rather than holding still.',
+      alsoNormal: [
+        'A burn that builds much faster than in the static hold.',
+        'The bottom shoulder working throughout.',
+      ],
+      notNormal: [...CORE_PAIN, 'Pain in the bottom shoulder joint.'],
+    },
     commonMistakes: [
       { mistake: 'Rotating toward the floor as the hips dip.', fix: 'Keep your top hip pointed at the ceiling throughout.' },
       { mistake: 'Resting the hip on the floor at the bottom.', fix: 'Stop a few centimetres short so tension never releases.' },
+      { mistake: 'Not reaching a straight line at the top.', fix: 'End the set when the top of the rep no longer reaches full extension.' },
     ],
+    cues: ['Straight down, straight up.', 'Never touch down.', 'Top hip to the ceiling.'],
+    safety: {
+      normalEffort: 'Hard. The burn arrives within a few reps.',
+      normalFatigue: 'A strong burn down the side of the waist, building quickly.',
+      concerningPain: CORE_PAIN,
+      stopIf: [...CORE_STOP, 'You can no longer reach a straight line at the top.'],
+      modifyIf: [
+        'You cannot reach the top position: go back to static side planks.',
+        'Your shoulder tires first: stagger your feet to share more of the load.',
+      ],
+    },
     demo: {
+      scene: 'floor',
       keyframes: [
-        { id: 'dipped', label: 'Hips dipped' },
-        { id: 'lifted', label: 'Straight line' },
+        { id: 'dipped', label: 'Dipped', caption: 'Hips lowered toward the floor without touching down.', pose: SIDE_PLANK_DOWN },
+        { id: 'lifted', label: 'Top', caption: 'Hips driven back up into one straight line.', pose: SIDE_PLANK_UP },
       ],
       loop: 'ping-pong',
+      alignment: ['toe', 'head'],
     },
     tags: ['core', 'no-equipment'],
   },
@@ -497,31 +846,64 @@ export const HANGING_CORE_EXERCISES: Exercise[] = [
     regression: null,
     progression: 'hanging-leg-raise',
     summary: 'Trunk flexion performed hanging, which also builds grip and shoulder stability.',
-    instructions: {
-      setup: [
-        'Hang from the bar with straight arms and a shoulder-width grip.',
-        'Pull your shoulder blades down so you are not hanging passively.',
-      ],
-      execution: [
-        'Without swinging, raise your knees toward your chest.',
-        'Curl your pelvis slightly at the top rather than only lifting the thighs.',
-        'Lower your legs slowly all the way down.',
+    startingPosition: {
+      hands: 'Gripping the bar at shoulder width, palms facing away, thumbs wrapped.',
+      feet: 'Clear of the ground, legs together and still.',
+      body: 'Hanging straight, with a slight active tension rather than fully relaxed.',
+      spine: 'Neutral, ribs pulled down.',
+      head: 'Neutral, eyes forward.',
+      shoulders: 'Pulled down away from your ears so you are not hanging passively.',
+      hips: 'Directly under your shoulders and still before the first rep.',
+    },
+    steps: [
+      'Hang from the bar with straight arms and a shoulder-width grip.',
+      'Pull your shoulder blades down so you are not hanging passively.',
+      'Pause until any swing has stopped completely.',
+      'Raise your knees toward your chest without swinging.',
+      'Curl your pelvis under slightly at the top, rather than only lifting the thighs.',
+      'Lower your legs slowly all the way down.',
+      'Pause at the bottom before the next rep.',
+    ],
+    breathing: {
+      inhale: 'As you lower your knees.',
+      exhale: 'As you raise them.',
+    },
+    tempo: {
+      phases: [
+        { label: 'Raise', seconds: 1 },
+        { label: 'Pause at the top', seconds: 1 },
+        { label: 'Lower', seconds: 2 },
       ],
     },
-    breathing: 'Exhale as you raise your knees, inhale as you lower them.',
-    cues: ['Lead with your pelvis, not your knees.', 'Stop the set as soon as you start swinging.'],
+    sensation: {
+      working: 'The lower abdominals, especially in the final part of the lift where the pelvis curls.',
+      alsoNormal: [
+        'The hip flexors doing much of the early part of the lift.',
+        'Grip fatigue ending the set before the abs do.',
+      ],
+      notNormal: [...CORE_PAIN, 'Pain at the front of the hip rather than muscular effort.'],
+    },
     commonMistakes: [
       { mistake: 'Swinging the legs up with momentum.', fix: 'Pause for a beat at the bottom of every rep.' },
       { mistake: 'Only lifting the thighs, so the abs barely work.', fix: 'Tuck your pelvis under at the top of each rep.' },
+      { mistake: 'Hanging completely passively.', fix: 'Pull your shoulder blades down before starting.' },
     ],
-    safetyNotes: [
-      'Check the bar takes your weight before hanging from it.',
-      'Lower yourself under control rather than dropping off the bar.',
-    ],
+    cues: ['Lead with your pelvis.', 'No swing.', 'Shoulders down.'],
+    safety: {
+      normalEffort: 'Hard, and limited by grip as much as by the abs.',
+      normalFatigue: 'Lower abs burning and forearms tiring.',
+      concerningPain: [...CORE_PAIN, 'Sharp pain at the front of the hip.'],
+      stopIf: [...CORE_STOP, 'You start swinging and cannot stop.', 'Your grip is going.'],
+      modifyIf: [
+        'Your grip fails first: do shorter sets, or work on dead hangs separately.',
+        'You cannot stop swinging: touch a toe to the ground between reps to reset.',
+      ],
+    },
     demo: {
+      scene: 'bar',
       keyframes: [
-        { id: 'hang', label: 'Hanging' },
-        { id: 'top', label: 'Knees up' },
+        { id: 'hang', label: 'Start', caption: 'Hanging still, shoulder blades pulled down.', pose: DEAD_HANG },
+        { id: 'top', label: 'Knees up', caption: 'Knees to the chest with the pelvis curled under.', pose: HANG_KNEES_UP },
       ],
       loop: 'ping-pong',
     },
@@ -544,34 +926,65 @@ export const HANGING_CORE_EXERCISES: Exercise[] = [
     regression: 'hanging-knee-raise',
     progression: null,
     summary: 'The same raise with straight legs, roughly doubling the leverage the abs must overcome.',
-    instructions: {
-      setup: [
-        'Hang from the bar with straight arms and your shoulder blades pulled down.',
-        'Point your toes and squeeze your legs together.',
-      ],
-      execution: [
-        'Raise your straight legs until they are at least parallel to the floor.',
-        'Curl your pelvis under at the top.',
-        'Lower slowly all the way to a dead hang without swinging.',
-      ],
+    startingPosition: {
+      hands: 'Gripping the bar at shoulder width, palms facing away.',
+      feet: 'Together with the toes pointed, clear of the ground.',
+      body: 'Hanging straight and still, with active shoulders.',
+      spine: 'Neutral, ribs pulled down.',
+      head: 'Neutral, eyes forward.',
+      shoulders: 'Pulled down away from your ears throughout.',
+      hips: 'Under your shoulders, completely still before each rep.',
     },
-    breathing: 'Exhale as you raise, inhale on the way down.',
-    cues: [
-      'Bend the knees slightly if your hamstrings limit the range.',
-      'The descent is where the strength is. Do not drop the legs.',
+    steps: [
+      'Hang from the bar with straight arms and your shoulder blades pulled down.',
+      'Point your toes and squeeze your legs together.',
+      'Wait until all swing has stopped.',
+      'Raise your straight legs until they are at least parallel to the floor.',
+      'Curl your pelvis under at the top.',
+      'Lower slowly all the way to a dead hang without swinging.',
+      'Pause for a full second before the next rep.',
     ],
+    breathing: {
+      inhale: 'As you lower.',
+      exhale: 'As you raise your legs.',
+    },
+    tempo: {
+      phases: [
+        { label: 'Raise', seconds: 2 },
+        { label: 'Pause at the top', seconds: 1 },
+        { label: 'Lower', seconds: 3 },
+      ],
+      note: 'The descent is where the strength is. Do not let the legs drop.',
+    },
+    sensation: {
+      working: 'The abdominals through a long range, hardest in the last part of the lift.',
+      alsoNormal: [
+        'A stretch through the hamstrings at the top.',
+        'Grip fatigue arriving quickly.',
+      ],
+      notNormal: [...CORE_PAIN, 'Pain at the front of the hip rather than effort.'],
+    },
     commonMistakes: [
       { mistake: 'Swinging between reps.', fix: 'Pause in a dead hang for a full second before each rep.' },
       { mistake: 'Stopping well below parallel.', fix: 'Return to knee raises until you can reach parallel cleanly.' },
+      { mistake: 'Dropping the legs at the end of the rep.', fix: 'Take three seconds down on every rep.' },
     ],
-    safetyNotes: [
-      'Check the bar takes your weight before hanging from it.',
-      'Lower yourself under control rather than dropping off the bar.',
-    ],
+    cues: ['Toes pointed.', 'Pelvis curls at the top.', 'Lower slowly.'],
+    safety: {
+      normalEffort: 'Very hard, both on the abs and the grip.',
+      normalFatigue: 'Deep abdominal burn and forearms giving out.',
+      concerningPain: [...CORE_PAIN, 'Sharp pain at the front of the hip.'],
+      stopIf: [...CORE_STOP, 'You start swinging and cannot stop.', 'Your grip is going.'],
+      modifyIf: [
+        'Your hamstrings limit the range: bend your knees slightly and keep them bent throughout.',
+        'You cannot reach parallel: go back to knee raises.',
+      ],
+    },
     demo: {
+      scene: 'bar',
       keyframes: [
-        { id: 'hang', label: 'Dead hang' },
-        { id: 'top', label: 'Legs parallel' },
+        { id: 'hang', label: 'Start', caption: 'Dead hang, legs together, toes pointed.', pose: DEAD_HANG },
+        { id: 'top', label: 'Legs parallel', caption: 'Straight legs at least parallel, pelvis curled under.', pose: HANG_LEGS_UP },
       ],
       loop: 'ping-pong',
     },

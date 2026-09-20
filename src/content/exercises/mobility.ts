@@ -1,4 +1,52 @@
 import type { Exercise } from '../../domain/exercise';
+import {
+  ANKLE_CIRCLE_FLEX,
+  ANKLE_CIRCLE_POINT,
+  ANKLE_WALL_FORWARD,
+  ANKLE_WALL_START,
+  CAT_ROUNDED,
+  COW_ARCHED,
+  HAMSTRING_FOLD,
+  KNEEL_HIP_NEUTRAL,
+  KNEEL_HIP_STRETCH,
+  KNEEL_TOES_BACK,
+  KNEEL_TOES_FORWARD,
+  LUNGE_HANDS_DOWN,
+  LUNGE_LEG_STRAIGHT,
+  LUNGE_ROTATED,
+  NINETY_NINETY_LEFT,
+  NINETY_NINETY_RIGHT,
+  OPEN_BOOK_CLOSED,
+  OPEN_BOOK_OPEN,
+  PRONE_ARMS_SIDE,
+  PRONE_CHEST_ROLLED,
+  QUADRUPED,
+  SEATED_FOLD,
+  SEATED_TALL,
+  SQUAT_DEEP,
+  STAND,
+  THREAD_NEEDLE,
+  TOWEL_BEHIND,
+  TOWEL_FRONT,
+  TOWEL_OVERHEAD,
+  WALL_ANGEL_HIGH,
+  WALL_ANGEL_LOW,
+} from '../poses';
+
+const STRETCH_PAIN = [
+  'Anything sharp, as opposed to a broad pulling sensation in the muscle.',
+  'Tingling, numbness or a shooting feeling, which means a nerve not a muscle.',
+  'Pain felt inside a joint rather than across a muscle.',
+];
+
+const STRETCH_STOP = [
+  'The sensation turns sharp instead of broad.',
+  'Anything shoots or tingles down a limb.',
+  'You are holding your breath to tolerate it.',
+];
+
+const BREATHE_INTO_IT =
+  'Breathe slowly throughout. Holding your breath makes a muscle tighten against you, which is the opposite of what you want.';
 
 /** Overhead reach without borrowing range from the lower back. */
 export const SHOULDER_MOBILITY_EXERCISES: Exercise[] = [
@@ -19,28 +67,65 @@ export const SHOULDER_MOBILITY_EXERCISES: Exercise[] = [
     regression: null,
     progression: 'towel-shoulder-dislocate',
     summary: 'Opens the chest and upper back, directly counteracting hours of sitting.',
-    instructions: {
-      setup: [
-        'Stand with your back against a wall, feet about a foot away from it.',
-        'Press your lower back, upper back and head into the wall.',
-        'Raise your arms into a goalpost shape with the backs of your hands on the wall.',
-      ],
-      execution: [
-        'Slide your arms slowly up the wall as far as they will go without losing contact.',
-        'Slide them back down until your elbows are level with your ribs.',
-        'Keep your lower back flat against the wall the whole time.',
-      ],
+    startingPosition: {
+      hands: 'Backs of the hands against the wall, arms bent into a goalpost shape at shoulder height.',
+      feet: 'About a foot out from the wall, hip-width apart.',
+      body: 'Standing with your back, shoulders and head all in contact with the wall.',
+      spine: 'Lower back lightly flattened toward the wall, ribs pulled down.',
+      head: 'Resting back against the wall, chin very slightly tucked.',
+      shoulders: 'Flat against the wall, pulled down away from your ears.',
+      hips: 'Square, directly under your shoulders.',
     },
-    breathing: 'Exhale as you slide up, inhale as you come down.',
-    cues: ['Contact beats range: stop where the wall contact breaks.', 'Keep your ribs down; do not arch to gain height.'],
+    steps: [
+      'Stand with your back against a wall and your feet about a foot away from it.',
+      'Press your lower back, upper back and head into the wall.',
+      'Raise your arms into a goalpost shape with the backs of your hands touching the wall.',
+      'Slide your arms slowly up the wall as far as they will go without losing any contact.',
+      'Stop at the point where a hand or your lower back starts to lift away.',
+      'Slide back down until your elbows are level with your ribs.',
+      'Keep every contact point on the wall for the whole rep.',
+    ],
+    breathing: {
+      inhale: 'As you slide down.',
+      exhale: 'As you slide up.',
+      note: BREATHE_INTO_IT,
+    },
+    tempo: {
+      phases: [
+        { label: 'Slide up', seconds: 3 },
+        { label: 'Slide down', seconds: 3 },
+      ],
+      note: 'Contact beats range. A short clean slide is worth far more than a big one with the back arched.',
+    },
+    sensation: {
+      working: 'The upper back and the back of the shoulders, working to keep the arms on the wall.',
+      alsoNormal: [
+        'A stretch across the front of the chest and shoulders.',
+        'Surprise at how small the range is at first.',
+      ],
+      notNormal: STRETCH_PAIN,
+    },
     commonMistakes: [
       { mistake: 'Lower back arches away from the wall.', fix: 'Step your feet further out and shorten the range.' },
       { mistake: 'Hands drift off the wall at the top.', fix: 'Stop at the point where the backs of your hands still touch.' },
+      { mistake: 'Shrugging the shoulders up to gain height.', fix: 'Keep the shoulders pulled down and accept less range.' },
     ],
+    cues: ['Everything stays on the wall.', 'Ribs down.', 'Small and clean.'],
+    safety: {
+      normalEffort: 'Light. This is a mobility drill.',
+      normalFatigue: 'A working ache in the upper back.',
+      concerningPain: STRETCH_PAIN,
+      stopIf: STRETCH_STOP,
+      modifyIf: [
+        'Your back will not stay flat: bend your knees slightly and step further from the wall.',
+        'Your hands will not touch: work within the range where they do; it will grow.',
+      ],
+    },
     demo: {
+      scene: 'wall',
       keyframes: [
-        { id: 'low', label: 'Goalpost' },
-        { id: 'high', label: 'Overhead' },
+        { id: 'low', label: 'Goalpost', caption: 'Arms bent at shoulder height, everything touching the wall.', pose: WALL_ANGEL_LOW },
+        { id: 'high', label: 'Overhead', caption: 'Arms slid up as far as contact allows.', pose: WALL_ANGEL_HIGH },
       ],
       loop: 'ping-pong',
     },
@@ -63,30 +148,66 @@ export const SHOULDER_MOBILITY_EXERCISES: Exercise[] = [
     regression: 'wall-angel',
     progression: 'prone-chest-opener',
     summary: 'Takes the shoulder through its full overhead arc, preparing it for hangs and handstands.',
-    instructions: {
-      setup: [
-        'Hold a towel in both hands with your arms straight and hands very wide apart.',
-        'Stand tall with your ribs down.',
-      ],
-      execution: [
-        'Keeping your elbows locked, raise the towel overhead.',
-        'Continue moving it behind you as far as it comfortably goes.',
-        'Reverse the path slowly back to the front.',
-        'Narrow your grip slightly over the weeks as the range improves.',
-      ],
+    startingPosition: {
+      hands: 'Gripping a towel with the hands very wide apart, arms straight, held in front of your thighs.',
+      feet: 'Hip-width apart, weight even.',
+      body: 'Standing tall.',
+      spine: 'Neutral, with the ribs pulled down so you cannot cheat by arching.',
+      head: 'Neutral, eyes forward.',
+      shoulders: 'Down and relaxed before the first rep.',
+      hips: 'Square and still throughout.',
     },
-    breathing: 'Exhale as the towel travels overhead, inhale on the way back.',
-    cues: ['Wider grip is easier; narrow it only when the full arc is smooth.', 'Elbows stay straight the whole way.'],
+    steps: [
+      'Hold a towel in both hands with your arms straight and your hands very wide apart.',
+      'Stand tall with your ribs pulled down.',
+      'Keeping your elbows completely locked, raise the towel overhead.',
+      'Continue moving it behind you as far as it comfortably goes.',
+      'Go slowly at the back of the arc, where the shoulder is most vulnerable.',
+      'Reverse the path slowly back to the front.',
+      'Narrow your grip by a few centimetres only once the full arc is smooth.',
+    ],
+    breathing: {
+      inhale: 'As the towel returns to the front.',
+      exhale: 'As it travels overhead and behind.',
+      note: BREATHE_INTO_IT,
+    },
+    tempo: {
+      phases: [
+        { label: 'Overhead and behind', seconds: 4 },
+        { label: 'Return to the front', seconds: 4 },
+      ],
+      note: 'Wider grip is easier. Narrow it only when the whole arc is smooth and painless.',
+    },
+    sensation: {
+      working: 'A stretch across the front of the shoulders and chest at the back of the arc.',
+      alsoNormal: [
+        'The range being much smaller than expected at first.',
+        'One shoulder being tighter than the other.',
+      ],
+      notNormal: [...STRETCH_PAIN, 'A feeling of the shoulder catching or wanting to slip.'],
+    },
     commonMistakes: [
       { mistake: 'Bending the elbows to force more range.', fix: 'Widen your grip instead and keep the arms locked.' },
       { mistake: 'Arching the lower back to get the arms further back.', fix: 'Brace your abs and keep your ribs pulled down.' },
+      { mistake: 'Moving fast through the back of the arc.', fix: 'Take four full seconds each way.' },
     ],
-    safetyNotes: ['Go slowly at the back of the arc. Forcing this position is how shoulders get injured.'],
+    cues: ['Elbows locked.', 'Ribs down.', 'Slow at the back.'],
+    safety: {
+      normalEffort: 'Light, but the end range demands respect.',
+      normalFatigue: 'A stretched feeling across the chest and shoulders.',
+      concerningPain: [...STRETCH_PAIN, 'Any sense of the shoulder catching or slipping.'],
+      stopIf: [...STRETCH_STOP, 'The shoulder catches at any point in the arc.'],
+      modifyIf: [
+        'You cannot get the towel behind you: widen your grip until you can.',
+        'One side is much tighter: widen for both and let the tight side set the pace.',
+      ],
+    },
     demo: {
+      scene: 'none',
       keyframes: [
-        { id: 'front', label: 'In front' },
-        { id: 'overhead', label: 'Overhead' },
-        { id: 'behind', label: 'Behind' },
+        { id: 'front', label: 'In front', caption: 'Wide grip, arms straight, towel at the thighs.', pose: TOWEL_FRONT },
+        { id: 'overhead', label: 'Overhead', caption: 'Arms still locked, towel directly above.', pose: TOWEL_OVERHEAD },
+        { id: 'behind', label: 'Behind', caption: 'Towel travelled behind, ribs still pulled down.', pose: TOWEL_BEHIND },
       ],
       loop: 'ping-pong',
     },
@@ -109,31 +230,58 @@ export const SHOULDER_MOBILITY_EXERCISES: Exercise[] = [
     regression: 'towel-shoulder-dislocate',
     progression: null,
     summary: 'A floor stretch that opens one side of the chest at a time, using your own bodyweight as the gentle force.',
-    instructions: {
-      setup: [
-        'Lie face down with one arm stretched straight out to the side at shoulder height, palm down.',
-      ],
-      execution: [
-        'Roll your body toward the outstretched arm, bringing the opposite knee across.',
-        'Plant that foot on the floor behind you and let it take your weight.',
-        'Relax into the stretch across the chest and front of the shoulder.',
-        'Hold, then roll back and switch sides.',
-      ],
+    startingPosition: {
+      hands: 'One arm stretched straight out to the side at shoulder height, palm flat on the floor.',
+      feet: 'Legs straight to begin with; one will cross over as you roll.',
+      body: 'Face down, ready to roll toward the outstretched arm.',
+      spine: 'Neutral; it will rotate as you roll, which is the point.',
+      head: 'Turned away from the outstretched arm, resting on the floor.',
+      shoulders: 'The outstretched one stays on the floor throughout.',
+      hips: 'Starting square, then rolling as the opposite knee crosses over.',
     },
-    breathing: 'Breathe slowly into the stretch; each exhale lets you settle a little further.',
-    cues: [
-      'Let the floor do the work. Relax rather than pushing.',
-      'Adjust the arm height until you feel the chest rather than the shoulder joint.',
+    steps: [
+      'Lie face down with one arm stretched straight out to the side at shoulder height, palm down.',
+      'Turn your head away from that arm and rest it on the floor.',
+      'Roll your body toward the outstretched arm, bringing the opposite knee across.',
+      'Plant that foot on the floor behind you and let it take some of your weight.',
+      'Relax completely and let gravity open the chest and front of the shoulder.',
+      'Adjust the arm height slightly until you feel the chest rather than the shoulder joint.',
+      'Hold, then roll back and repeat on the other side.',
     ],
+    breathing: {
+      inhale: 'Slowly and deeply into the ribs.',
+      exhale: 'Slowly, letting yourself settle a little further each time.',
+      note: BREATHE_INTO_IT,
+    },
+    sensation: {
+      working: 'A broad stretch across the chest and the front of the shoulder.',
+      alsoNormal: [
+        'A rotation feeling through the upper back.',
+        'A strong but comfortable stretch that eases as you relax.',
+      ],
+      notNormal: [...STRETCH_PAIN, 'A pinch at the front of the shoulder joint.'],
+    },
     commonMistakes: [
       { mistake: 'Rolling so far that the shoulder takes sharp strain.', fix: 'Back off until it is a broad stretch across the chest, never a pinch.' },
       { mistake: 'Holding tension through the whole stretch.', fix: 'Relax completely and let your bodyweight settle you in.' },
+      { mistake: 'Keeping the arm at one fixed height.', fix: 'Try it a little higher and a little lower; the best angle differs per person.' },
     ],
-    safetyNotes: ['Stop at any sharp or pinching sensation in the front of the shoulder joint.'],
+    cues: ['Relax completely.', 'Chest, not shoulder joint.', 'Let the foot take your weight.'],
+    safety: {
+      normalEffort: 'Very light. This is a passive stretch.',
+      normalFatigue: 'None. You should finish feeling looser, not tired.',
+      concerningPain: [...STRETCH_PAIN, 'Pinching at the front of the shoulder joint.'],
+      stopIf: STRETCH_STOP,
+      modifyIf: [
+        'It is too intense: keep more weight on the planted foot, or lower the arm.',
+        'You feel it in the shoulder joint rather than the chest: change the arm height.',
+      ],
+    },
     demo: {
+      scene: 'floor',
       keyframes: [
-        { id: 'flat', label: 'Face down' },
-        { id: 'rolled', label: 'Rolled open' },
+        { id: 'flat', label: 'Start', caption: 'Face down, one arm out to the side at shoulder height.', pose: PRONE_ARMS_SIDE },
+        { id: 'rolled', label: 'Rolled open', caption: 'Rolled toward the arm, opposite foot planted behind.', pose: PRONE_CHEST_ROLLED },
       ],
       loop: 'ping-pong',
     },
@@ -160,27 +308,64 @@ export const THORACIC_MOBILITY_EXERCISES: Exercise[] = [
     regression: null,
     progression: 'thread-the-needle',
     summary: 'A gentle spinal warm-up that moves every segment of the back.',
-    instructions: {
-      setup: [
-        'Kneel on all fours with your hands under your shoulders and knees under your hips.',
-        'Start with a flat back.',
-      ],
-      execution: [
-        'Exhale and round your spine toward the ceiling, tucking your chin and tailbone.',
-        'Inhale and reverse: drop your belly, lift your chest and tailbone.',
-        'Move slowly through the full range, one segment at a time.',
+    startingPosition: {
+      hands: 'Flat on the floor directly under your shoulders, fingers spread.',
+      feet: 'Toes flat or tucked, knees directly under your hips.',
+      body: 'On all fours, back flat like a table top.',
+      spine: 'Neutral to start, ready to round and arch through its full range.',
+      head: 'In line with your spine, eyes on the floor.',
+      shoulders: 'Pressed away from the floor so you do not sink between them.',
+      hips: 'Directly over your knees and staying there; only the spine moves.',
+    },
+    steps: [
+      'Kneel on all fours with your hands under your shoulders and knees under your hips.',
+      'Start with a flat back.',
+      'Exhale and round your spine toward the ceiling, starting the movement from your tailbone.',
+      'Tuck your chin at the end of the rounding.',
+      'Inhale and reverse: drop your belly, lift your chest and tailbone.',
+      'Move slowly through the full range, one segment at a time.',
+      'Keep your hips over your knees the whole time; the spine does the moving.',
+    ],
+    breathing: {
+      inhale: 'As you arch and open the chest.',
+      exhale: 'As you round the spine toward the ceiling.',
+      note: 'Let the breath set the tempo rather than the other way round.',
+    },
+    tempo: {
+      phases: [
+        { label: 'Round', seconds: 3 },
+        { label: 'Arch', seconds: 3 },
       ],
     },
-    breathing: 'Exhale as you round, inhale as you arch. Let the breath set the tempo.',
-    cues: ['Start the movement from your tailbone, not your head.', 'Slower is better; aim for three seconds each way.'],
+    sensation: {
+      working: 'Movement through the whole spine, especially the middle of the back between the shoulder blades.',
+      alsoNormal: [
+        'Clicking in the spine that does not hurt.',
+        'The middle of the back feeling stiffer than the neck and lower back.',
+      ],
+      notNormal: STRETCH_PAIN,
+    },
     commonMistakes: [
       { mistake: 'Only the neck and lower back move.', fix: 'Focus on moving the middle of your back between the shoulder blades.' },
       { mistake: 'Rushing through the reps.', fix: 'Match the tempo to your breath and take three seconds each way.' },
+      { mistake: 'Rocking the hips forward and back.', fix: 'Keep your hips over your knees and let only the spine move.' },
     ],
+    cues: ['Start from the tailbone.', 'Three seconds each way.', 'Hips stay still.'],
+    safety: {
+      normalEffort: 'Very light. This is a warm-up, not a set.',
+      normalFatigue: 'None. This should leave you looser.',
+      concerningPain: STRETCH_PAIN,
+      stopIf: STRETCH_STOP,
+      modifyIf: [
+        'Your wrists ache: make fists, or come onto your forearms for the rounding portion.',
+        'Your knees hurt: kneel on a folded towel.',
+      ],
+    },
     demo: {
+      scene: 'floor',
       keyframes: [
-        { id: 'cat', label: 'Cat (rounded)' },
-        { id: 'cow', label: 'Cow (arched)' },
+        { id: 'cat', label: 'Cat', caption: 'Spine rounded toward the ceiling, chin tucked.', pose: CAT_ROUNDED },
+        { id: 'cow', label: 'Cow', caption: 'Belly dropped, chest and tailbone lifted.', pose: COW_ARCHED },
       ],
       loop: 'ping-pong',
     },
@@ -203,30 +388,65 @@ export const THORACIC_MOBILITY_EXERCISES: Exercise[] = [
     regression: 'cat-cow',
     progression: 'open-book-rotation',
     summary: 'A rotation drill on all fours that reaches the upper back without loading the lower back.',
-    instructions: {
-      setup: [
-        'Kneel on all fours with your hands under your shoulders and knees under your hips.',
-      ],
-      execution: [
-        'Slide one arm underneath your body and across, palm up.',
-        'Let your shoulder and the side of your head rest on the floor.',
-        'Hold for two seconds, feeling the rotation between the shoulder blades.',
-        'Unwind and reach that arm up toward the ceiling, then repeat.',
+    startingPosition: {
+      hands: 'Flat under your shoulders, fingers spread.',
+      feet: 'Toes flat or tucked, knees under your hips.',
+      body: 'On all fours with a flat back.',
+      spine: 'Neutral, ready to rotate through the upper back.',
+      head: 'In line with your spine to begin with; it will rest on the floor as you thread through.',
+      shoulders: 'Level at the start, then one will lower to the floor.',
+      hips: 'Stacked over your knees and staying there. This is what forces the upper back to do the rotating.',
+    },
+    steps: [
+      'Kneel on all fours with your hands under your shoulders and knees under your hips.',
+      'Keep your hips stacked directly over your knees for the whole drill.',
+      'Slide one arm underneath your body and across, palm facing up.',
+      'Let that shoulder and the side of your head rest on the floor.',
+      'Hold for two seconds, feeling the rotation between the shoulder blades.',
+      'Unwind and reach that same arm up toward the ceiling, following it with your eyes.',
+      'Return to the start and repeat, then switch sides.',
+    ],
+    breathing: {
+      inhale: 'As you open upward.',
+      exhale: 'As you thread the arm through.',
+      note: BREATHE_INTO_IT,
+    },
+    tempo: {
+      phases: [
+        { label: 'Thread through', seconds: 2 },
+        { label: 'Hold', seconds: 2 },
+        { label: 'Open up', seconds: 2 },
       ],
     },
-    breathing: 'Exhale as you thread through, inhale as you open upward.',
-    cues: [
-      'Keep your hips square over your knees; the rotation comes from the upper back.',
-      'Follow your reaching hand with your eyes when you open up.',
-    ],
+    sensation: {
+      working: 'A rotation and stretch through the upper back between the shoulder blades.',
+      alsoNormal: [
+        'A stretch across the back of the threading shoulder.',
+        'Much more range on one side than the other.',
+      ],
+      notNormal: STRETCH_PAIN,
+    },
     commonMistakes: [
       { mistake: 'Hips swinging sideways to create the rotation.', fix: 'Keep your hips stacked over your knees and reduce the range.' },
       { mistake: 'Rushing past the end positions.', fix: 'Pause for two seconds at each end.' },
+      { mistake: 'Rotating only the arm.', fix: 'Follow your hand with your eyes so the chest turns with it.' },
     ],
+    cues: ['Hips stay over the knees.', 'Follow your hand.', 'Pause at both ends.'],
+    safety: {
+      normalEffort: 'Very light. Nothing here should feel like work.',
+      normalFatigue: 'None. You should finish this looser than you started.',
+      concerningPain: [...STRETCH_PAIN, 'Neck pain from resting the head awkwardly.'],
+      stopIf: STRETCH_STOP,
+      modifyIf: [
+        'Your neck is uncomfortable: rest your head on a cushion or your free forearm.',
+        'Your hips will not stay put: reduce the range considerably.',
+      ],
+    },
     demo: {
+      scene: 'floor',
       keyframes: [
-        { id: 'threaded', label: 'Threaded through' },
-        { id: 'open', label: 'Reaching up' },
+        { id: 'start', label: 'All fours', caption: 'Flat back, hips over knees.', pose: QUADRUPED },
+        { id: 'threaded', label: 'Threaded', caption: 'Arm slid under the body, shoulder and head on the floor.', pose: THREAD_NEEDLE },
       ],
       loop: 'ping-pong',
     },
@@ -249,31 +469,65 @@ export const THORACIC_MOBILITY_EXERCISES: Exercise[] = [
     regression: 'thread-the-needle',
     progression: null,
     summary: 'Side-lying rotation that opens the chest and upper back through the largest range available on the floor.',
-    instructions: {
-      setup: [
-        'Lie on your side with your knees bent to ninety degrees and stacked.',
-        'Stretch both arms straight out in front at shoulder height, palms together.',
-      ],
-      execution: [
-        'Keeping your knees pinned together, sweep your top arm in a wide arc across your body.',
-        'Follow your hand with your eyes and let your chest turn toward the ceiling.',
-        'Stop where your knees start to lift, and hold for three seconds.',
-        'Sweep back and repeat, then switch sides.',
+    startingPosition: {
+      hands: 'Both arms straight out in front at shoulder height, palms together.',
+      feet: 'Knees bent to 90 degrees and stacked, feet behind you.',
+      body: 'Lying on one side, knees and arms stacked.',
+      spine: 'Neutral, ready to rotate through the upper back only.',
+      head: 'Resting on the floor or a cushion, in line with your spine.',
+      shoulders: 'Stacked one above the other at the start.',
+      hips: 'Stacked and pinned; the knees staying down is what forces the upper back to rotate.',
+    },
+    steps: [
+      'Lie on your side with your knees bent to 90 degrees and stacked.',
+      'Stretch both arms straight out in front at shoulder height, palms together.',
+      'Press your top knee down so your hips cannot rotate.',
+      'Sweep your top arm in a wide arc across your body at shoulder height.',
+      'Follow your hand with your eyes and let your chest turn toward the ceiling.',
+      'Stop where your knees start to lift, and hold for three seconds.',
+      'Sweep back to the start and repeat, then switch sides.',
+    ],
+    breathing: {
+      inhale: 'As the arm opens and the chest turns.',
+      exhale: 'As the arm returns.',
+      note: BREATHE_INTO_IT,
+    },
+    tempo: {
+      phases: [
+        { label: 'Open', seconds: 3 },
+        { label: 'Hold', seconds: 3 },
+        { label: 'Return', seconds: 3 },
       ],
     },
-    breathing: 'Exhale as the arm opens, inhale as it returns.',
-    cues: [
-      'The knees staying down is what forces the upper back to rotate.',
-      'Rest your top knee on a cushion if it lifts immediately.',
-    ],
+    sensation: {
+      working: 'A stretch across the chest and a rotation through the upper back.',
+      alsoNormal: [
+        'One side opening much further than the other.',
+        'The top shoulder not reaching the floor, which is normal at first.',
+      ],
+      notNormal: STRETCH_PAIN,
+    },
     commonMistakes: [
       { mistake: 'Knees lifting so the rotation comes from the hips.', fix: 'Press the top knee down and rotate only as far as it stays put.' },
       { mistake: 'Arm travelling above shoulder height.', fix: 'Keep the sweep at shoulder height, where the chest opens best.' },
+      { mistake: 'Forcing the shoulder to the floor.', fix: 'Go to where it opens naturally; the floor is not the goal.' },
     ],
+    cues: ['Knees stay down.', 'Shoulder height.', 'Follow your hand.'],
+    safety: {
+      normalEffort: 'Very light. Nothing here should feel like work.',
+      normalFatigue: 'None. You should finish this looser than you started.',
+      concerningPain: STRETCH_PAIN,
+      stopIf: STRETCH_STOP,
+      modifyIf: [
+        'Your top knee lifts immediately: rest it on a cushion and reduce the range.',
+        'Your neck is uncomfortable: put a cushion under your head.',
+      ],
+    },
     demo: {
+      scene: 'floor',
       keyframes: [
-        { id: 'closed', label: 'Hands together' },
-        { id: 'open', label: 'Chest open' },
+        { id: 'closed', label: 'Start', caption: 'On your side, knees stacked, palms together in front.', pose: OPEN_BOOK_CLOSED },
+        { id: 'open', label: 'Open', caption: 'Top arm swept across, chest turned, knees still down.', pose: OPEN_BOOK_OPEN },
       ],
       loop: 'ping-pong',
     },
@@ -300,27 +554,64 @@ export const HIP_MOBILITY_EXERCISES: Exercise[] = [
     regression: null,
     progression: 'kneeling-hip-flexor-stretch',
     summary: 'Rotates the hips through their full inward and outward range.',
-    instructions: {
-      setup: [
-        'Sit on the floor with one leg bent in front at 90 degrees and the other bent out to the side at 90 degrees.',
-        'Sit tall with your hands on the floor behind you for support.',
-      ],
-      execution: [
-        'Keeping your feet planted, rotate both knees across to the other side.',
-        'Lower them until both touch the floor in the mirrored position.',
-        'Pause for a moment, then switch back.',
+    startingPosition: {
+      hands: 'On the floor behind you for support, or on your knees once you can sit tall unaided.',
+      feet: 'One leg bent in front at 90 degrees, the other bent out to the side at 90 degrees.',
+      body: 'Seated and upright.',
+      spine: 'Tall and neutral rather than rounded back.',
+      head: 'Neutral, eyes forward.',
+      shoulders: 'Down and relaxed.',
+      hips: 'On the floor, one rotated outward and one inward.',
+    },
+    steps: [
+      'Sit on the floor with one leg bent in front at 90 degrees and the other bent out to the side at 90 degrees.',
+      'Sit as tall as you can, using your hands behind you for support if needed.',
+      'Keep your feet planted where they are.',
+      'Rotate both knees across to the other side, moving slowly.',
+      'Lower them until both touch the floor in the mirrored position.',
+      'Pause for two seconds in the end position.',
+      'Rotate back to the first side. One rep is one full switch.',
+    ],
+    breathing: {
+      inhale: 'In the end position.',
+      exhale: 'As you rotate across.',
+      note: BREATHE_INTO_IT,
+    },
+    tempo: {
+      phases: [
+        { label: 'Rotate across', seconds: 3 },
+        { label: 'Pause', seconds: 2 },
       ],
     },
-    breathing: 'Exhale as you rotate, inhale in the end position.',
-    cues: ['Move slowly; this is a range-of-motion drill, not a rep chase.', 'Keep your chest tall rather than rounding forward.'],
+    sensation: {
+      working: 'A stretch deep in the hips, different on each side as one rotates in and one out.',
+      alsoNormal: [
+        'One direction being far tighter than the other.',
+        'The front leg’s outer hip feeling most of it.',
+      ],
+      notNormal: [...STRETCH_PAIN, 'Pain inside the knee joint, which means the hip is not rotating and the knee is taking it.'],
+    },
     commonMistakes: [
       { mistake: 'Rounding the back to force the knees down.', fix: 'Sit on a cushion and shorten the range until you can stay tall.' },
       { mistake: 'Rushing the switch with momentum.', fix: 'Pause for two seconds in each end position.' },
+      { mistake: 'Pushing into knee pain to gain hip range.', fix: 'Reduce the range immediately; the knee should never be the limiter.' },
     ],
+    cues: ['Sit tall.', 'Slow rotation.', 'Never force the knee.'],
+    safety: {
+      normalEffort: 'Light. A range-of-motion drill rather than a strength set.',
+      normalFatigue: 'A stretched feeling in the hips, no real fatigue.',
+      concerningPain: [...STRETCH_PAIN, 'Any pain inside the knee joint.'],
+      stopIf: [...STRETCH_STOP, 'You feel it in the knee rather than the hip.'],
+      modifyIf: [
+        'You cannot sit tall: sit on a folded cushion to raise your hips.',
+        'Your knee complains: widen the angle of the legs and reduce the range.',
+      ],
+    },
     demo: {
+      scene: 'floor',
       keyframes: [
-        { id: 'left', label: 'Left 90/90' },
-        { id: 'right', label: 'Right 90/90' },
+        { id: 'left', label: 'One side', caption: 'Front leg bent at 90, back leg out at 90, sitting tall.', pose: NINETY_NINETY_LEFT },
+        { id: 'right', label: 'Other side', caption: 'Both knees rotated across to the mirrored position.', pose: NINETY_NINETY_RIGHT },
       ],
       loop: 'ping-pong',
     },
@@ -343,31 +634,58 @@ export const HIP_MOBILITY_EXERCISES: Exercise[] = [
     regression: 'ninety-ninety-hip-switch',
     progression: 'deep-squat-hold',
     summary: 'Lengthens the front of the hip, which shortens from sitting and quietly limits both squats and posture.',
-    instructions: {
-      setup: [
-        'Kneel on one knee with the other foot flat on the floor in front, both knees at about ninety degrees.',
-        'Put something soft under the down knee.',
-      ],
-      execution: [
-        'Squeeze the glute on the kneeling side and tuck your tailbone under.',
-        'Shift your hips forward a few centimetres, keeping the tuck.',
-        'Hold, feeling the stretch across the front of the kneeling hip.',
-        'Come out of it slowly, then set up on the other side and repeat.',
-      ],
+    startingPosition: {
+      hands: 'On the front knee, or on your hips.',
+      feet: 'One foot flat in front with that knee at about 90 degrees; the other knee on the floor behind, on something soft.',
+      body: 'Upright in a half-kneeling position.',
+      spine: 'Neutral with the tailbone tucked under. The tuck is what makes this work.',
+      head: 'Neutral, eyes forward.',
+      shoulders: 'Square and down.',
+      hips: 'Square to the front, tailbone tucked, ready to shift forward a small amount.',
     },
-    breathing: 'Breathe slowly and deeply; let each exhale soften the hip.',
-    cues: [
-      'The glute squeeze is what makes this work. Without it you just arch your back.',
-      'A small shift with a tucked pelvis beats a big lunge with an arched one.',
+    steps: [
+      'Kneel on one knee with the other foot flat in front, both knees at about 90 degrees.',
+      'Put something soft under the down knee.',
+      'Square your hips to the front.',
+      'Squeeze the glute on the kneeling side and tuck your tailbone under.',
+      'Shift your hips forward only a few centimetres, keeping the tuck.',
+      'Hold, feeling the stretch across the front of the kneeling hip.',
+      'Come out of it slowly, then set up on the other side and repeat.',
     ],
+    breathing: {
+      inhale: 'Slowly and deeply.',
+      exhale: 'Slowly, letting the hip soften with each breath out.',
+      note: BREATHE_INTO_IT,
+    },
+    sensation: {
+      working: 'A stretch across the front of the kneeling hip and down the front of that thigh.',
+      alsoNormal: [
+        'The glute on the kneeling side working to hold the tuck.',
+        'Feeling nothing until you tuck the pelvis, then feeling a lot.',
+      ],
+      notNormal: [...STRETCH_PAIN, 'Pain in the lower back, which means you are arching rather than stretching.'],
+    },
     commonMistakes: [
       { mistake: 'Arching the lower back and calling it a hip stretch.', fix: 'Tuck the tailbone under first, then move forward.' },
       { mistake: 'Lunging far forward and feeling nothing.', fix: 'Squeeze the glute and shift only a couple of centimetres.' },
+      { mistake: 'Letting the hips rotate open.', fix: 'Square both hip bones to the front before you shift.' },
     ],
+    cues: ['Tuck the tailbone.', 'Squeeze the back glute.', 'Small shift, big stretch.'],
+    safety: {
+      normalEffort: 'Light. The glute squeeze is the only real effort.',
+      normalFatigue: 'None; you should finish looser.',
+      concerningPain: [...STRETCH_PAIN, 'Lower back pain.'],
+      stopIf: STRETCH_STOP,
+      modifyIf: [
+        'Your down knee hurts: use a thicker cushion.',
+        'You feel it in your lower back: tuck harder and shift less.',
+      ],
+    },
     demo: {
+      scene: 'floor',
       keyframes: [
-        { id: 'neutral', label: 'Kneeling' },
-        { id: 'stretched', label: 'Hips forward' },
+        { id: 'neutral', label: 'Set up', caption: 'Half kneeling, hips square, tailbone tucked.', pose: KNEEL_HIP_NEUTRAL },
+        { id: 'stretched', label: 'Stretch', caption: 'Hips shifted forward a few centimetres, tuck maintained.', pose: KNEEL_HIP_STRETCH },
       ],
       loop: 'ping-pong',
     },
@@ -390,27 +708,59 @@ export const HIP_MOBILITY_EXERCISES: Exercise[] = [
     regression: 'kneeling-hip-flexor-stretch',
     progression: null,
     summary: 'Resting in the bottom of a squat, which restores ankle, knee and hip range together.',
-    instructions: {
-      setup: [
-        'Stand with your feet a little wider than your hips, toes turned slightly out.',
-        'Hold onto a doorframe or a fixed rail if you need support.',
-      ],
-      execution: [
-        'Squat all the way down until your hips are below your knees.',
-        'Keep your heels flat and let your elbows rest inside your knees.',
-        'Relax into the position and hold, gently pushing your knees out.',
-      ],
+    startingPosition: {
+      hands: 'Together in front of your chest, elbows resting inside your knees; or holding a door frame while you learn.',
+      feet: 'A little wider than your hips, toes turned slightly out, heels flat.',
+      body: 'Settled into the bottom of a squat, relaxed rather than braced.',
+      spine: 'Long, though some rounding at the bottom is normal and fine here.',
+      head: 'Neutral, eyes forward.',
+      shoulders: 'Relaxed and down.',
+      hips: 'Below your knees, sinking rather than holding.',
     },
-    breathing: 'Breathe deeply into your belly; each exhale lets you settle lower.',
-    cues: ['Hold support until you can balance unaided.', 'Put something thin under your heels if they lift.'],
+    steps: [
+      'Stand with your feet a little wider than your hips, toes turned slightly out.',
+      'Hold a door frame or a fixed rail if you need support.',
+      'Squat all the way down until your hips are below your knees.',
+      'Keep your heels flat; put a folded towel under them if they lift.',
+      'Let your elbows rest inside your knees and gently push them outward.',
+      'Relax into the position rather than holding yourself in it.',
+      'Breathe deeply and let each exhale settle you a little lower.',
+    ],
+    breathing: {
+      inhale: 'Deeply into your belly.',
+      exhale: 'Slowly, sinking a little lower each time.',
+      note: BREATHE_INTO_IT,
+    },
+    sensation: {
+      working: 'A broad stretch through the hips, groin and ankles.',
+      alsoNormal: [
+        'Wanting to tip backwards at first.',
+        'The ankles feeling like the limiting factor.',
+      ],
+      notNormal: [...STRETCH_PAIN, 'Pain inside the knee joint.'],
+    },
     commonMistakes: [
       { mistake: 'Heels lift, tipping you onto your toes.', fix: 'Raise your heels on a folded towel and widen your stance.' },
       { mistake: 'Staying tense throughout the hold.', fix: 'Let your back round slightly and relax; this is a rest position.' },
+      { mistake: 'Holding a door frame forever.', fix: 'Let go for a few seconds at a time and build up to unsupported.' },
     ],
+    cues: ['Relax into it.', 'Heels down.', 'Elbows push the knees out.'],
+    safety: {
+      normalEffort: 'Light, though it may feel hard to hold at first.',
+      normalFatigue: 'A stretched feeling through the hips and ankles.',
+      concerningPain: [...STRETCH_PAIN, 'Pain inside the knee joint.'],
+      stopIf: [...STRETCH_STOP, 'Your knees hurt rather than your hips or ankles.'],
+      modifyIf: [
+        'Your heels lift: put a folded towel under them.',
+        'You fall backwards: hold a door frame lightly.',
+        'Your knees hurt: reduce the depth and work on ankle mobility first.',
+      ],
+    },
     demo: {
+      scene: 'floor',
       keyframes: [
-        { id: 'stand', label: 'Standing' },
-        { id: 'deep', label: 'Deep squat' },
+        { id: 'stand', label: 'Start', caption: 'Standing, feet slightly wider than hips, toes out.', pose: STAND },
+        { id: 'deep', label: 'Deep squat', caption: 'Hips below knees, heels flat, elbows inside the knees.', pose: SQUAT_DEEP },
       ],
       loop: 'ping-pong',
     },
@@ -437,30 +787,64 @@ export const HAMSTRING_MOBILITY_EXERCISES: Exercise[] = [
     regression: null,
     progression: 'worlds-greatest-stretch',
     summary: 'A moving hamstring drill that warms the back of the leg without holding a long stretch cold.',
-    instructions: {
-      setup: [
-        'Stand tall and place one heel on the floor a short step in front, toes pulled up.',
-      ],
-      execution: [
-        'Hinge at the hips and reach both hands toward the front foot, keeping your back flat.',
-        'Sweep your hands down past the shin and back up as you stand.',
-        'Stay tall in the spine; the fold comes from the hip.',
-        'Finish all reps before switching sides.',
+    startingPosition: {
+      hands: 'Hanging in front of you, ready to sweep down the front leg.',
+      feet: 'One heel on the floor a short step in front with the toes pulled up; the back foot flat under you.',
+      body: 'Standing tall, weight mostly on the back leg.',
+      spine: 'Long and flat. The fold comes from the hip, not the spine.',
+      head: 'In line with your spine, eyes on the floor ahead as you fold.',
+      shoulders: 'Square and relaxed.',
+      hips: 'Square to the front, hinging back as you fold.',
+    },
+    steps: [
+      'Stand tall and place one heel on the floor a short step in front, toes pulled up.',
+      'Keep a soft bend in the front knee if your hamstrings are tight.',
+      'Hinge at the hips and reach both hands toward the front foot.',
+      'Keep your back flat; stop folding the moment it starts to round.',
+      'Sweep your hands down past the shin and back up as you stand.',
+      'Move smoothly in both directions with no bounce at the bottom.',
+      'Finish all reps before switching sides.',
+    ],
+    breathing: {
+      inhale: 'As you stand.',
+      exhale: 'As you fold forward.',
+      note: BREATHE_INTO_IT,
+    },
+    tempo: {
+      phases: [
+        { label: 'Fold', seconds: 2 },
+        { label: 'Stand', seconds: 2 },
       ],
     },
-    breathing: 'Exhale as you fold forward, inhale as you stand.',
-    cues: [
-      'Flat back throughout. The moment it rounds, you have gone far enough.',
-      'Keep a soft bend in the front knee if your hamstrings are tight.',
-    ],
+    sensation: {
+      working: 'A pull down the back of the front leg.',
+      alsoNormal: [
+        'The stretch easing noticeably over the reps.',
+        'The calf joining in when the toes are pulled up.',
+      ],
+      notNormal: [...STRETCH_PAIN, 'Anything shooting down the back of the leg, which is a nerve rather than a muscle.'],
+    },
     commonMistakes: [
       { mistake: 'Rounding the back to reach the foot.', fix: 'Reach only as far as your back stays flat; depth comes later.' },
-      { mistake: 'Bouncing at the bottom.', fix: 'Move smoothly in both directions, with no bounce at the end.' },
+      { mistake: 'Bouncing at the bottom.', fix: 'Move smoothly in both directions with no bounce.' },
+      { mistake: 'Locking the front knee hard.', fix: 'Keep a soft bend, especially when you are tight.' },
     ],
+    cues: ['Flat back.', 'Hinge from the hip.', 'No bouncing.'],
+    safety: {
+      normalEffort: 'Very light. This is a warm-up movement.',
+      normalFatigue: 'None. The stretch should ease as the reps go on.',
+      concerningPain: [...STRETCH_PAIN, 'Any shooting or tingling down the back of the leg.'],
+      stopIf: STRETCH_STOP,
+      modifyIf: [
+        'You cannot keep a flat back: bend the front knee more and reduce the range.',
+        'You feel tingling: stop, and keep the knee bent more next time.',
+      ],
+    },
     demo: {
+      scene: 'floor',
       keyframes: [
-        { id: 'stand', label: 'Standing' },
-        { id: 'folded', label: 'Folded' },
+        { id: 'stand', label: 'Start', caption: 'Standing tall, front heel down and toes pulled up.', pose: STAND },
+        { id: 'folded', label: 'Folded', caption: 'Hinged at the hips with a flat back, hands sweeping down the shin.', pose: HAMSTRING_FOLD },
       ],
       loop: 'ping-pong',
     },
@@ -483,29 +867,66 @@ export const HAMSTRING_MOBILITY_EXERCISES: Exercise[] = [
     regression: 'standing-hamstring-sweep',
     progression: 'seated-pike-fold',
     summary: 'A lunge, rotation and hamstring stretch in one sequence.',
-    instructions: {
-      setup: [
-        'Step one foot forward into a deep lunge.',
-        'Place both hands on the floor inside your front foot.',
-      ],
-      execution: [
-        'Drop your back knee toward the floor and sink into the hip stretch.',
-        'Lift the hand nearest your front foot and rotate your chest open toward the ceiling.',
-        'Return the hand to the floor, then straighten your front leg to stretch the hamstring.',
-        'Return to the lunge and repeat, then switch sides.',
+    startingPosition: {
+      hands: 'Both on the floor inside your front foot.',
+      feet: 'One foot forward in a deep lunge, the back leg extended with the knee toward the floor.',
+      body: 'Low in a lunge, chest up as much as the position allows.',
+      spine: 'Long rather than rounded.',
+      head: 'In line with the spine; it will turn to follow your hand.',
+      shoulders: 'Square at the start, then one opens toward the ceiling.',
+      hips: 'Front hip deep, back hip pressed forward and down.',
+    },
+    steps: [
+      'Step one foot forward into a deep lunge.',
+      'Place both hands on the floor inside your front foot.',
+      'Drop your back knee toward the floor and press that hip forward to sink into the stretch.',
+      'Lift the hand nearest your front foot and rotate your chest open toward the ceiling.',
+      'Follow your hand with your eyes so the whole chest turns, not just the arm.',
+      'Return the hand to the floor, then straighten your front leg to stretch the hamstring.',
+      'Return to the lunge and repeat, then switch sides.',
+    ],
+    breathing: {
+      inhale: 'As you rotate open.',
+      exhale: 'As you sink into the lunge and as you fold over the straight leg.',
+      note: BREATHE_INTO_IT,
+    },
+    tempo: {
+      phases: [
+        { label: 'Sink into the lunge', seconds: 3 },
+        { label: 'Rotate open', seconds: 3 },
+        { label: 'Straighten the front leg', seconds: 3 },
       ],
     },
-    breathing: 'Exhale as you rotate open, inhale as you return.',
-    cues: ['Rotate from the middle of your back, not just the arm.', 'Keep your back leg long and active.'],
+    sensation: {
+      working: 'The front of the back hip, then the upper back, then the front leg’s hamstring, in that order.',
+      alsoNormal: [
+        'Three distinct stretches in one sequence.',
+        'Wrists working to support you on the floor.',
+      ],
+      notNormal: STRETCH_PAIN,
+    },
     commonMistakes: [
       { mistake: 'Rotating from the shoulder only.', fix: 'Follow your hand with your eyes so the chest turns too.' },
       { mistake: 'Back knee collapsing so the hip never stretches.', fix: 'Press your back hip forward before rotating.' },
+      { mistake: 'Rushing the three parts together.', fix: 'Give each part three seconds of its own.' },
     ],
+    cues: ['Press the back hip forward.', 'Follow your hand.', 'Three parts, three breaths.'],
+    safety: {
+      normalEffort: 'Light. Three stretches in sequence, none of them hard.',
+      normalFatigue: 'None; this is a warm-up sequence.',
+      concerningPain: STRETCH_PAIN,
+      stopIf: STRETCH_STOP,
+      modifyIf: [
+        'Your back knee hurts: put a cushion under it.',
+        'You cannot reach the floor: rest your hands on a low step or a stack of books.',
+      ],
+    },
     demo: {
+      scene: 'floor',
       keyframes: [
-        { id: 'lunge', label: 'Deep lunge' },
-        { id: 'rotate', label: 'Chest open' },
-        { id: 'hamstring', label: 'Leg straight' },
+        { id: 'lunge', label: 'Deep lunge', caption: 'Hands inside the front foot, back hip pressed forward.', pose: LUNGE_HANDS_DOWN },
+        { id: 'rotate', label: 'Chest open', caption: 'One hand lifted, chest rotated toward the ceiling.', pose: LUNGE_ROTATED },
+        { id: 'hamstring', label: 'Leg straight', caption: 'Front leg straightened to stretch the hamstring.', pose: LUNGE_LEG_STRAIGHT },
       ],
       loop: 'cycle',
     },
@@ -528,31 +949,58 @@ export const HAMSTRING_MOBILITY_EXERCISES: Exercise[] = [
     regression: 'worlds-greatest-stretch',
     progression: null,
     summary: 'A held hamstring fold with the legs straight, building the range that pike and handstand work need.',
-    instructions: {
-      setup: [
-        'Sit on the floor with your legs straight in front and your toes pulled toward you.',
-        'Sit on the edge of a folded towel if your lower back rounds immediately.',
-      ],
-      execution: [
-        'Sit tall and rotate your pelvis forward, as if trying to point your tailbone backward.',
-        'Fold forward from the hip with a flat back and reach toward your feet.',
-        'Stop where your back starts to round, and hold there.',
-        'Relax into the hold and breathe.',
-      ],
+    startingPosition: {
+      hands: 'Reaching toward your feet, or resting on your shins where you can reach.',
+      feet: 'Legs straight in front, toes pulled back toward you.',
+      body: 'Seated, hinged forward from the hip.',
+      spine: 'Long, folding at the hip rather than rounding through the back.',
+      head: 'In line with the spine, leading with the chest rather than the head.',
+      shoulders: 'Relaxed and down, not hunched toward the ears.',
+      hips: 'Rotated forward, as if trying to point your tailbone backward.',
     },
-    breathing: 'Breathe slowly; each exhale lets you fold a little further.',
-    cues: [
-      'Lead with your chest, not your head.',
-      'A shallow fold with a flat back is worth more than a deep one with a rounded one.',
+    steps: [
+      'Sit on the floor with your legs straight in front and your toes pulled toward you.',
+      'Sit on the edge of a folded towel if your lower back rounds immediately.',
+      'Sit tall and rotate your pelvis forward, as if pointing your tailbone backward.',
+      'Fold forward from the hip with a flat back, leading with your chest.',
+      'Reach toward your feet and stop where your back starts to round.',
+      'Hold there and relax into it rather than pulling harder.',
+      'Breathe slowly; each exhale should let you fold a little further.',
     ],
+    breathing: {
+      inhale: 'Slowly, lengthening the spine.',
+      exhale: 'Slowly, folding a little further as the muscle releases.',
+      note: BREATHE_INTO_IT,
+    },
+    sensation: {
+      working: 'A broad pull down the back of both thighs.',
+      alsoNormal: [
+        'The calves joining in when the toes are pulled back.',
+        'The range improving noticeably within a single hold.',
+      ],
+      notNormal: [...STRETCH_PAIN, 'Anything shooting or tingling down the back of the legs.'],
+    },
     commonMistakes: [
       { mistake: 'Rounding the back to get the hands to the feet.', fix: 'Sit on a folded towel and fold only as far as the back stays flat.' },
       { mistake: 'Bouncing to force more range.', fix: 'Hold still. Bouncing makes the hamstring tighten against you.' },
+      { mistake: 'Pulling hard on the feet.', fix: 'Relax into the position and let the breath do the work.' },
     ],
+    cues: ['Tailbone back.', 'Chest leads.', 'Relax, do not pull.'],
+    safety: {
+      normalEffort: 'Light, though the stretch can be intense.',
+      normalFatigue: 'None; you should finish looser.',
+      concerningPain: [...STRETCH_PAIN, 'Any shooting or tingling down the legs.'],
+      stopIf: STRETCH_STOP,
+      modifyIf: [
+        'Your back rounds at once: sit on a folded towel or cushion to raise your hips.',
+        'It is too intense: bend your knees slightly and keep the spine long.',
+      ],
+    },
     demo: {
+      scene: 'floor',
       keyframes: [
-        { id: 'tall', label: 'Sitting tall' },
-        { id: 'folded', label: 'Folded' },
+        { id: 'tall', label: 'Sit tall', caption: 'Legs straight, toes back, sitting tall with the pelvis rotated forward.', pose: SEATED_TALL },
+        { id: 'folded', label: 'Folded', caption: 'Hinged at the hip with a long spine, chest leading.', pose: SEATED_FOLD },
       ],
       loop: 'ping-pong',
     },
@@ -579,30 +1027,65 @@ export const ANKLE_MOBILITY_EXERCISES: Exercise[] = [
     regression: null,
     progression: 'knee-to-wall-ankle-rock',
     summary: 'The warm-up that costs nothing and takes the ankle through every direction it can move.',
-    instructions: {
-      setup: [
-        'Sit on the floor or a chair and cross one ankle over the opposite knee.',
-        'Hold the shin with one hand and the foot with the other.',
-      ],
-      execution: [
-        'Draw the largest circle you can with your toes, slowly.',
-        'Complete the target reps in one direction, then reverse the direction.',
-        'Uncross the leg and repeat the whole set on the other foot.',
-      ],
+    startingPosition: {
+      hands: 'One holding the shin still, the other holding the foot.',
+      feet: 'One ankle crossed over the opposite knee; the other foot flat or extended.',
+      body: 'Seated on the floor or a chair, relaxed.',
+      spine: 'Comfortable and upright; this one does not demand a position.',
+      head: 'Neutral, watching the moving foot.',
+      shoulders: 'Relaxed and down; nothing above the knee is working here.',
+      hips: 'Comfortable, one hip rotated open to cross the ankle over.',
     },
-    breathing: 'Breathe normally throughout.',
-    cues: [
-      'Bigger, slower circles beat fast small ones.',
-      'Move the ankle, not the whole leg.',
+    steps: [
+      'Sit on the floor or a chair and cross one ankle over the opposite knee.',
+      'Hold the shin still with one hand so only the ankle moves.',
+      'Hold the foot with the other hand.',
+      'Draw the largest circle you can with your toes, slowly.',
+      'Reach the end of the range in every direction rather than rushing.',
+      'Complete the target reps in one direction, then reverse the direction.',
+      'Uncross the leg and repeat the whole set on the other foot.',
     ],
+    breathing: {
+      inhale: 'Normally throughout.',
+      exhale: 'Normally throughout.',
+      note: 'No breathing pattern is needed here. Just do not hold your breath.',
+    },
+    tempo: {
+      phases: [
+        { label: 'One full circle', seconds: 4 },
+        { label: 'Next circle', seconds: 4 },
+      ],
+      note: 'Bigger, slower circles beat fast small ones.',
+    },
+    sensation: {
+      working: 'Movement rather than effort: a mild stretch at the extremes of the circle.',
+      alsoNormal: [
+        'Clicking or crunching that does not hurt.',
+        'One ankle moving much more freely than the other.',
+      ],
+      notNormal: [...STRETCH_PAIN, 'A painful click or catch in the ankle joint.'],
+    },
     commonMistakes: [
       { mistake: 'Rotating the whole lower leg instead of the ankle.', fix: 'Hold the shin still with your hand so only the foot moves.' },
       { mistake: 'Small, quick circles.', fix: 'Slow down and reach the end of the range in every direction.' },
+      { mistake: 'Skipping it because it seems trivial.', fix: 'Do it before every leg session; ankle range limits squat depth more than strength does.' },
     ],
+    cues: ['Hold the shin still.', 'Biggest circle possible.', 'Four seconds a circle.'],
+    safety: {
+      normalEffort: 'Negligible. This costs nothing and takes a minute.',
+      normalFatigue: 'None at all. Skip it and your squat depth pays for it.',
+      concerningPain: [...STRETCH_PAIN, 'A painful catch in the ankle joint.'],
+      stopIf: STRETCH_STOP,
+      modifyIf: [
+        'You cannot reach your foot comfortably: do the circles with the foot in the air instead.',
+        'The ankle catches painfully: reduce the size of the circle.',
+      ],
+    },
     demo: {
+      scene: 'none',
       keyframes: [
-        { id: 'pointed', label: 'Toes pointed' },
-        { id: 'flexed', label: 'Toes pulled up' },
+        { id: 'pointed', label: 'Toes pointed', caption: 'Ankle extended fully at one end of the circle.', pose: ANKLE_CIRCLE_POINT },
+        { id: 'flexed', label: 'Toes pulled up', caption: 'Ankle flexed fully at the other end.', pose: ANKLE_CIRCLE_FLEX },
       ],
       loop: 'cycle',
     },
@@ -625,31 +1108,65 @@ export const ANKLE_MOBILITY_EXERCISES: Exercise[] = [
     regression: 'ankle-circles',
     progression: 'kneeling-toe-stretch',
     summary: 'The standard ankle test and drill in one: drive the knee past the toes with the heel down.',
-    instructions: {
-      setup: [
-        'Stand facing a wall with one foot about a hand’s width from it.',
-        'Place your hands on the wall for balance.',
-      ],
-      execution: [
-        'Drive your knee straight forward toward the wall, keeping your heel flat.',
-        'Touch the wall with your knee if you can, then return.',
-        'If it touches easily, slide the foot further back and repeat.',
-        'Finish all reps before switching feet.',
+    startingPosition: {
+      hands: 'On the wall at about chest height for balance.',
+      feet: 'One foot about a hand’s width from the wall, pointing straight at it; the other behind for balance.',
+      body: 'Standing, facing the wall.',
+      spine: 'Neutral and upright.',
+      head: 'Neutral, eyes on the wall.',
+      shoulders: 'Relaxed, not leaning heavily on the wall.',
+      hips: 'Square to the wall.',
+    },
+    steps: [
+      'Stand facing a wall with one foot about a hand’s width from it.',
+      'Place your hands on the wall for balance.',
+      'Drive your knee straight forward toward the wall, tracking over your second toe.',
+      'Keep your heel flat on the floor for the entire rep.',
+      'Touch the wall with your knee if you can, then return.',
+      'If it touches easily, slide the foot a centimetre further back and repeat.',
+      'Finish all reps before switching feet.',
+    ],
+    breathing: {
+      inhale: 'As the knee returns.',
+      exhale: 'As the knee travels forward.',
+      note: BREATHE_INTO_IT,
+    },
+    tempo: {
+      phases: [
+        { label: 'Knee forward', seconds: 2 },
+        { label: 'Hold at the end', seconds: 1 },
+        { label: 'Return', seconds: 1 },
       ],
     },
-    breathing: 'Exhale as the knee travels forward, inhale as it returns.',
-    cues: [
-      'The heel staying down is the whole exercise. The moment it lifts, move closer.',
-      'Track the knee straight over the middle toes, not inward.',
-    ],
+    sensation: {
+      working: 'A stretch at the back of the ankle and lower calf, and a squeeze at the front of the ankle.',
+      alsoNormal: [
+        'A feeling of compression at the front of the ankle, which is pressure rather than pain.',
+        'A clear difference between the two ankles.',
+      ],
+      notNormal: [...STRETCH_PAIN, 'Sharp pain at the front of the ankle joint.'],
+    },
     commonMistakes: [
       { mistake: 'Heel lifting as the knee reaches the wall.', fix: 'Move your foot closer until the heel can stay flat.' },
       { mistake: 'Knee caving inward to reach further.', fix: 'Aim the knee over your second toe and accept less range.' },
+      { mistake: 'Leaning on the wall with the arms.', fix: 'Use the hands for balance only; the leg does the work.' },
     ],
+    cues: ['Heel stays down.', 'Knee over the second toe.', 'Move back a centimetre at a time.'],
+    safety: {
+      normalEffort: 'Light. The calf stretch is the only real sensation.',
+      normalFatigue: 'A stretched calf, nothing more.',
+      concerningPain: [...STRETCH_PAIN, 'Sharp pain at the front of the ankle joint.'],
+      stopIf: STRETCH_STOP,
+      modifyIf: [
+        'Your heel lifts immediately: start with the foot right against the wall and build distance.',
+        'The front of the ankle pinches sharply: reduce the range and work on calf stretching instead.',
+      ],
+    },
     demo: {
+      scene: 'wall',
       keyframes: [
-        { id: 'start', label: 'Upright' },
-        { id: 'forward', label: 'Knee to wall' },
+        { id: 'start', label: 'Start', caption: 'Standing upright, foot a hand’s width from the wall.', pose: ANKLE_WALL_START },
+        { id: 'forward', label: 'Knee to wall', caption: 'Knee driven forward over the toes with the heel flat.', pose: ANKLE_WALL_FORWARD },
       ],
       loop: 'ping-pong',
     },
@@ -672,34 +1189,58 @@ export const ANKLE_MOBILITY_EXERCISES: Exercise[] = [
     regression: 'knee-to-wall-ankle-rock',
     progression: null,
     summary: 'Kneeling with the toes tucked, which opens the underside of the foot and the front of the ankle.',
-    instructions: {
-      setup: [
-        'Kneel on a soft surface with your toes tucked under.',
-        'Keep your hands on the floor in front to control how much weight you take.',
-      ],
-      execution: [
-        'Slowly sit back toward your heels, letting the weight settle onto your toes.',
-        'Go only as far as is a strong stretch rather than pain.',
-        'Hold, breathing steadily.',
-        'Come forward onto your hands to release.',
-      ],
+    startingPosition: {
+      hands: 'On the floor in front of you, carrying as much weight as you need them to.',
+      feet: 'Toes tucked firmly under, heels pointing up.',
+      body: 'Kneeling on a soft surface, weight shared between hands and legs.',
+      spine: 'Upright and neutral.',
+      head: 'Neutral, eyes forward.',
+      shoulders: 'Relaxed, not hunched.',
+      hips: 'Starting forward over the knees, then travelling back toward the heels.',
     },
-    breathing: 'Breathe slowly and deeply; do not brace against the stretch.',
-    cues: [
-      'Your hands control the intensity. Take more weight on them to ease off.',
-      'This is intense at first. Thirty seconds is plenty.',
+    steps: [
+      'Kneel on a soft surface with your toes tucked firmly under.',
+      'Place your hands on the floor in front of you to control how much weight you take.',
+      'Slowly sit back toward your heels, letting the weight settle onto your toes.',
+      'Go only as far as is a strong stretch rather than pain.',
+      'Hold there, breathing steadily.',
+      'Use your hands to take weight off whenever it becomes too much.',
+      'Come forward onto your hands to release at the end.',
     ],
+    breathing: {
+      inhale: 'Slowly and deeply.',
+      exhale: 'Slowly, letting the foot soften.',
+      note: 'Do not brace against the stretch. Bracing makes it worse and holding your breath makes it feel worse still.',
+    },
+    sensation: {
+      working: 'A strong stretch across the underside of the toes and the sole of the foot.',
+      alsoNormal: [
+        'This being much more intense than expected the first few times.',
+        'Needing to come out of it well before 30 seconds at first.',
+      ],
+      notNormal: [...STRETCH_PAIN, 'Sharp pain in the toe joints, particularly the big toe.'],
+    },
     commonMistakes: [
       { mistake: 'Sitting straight back onto the heels on the first attempt.', fix: 'Keep most of your weight on your hands and add load gradually.' },
       { mistake: 'Holding through sharp pain in the toe joints.', fix: 'Back off immediately; this should stretch the sole, not hurt the joints.' },
+      { mistake: 'Doing it on a hard floor.', fix: 'Kneel on a mat, a folded towel or a carpet.' },
     ],
-    safetyNotes: [
-      'Skip this if you have a toe or big-toe joint problem. Stop at sharp joint pain as opposed to a stretch.',
-    ],
+    cues: ['Hands control the intensity.', 'Strong stretch, not pain.', 'Thirty seconds is plenty.'],
+    safety: {
+      normalEffort: 'Light in the muscles, but intense as a sensation.',
+      normalFatigue: 'None, though the feet may feel odd for a minute afterwards.',
+      concerningPain: [...STRETCH_PAIN, 'Sharp pain in the toe joints.'],
+      stopIf: [...STRETCH_STOP, 'You feel it in the toe joints rather than across the sole.'],
+      modifyIf: [
+        'It is too intense: take far more weight on your hands.',
+        'You have a big-toe joint problem: skip this one and use the other two ankle drills.',
+      ],
+    },
     demo: {
+      scene: 'floor',
       keyframes: [
-        { id: 'forward', label: 'Weight forward' },
-        { id: 'back', label: 'Sitting back' },
+        { id: 'forward', label: 'Weight forward', caption: 'Kneeling with toes tucked, most weight on the hands.', pose: KNEEL_TOES_FORWARD },
+        { id: 'back', label: 'Sitting back', caption: 'Hips travelled back toward the heels, stretching the soles.', pose: KNEEL_TOES_BACK },
       ],
       loop: 'ping-pong',
     },

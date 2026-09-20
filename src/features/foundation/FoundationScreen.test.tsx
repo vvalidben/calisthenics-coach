@@ -1,11 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { SEED_PROGRESSION } from '../../content/seed-progression';
 import { SEED_PROFILE } from '../../content/seed-profile';
 import { FoundationScreen } from './FoundationScreen';
 
 const renderScreen = (progression = SEED_PROGRESSION, profile = SEED_PROFILE) =>
-  render(<FoundationScreen progression={progression} profile={profile} schemaVersion={1} />);
+  render(
+    <MemoryRouter>
+      <FoundationScreen progression={progression} profile={profile} schemaVersion={1} />
+    </MemoryRouter>,
+  );
 
 describe('FoundationScreen', () => {
   it('shows a rung strip for every progression family', () => {

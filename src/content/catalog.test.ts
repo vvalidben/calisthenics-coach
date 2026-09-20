@@ -88,8 +88,8 @@ describe('exercise catalog', () => {
       (e) =>
         e.cues.length === 0 ||
         e.commonMistakes.length === 0 ||
-        e.instructions.execution.length < 2 ||
-        e.instructions.setup.length < 1,
+        e.steps.length < 3 ||
+        Object.values(e.startingPosition).some((slot) => slot.trim().length === 0),
     );
     expect(thin.map((e) => e.id)).toEqual([]);
   });
@@ -101,13 +101,19 @@ describe('exercise catalog', () => {
         e.equipment.includes('parallel-bars') ||
         e.family === 'handstand',
     );
-    const missing = risky.filter((e) => (e.safetyNotes ?? []).length === 0);
+    const missing = risky.filter((e) => e.safety.concerningPain.length === 0);
     expect(missing.map((e) => e.id)).toEqual([]);
   });
 
   it('attaches a stability warning to every exercise that stands on furniture', () => {
     const onFurniture = EXERCISES.filter((e) => e.equipment.includes('chair'));
-    const missing = onFurniture.filter((e) => (e.safetyNotes ?? []).length === 0);
+    const missing = onFurniture.filter(
+      (e) =>
+        ![...e.safety.stopIf, ...e.safety.modifyIf, ...e.steps]
+          .join(' ')
+          .toLowerCase()
+          .match(/slide|shift|brace|test|load it|cannot move/),
+    );
     expect(missing.map((e) => e.id)).toEqual([]);
   });
 
@@ -211,7 +217,7 @@ describe('floor-based pulling', () => {
 
   it('labels every exercise as not a substitute for pulling', () => {
     const unlabelled = exercisesInFamily('pull-prep').filter(
-      (e) => !(e.safetyNotes ?? []).some((note) => /not a substitute for pulling/i.test(note)),
+      (e) => !e.safety.modifyIf.some((note) => /not a substitute for pulling/i.test(note)),
     );
     expect(unlabelled.map((e) => e.id)).toEqual([]);
   });

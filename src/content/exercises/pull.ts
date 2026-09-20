@@ -1,11 +1,35 @@
 import type { Exercise } from '../../domain/exercise';
+import {
+  DEAD_HANG,
+  PULL_UP_TOP,
+  ROW_BOTTOM,
+  ROW_TOP,
+  SCAP_PULL,
+} from '../poses';
 
-const BAR_SAFETY = [
-  'Check the bar takes your weight before hanging from it.',
-  'Lower yourself under control rather than dropping off the bar.',
+const BAR_PAIN = [
+  'Sharp pain at the front of the shoulder, especially at the bottom of a hang.',
+  'Pain in the elbow joint rather than effort in the arm muscles.',
+  'Tingling or numbness in the hands, beyond ordinary grip fatigue.',
 ];
 
-/** Everything performed hanging from, or under, a fixed bar. */
+const BAR_STOP = [
+  'Anything sharp, stabbing or electric.',
+  'Your grip is going and you might not control the descent.',
+  'You start swinging and cannot stop it.',
+];
+
+const BAR_MODIFY = [
+  'The bar hurts your hands: use a thicker grip or chalk, and build hang time gradually.',
+  'You cannot control the descent: reduce the reps rather than dropping off the bar.',
+];
+
+/**
+ * Everything performed hanging from, or under, a fixed bar.
+ *
+ * Locked until a bar exists. Written in full so it works the day one is fitted;
+ * nothing here should be improvised in the meantime.
+ */
 export const PULL_EXERCISES: Exercise[] = [
   {
     id: 'dead-hang',
@@ -24,30 +48,61 @@ export const PULL_EXERCISES: Exercise[] = [
     regression: null,
     progression: 'scapular-pull',
     summary: 'Simply hanging. Builds grip, decompresses the spine and opens the shoulders.',
-    instructions: {
-      setup: [
-        'Grip the bar slightly wider than your shoulders with your palms facing away.',
-        'Step or hop up until your arms are straight and your feet are clear of the ground.',
+    startingPosition: {
+      hands: 'Gripping the bar slightly wider than your shoulders, palms facing away, thumbs wrapped around.',
+      feet: 'Clear of the ground, toes pointed, legs together and still.',
+      body: 'Long and relaxed, hanging straight down.',
+      spine: 'Neutral and lengthening under your own weight.',
+      head: 'Neutral, eyes forward. Do not crane to look up at the bar.',
+      shoulders: 'Relaxed and allowed to rise toward your ears. This one is a passive hang.',
+      hips: 'Directly under your shoulders, not swinging forward or back.',
+    },
+    steps: [
+      'Check the bar takes your weight before committing to it.',
+      'Grip slightly wider than your shoulders with your palms facing away.',
+      'Step or hop up until your arms are straight and your feet are clear of the ground.',
+      'Let your body hang long and still, with your shoulders relaxed.',
+      'Point your toes and squeeze your legs together to stop any swinging.',
+      'Hold for the target time, breathing evenly.',
+      'Lower your feet to the ground under control rather than dropping off.',
+    ],
+    breathing: {
+      inhale: 'Slowly and evenly throughout the hang.',
+      exhale: 'Slowly and evenly throughout the hang.',
+      note: 'Do not hold your breath. If you find yourself holding it, the hang is too long for now.',
+    },
+    sensation: {
+      working: 'The grip and forearms, with a gentle stretch through the shoulders and lats.',
+      alsoNormal: [
+        'Forearms burning and the fingers wanting to open near the end.',
+        'A pleasant feeling of the spine lengthening.',
       ],
-      execution: [
-        'Hang with straight arms and relaxed shoulders.',
-        'Keep your ribs down and your legs still rather than swinging.',
-        'Hold for the target time, then lower under control.',
+      notNormal: BAR_PAIN,
+    },
+    commonMistakes: [
+      { mistake: 'Swinging, which turns a hang into a grip contest.', fix: 'Start from a still position, point your toes and squeeze your legs together.' },
+      { mistake: 'Gripping so hard the forearms fail in ten seconds.', fix: 'Relax the grip to the minimum that holds you.' },
+      { mistake: 'Dropping off the bar at the end.', fix: 'Lower your feet to the ground under control every time.' },
+    ],
+    cues: ['Relax and hang long.', 'Point your toes.', 'Breathe.'],
+    safety: {
+      normalEffort: 'Light through the body, hard on the grip.',
+      normalFatigue: 'Forearms burning and fingers tiring. That is the limiting factor early on.',
+      concerningPain: BAR_PAIN,
+      stopIf: BAR_STOP,
+      modifyIf: [
+        ...BAR_MODIFY,
+        'You cannot hold 20 seconds: keep a foot lightly on the ground to take some weight.',
       ],
     },
-    breathing: 'Breathe slowly and evenly. Do not hold your breath.',
-    cues: ['Let your shoulders rise toward your ears; this is a passive hang.', 'Point your toes to stop the legs swinging.'],
-    commonMistakes: [
-      { mistake: 'Swinging, which turns a hang into a grip contest.', fix: 'Start from a still position and squeeze your glutes.' },
-      { mistake: 'Gripping so hard the forearms fail in ten seconds.', fix: 'Relax the grip to the minimum that holds you.' },
-    ],
-    safetyNotes: BAR_SAFETY,
     demo: {
+      scene: 'bar',
       keyframes: [
-        { id: 'hang', label: 'Passive hang' },
-        { id: 'still', label: 'Legs still' },
+        { id: 'hang', label: 'Hanging', caption: 'Arms straight, body long, shoulders relaxed.', pose: DEAD_HANG },
+        { id: 'still', label: 'Still', caption: 'Toes pointed, legs together, no swing.', pose: DEAD_HANG },
       ],
       loop: 'cycle',
+      alignment: ['hand', 'toe'],
     },
     tags: ['grip', 'shoulder-health', 'warm-up'],
   },
@@ -68,28 +123,63 @@ export const PULL_EXERCISES: Exercise[] = [
     regression: 'dead-hang',
     progression: 'australian-row',
     summary: 'A short pull driven entirely by the shoulder blades. Teaches the start of every pull-up.',
-    instructions: {
-      setup: [
-        'Hang from the bar with straight arms.',
-        'Let your shoulders rise toward your ears.',
-      ],
-      execution: [
-        'Without bending your elbows, pull your shoulder blades down and together.',
-        'Your body rises a few centimetres; that is the whole rep.',
-        'Pause for one second at the top, then lower back to a passive hang.',
+    startingPosition: {
+      hands: 'Gripping the bar at shoulder width or slightly wider, palms facing away.',
+      feet: 'Clear of the ground, legs together and still.',
+      body: 'Hanging long, ready to move only a few centimetres.',
+      spine: 'Neutral, ribs pulled down.',
+      head: 'Neutral, eyes forward.',
+      shoulders: 'Starting relaxed and high toward the ears, ready to be pulled down.',
+      hips: 'Under your shoulders, still.',
+    },
+    steps: [
+      'Hang from the bar with straight arms and let your shoulders rise toward your ears.',
+      'Keep your elbows completely locked for the whole rep.',
+      'Pull your shoulder blades down and together.',
+      'Your whole body rises a few centimetres; that is the entire rep.',
+      'Pause at the top for one full second.',
+      'Lower slowly back to a relaxed, passive hang.',
+    ],
+    breathing: {
+      inhale: 'As you return to the passive hang.',
+      exhale: 'As you pull the shoulder blades down.',
+    },
+    tempo: {
+      phases: [
+        { label: 'Pull down', seconds: 1 },
+        { label: 'Hold', seconds: 1 },
+        { label: 'Release', seconds: 2 },
       ],
     },
-    breathing: 'Exhale as you pull down, inhale as you return to the hang.',
-    cues: ['Elbows stay locked straight.', 'Think "put your shoulder blades in your back pockets".'],
+    sensation: {
+      working: 'The lats and the muscles around the shoulder blades, in a short, specific range.',
+      alsoNormal: [
+        'Confusion about whether anything happened at first. The movement really is that small.',
+        'Grip fatigue arriving before back fatigue.',
+      ],
+      notNormal: BAR_PAIN,
+    },
     commonMistakes: [
       { mistake: 'Bending the elbows, turning it into a small pull-up.', fix: 'Watch your elbows; if they bend, the rep does not count.' },
-      { mistake: 'Rushing through without a pause.', fix: 'Hold the top for a full second every rep.' },
+      { mistake: 'Rushing through without a pause.', fix: 'Hold the top for a full second on every rep.' },
+      { mistake: 'Shrugging up instead of pulling down.', fix: 'Think about putting your shoulder blades into your back pockets.' },
     ],
-    safetyNotes: BAR_SAFETY,
+    cues: ['Elbows locked.', 'Blades to your back pockets.', 'Hold the top.'],
+    safety: {
+      normalEffort: 'Light to moderate. It is a technique drill.',
+      normalFatigue: 'Grip tiring and a mild working feeling across the upper back.',
+      concerningPain: BAR_PAIN,
+      stopIf: BAR_STOP,
+      modifyIf: [
+        ...BAR_MODIFY,
+        'You cannot feel your back working: slow down and hold the top for two seconds.',
+      ],
+    },
     demo: {
+      scene: 'bar',
       keyframes: [
-        { id: 'passive', label: 'Shoulders up' },
-        { id: 'active', label: 'Shoulders packed' },
+        { id: 'passive', label: 'Shoulders up', caption: 'Passive hang with the shoulders near the ears.', pose: DEAD_HANG },
+        { id: 'active', label: 'Blades down', caption: 'Shoulder blades pulled down. The body rises only a few centimetres, too little for the drawing to show, so judge it by your elbows staying locked.', pose: SCAP_PULL },
       ],
       loop: 'ping-pong',
     },
@@ -112,36 +202,153 @@ export const PULL_EXERCISES: Exercise[] = [
     regression: 'scapular-pull',
     progression: 'negative-pull-up',
     summary: 'A horizontal pull under a low bar, balancing all the pressing work.',
-    instructions: {
-      setup: [
-        'Set up under a bar at roughly waist height.',
-        'Grip it slightly wider than your shoulders, palms facing away.',
-        'Walk your feet forward until your body hangs straight underneath at an angle.',
+    startingPosition: {
+      hands: 'Gripping a waist-height bar slightly wider than your shoulders, palms facing away.',
+      feet: 'Walked forward, heels on the floor, legs straight.',
+      body: 'One straight line from heels to head, hanging underneath the bar at an angle.',
+      spine: 'Neutral with the ribs down.',
+      head: 'Neutral, in line with the spine.',
+      shoulders: 'Set down away from your ears before the first pull.',
+      hips: 'In line with heels and shoulders, not sagging toward the floor.',
+    },
+    steps: [
+      'Set up under a bar at roughly waist height and grip it slightly wider than your shoulders.',
+      'Walk your feet forward until your body hangs straight underneath at an angle.',
+      'Squeeze your glutes and brace your abs so you are one rigid line.',
+      'Start the rep by pulling your shoulder blades together.',
+      'Then pull your chest toward the bar, driving your elbows back past your ribs.',
+      'Touch your chest to the bar if you can.',
+      'Lower under control until your arms are completely straight.',
+    ],
+    breathing: {
+      inhale: 'As you lower back to straight arms.',
+      exhale: 'As you pull your chest toward the bar.',
+    },
+    tempo: {
+      phases: [
+        { label: 'Pull', seconds: 1 },
+        { label: 'Pause at the top', seconds: 1 },
+        { label: 'Lower', seconds: 2 },
       ],
-      execution: [
-        'Pull your shoulder blades together, then pull your chest toward the bar.',
-        'Touch your chest to the bar if you can.',
-        'Lower under control until your arms are straight.',
+      note: 'The more horizontal your body, the harder the row. Walk your feet further forward to progress.',
+    },
+    sensation: {
+      working: 'The muscles between and below the shoulder blades, with the biceps helping.',
+      alsoNormal: [
+        'A squeeze across the upper back at the top of each rep.',
+        'Your glutes and abs tiring from holding the line.',
+      ],
+      notNormal: BAR_PAIN,
+    },
+    commonMistakes: [
+      { mistake: 'Hips sag so only the upper body moves.', fix: 'Squeeze your glutes and hold one straight line from heels to head.' },
+      { mistake: 'Pulling with the arms before the shoulder blades move.', fix: 'Start every rep by squeezing the shoulder blades together.' },
+      { mistake: 'Stopping short of straight arms at the bottom.', fix: 'Reach full extension every rep, then pull again.' },
+    ],
+    cues: ['Blades first, then arms.', 'Chest to the bar.', 'One straight line.'],
+    safety: {
+      normalEffort: 'Moderate to hard depending on your body angle.',
+      normalFatigue: 'Upper back burning and grip tiring toward the end of a set.',
+      concerningPain: BAR_PAIN,
+      stopIf: [...BAR_STOP, 'Your hips drop and you cannot lift them back into line.'],
+      modifyIf: [
+        ...BAR_MODIFY,
+        'It is too hard: walk your feet back so your body is more upright.',
+        'It is too easy: walk your feet further forward, or raise them onto a low step.',
       ],
     },
-    breathing: 'Exhale as you pull, inhale as you lower.',
-    cues: [
-      'The more horizontal your body, the harder the row.',
-      'Lead with your chest, not your chin.',
-    ],
-    commonMistakes: [
-      { mistake: 'Hips sag so only the upper body moves.', fix: 'Squeeze your glutes and hold one straight line.' },
-      { mistake: 'Pulling with the arms before the shoulder blades move.', fix: 'Start every rep by squeezing your shoulder blades together.' },
-    ],
-    safetyNotes: BAR_SAFETY,
     demo: {
+      scene: 'low-bar',
       keyframes: [
-        { id: 'bottom', label: 'Arms straight' },
-        { id: 'top', label: 'Chest to bar' },
+        { id: 'bottom', label: 'Start', caption: 'Hanging under the bar with straight arms, body in one line.', pose: ROW_BOTTOM },
+        { id: 'top', label: 'Chest to bar', caption: 'Chest pulled to the bar, elbows driven back, hips still level.', pose: ROW_TOP },
+        { id: 'end', label: 'Lower', caption: 'Back to straight arms under control.', pose: ROW_BOTTOM },
       ],
-      loop: 'ping-pong',
+      loop: 'cycle',
+      alignment: ['toe', 'head'],
     },
     tags: ['posture', 'balance'],
+  },
+  {
+    id: 'negative-pull-up',
+    name: 'Negative Pull-Up',
+    category: 'pull',
+    movementPattern: 'vertical-pull',
+    family: 'pull',
+    primaryMuscles: ['lats', 'biceps'],
+    secondaryMuscles: ['rhomboids', 'forearms', 'abs'],
+    equipment: ['pullup-bar'],
+    difficulty: 3,
+    beginnerSuitability: 'suitable',
+    measurement: 'reps',
+    prescription: { sets: { min: 3, max: 4 }, target: { min: 3, max: 6 }, restSeconds: 120 },
+    progressionLevel: 4,
+    regression: 'australian-row',
+    progression: 'chin-up',
+    summary: 'Only the lowering half of a pull-up, which you can control long before you can pull.',
+    startingPosition: {
+      hands: 'Gripping the bar slightly wider than your shoulders, palms facing away.',
+      feet: 'Off the ground once you reach the top, legs together and still.',
+      body: 'Starting at the top, chin over the bar, held as one piece.',
+      spine: 'Neutral with the ribs pulled down; no arching to reach higher.',
+      head: 'Neutral, chin clearing the bar without craning.',
+      shoulders: 'Pulled down away from the ears at the top and held there as long as possible.',
+      hips: 'Slightly in front, in a gentle hollow rather than arched back.',
+    },
+    steps: [
+      'Grip the bar with your palms facing away, slightly wider than your shoulders.',
+      'Step, jump or climb up until your chin is over the bar.',
+      'Hold the top for a second with your shoulder blades pulled down.',
+      'Lower yourself as slowly as you can, aiming for five seconds.',
+      'Fight hardest through the last third, where most people simply drop.',
+      'Finish with your arms completely straight.',
+      'Step or climb back to the top for the next rep rather than pulling.',
+    ],
+    breathing: {
+      inhale: 'At the top, before you begin lowering.',
+      exhale: 'Slowly through the descent.',
+    },
+    tempo: {
+      phases: [
+        { label: 'Hold at the top', seconds: 1 },
+        { label: 'Lower', seconds: 5 },
+      ],
+      note: 'Count the descent out loud. When it drops below three seconds, the set is over.',
+    },
+    sensation: {
+      working: 'The lats and biceps resisting your bodyweight the whole way down.',
+      alsoNormal: [
+        'Arms shaking badly in the bottom third.',
+        'Significant soreness in the lats and biceps a day or two later.',
+      ],
+      notNormal: BAR_PAIN,
+    },
+    commonMistakes: [
+      { mistake: 'Dropping through the bottom half.', fix: 'Reduce the reps and keep the tempo even the whole way down.' },
+      { mistake: 'Pulling back up between reps, turning it into a set of pull-ups.', fix: 'Step or climb back to the top each time.' },
+      { mistake: 'Stopping the descent with bent arms.', fix: 'Finish every rep at full extension, which is where the strength is built.' },
+    ],
+    cues: ['Count the descent.', 'Fight the last third.', 'Finish straight.'],
+    safety: {
+      normalEffort: 'Hard. Three good negatives is a real set.',
+      normalFatigue: 'Heavy arm shaking and next-day soreness in the lats and biceps.',
+      concerningPain: [...BAR_PAIN, 'A sudden sharp sensation in the elbow when the arm reaches full extension.'],
+      stopIf: [...BAR_STOP, 'The descent becomes a drop rather than a lower.'],
+      modifyIf: [
+        ...BAR_MODIFY,
+        'You cannot last three seconds: keep a toe on a chair to take some weight.',
+        'Your elbows ache: reduce the reps and avoid snapping into full extension at the bottom.',
+      ],
+    },
+    demo: {
+      scene: 'bar',
+      keyframes: [
+        { id: 'top', label: 'Start at the top', caption: 'Chin over the bar, shoulder blades pulled down.', pose: PULL_UP_TOP },
+        { id: 'bottom', label: 'Lower slowly', caption: 'Five seconds down to fully straight arms.', pose: DEAD_HANG },
+      ],
+      loop: 'cycle',
+    },
+    tags: ['technique', 'upper-body'],
   },
   {
     id: 'chin-up',
@@ -160,30 +367,68 @@ export const PULL_EXERCISES: Exercise[] = [
     regression: 'negative-pull-up',
     progression: 'pull-up',
     summary: 'A vertical pull with palms facing you, giving the biceps more of the work.',
-    instructions: {
-      setup: [
-        'Grip the bar at shoulder width with your palms facing you.',
-        'Hang with straight arms and squeeze your glutes.',
-      ],
-      execution: [
-        'Pull your shoulder blades down, then drive your elbows toward your ribs.',
-        'Pull until your chin clears the bar.',
-        'Lower all the way to straight arms under control.',
+    startingPosition: {
+      hands: 'Gripping the bar at shoulder width with your palms facing you.',
+      feet: 'Off the ground, legs together, ankles crossed if it helps you stay still.',
+      body: 'Hanging with straight arms in a gentle hollow.',
+      spine: 'Neutral with the ribs pulled down.',
+      head: 'Neutral; let the chin clear the bar rather than reaching with it.',
+      shoulders: 'Relaxed at the bottom, pulled down as the rep begins.',
+      hips: 'Slightly forward of the bar line, glutes squeezed to stop swinging.',
+    },
+    steps: [
+      'Grip the bar at shoulder width with your palms facing you.',
+      'Hang with straight arms and squeeze your glutes to stop any swing.',
+      'Begin by pulling your shoulder blades down, before the elbows bend.',
+      'Drive your elbows down toward your ribs.',
+      'Pull until your chin clears the bar without craning your neck.',
+      'Lower under control all the way to straight arms.',
+      'Pause for a moment at the bottom before the next rep.',
+    ],
+    breathing: {
+      inhale: 'At the bottom, before you pull.',
+      exhale: 'As you pull up, finishing as your chin clears the bar.',
+    },
+    tempo: {
+      phases: [
+        { label: 'Pull', seconds: 1 },
+        { label: 'Pause at the top', seconds: 1 },
+        { label: 'Lower', seconds: 2 },
       ],
     },
-    breathing: 'Exhale on the way up, inhale on the way down.',
-    cues: ['Think "pull the bar to your chest", not "pull yourself to the bar".', 'Keep your ribs down so you do not arch.'],
-    commonMistakes: [
-      { mistake: 'Kipping with the legs to clear the bar.', fix: 'Reduce the reps and keep every rep strict.' },
-      { mistake: 'Stopping short of straight arms at the bottom.', fix: 'Reach full extension every rep; partial reps build partial strength.' },
-    ],
-    safetyNotes: BAR_SAFETY,
-    demo: {
-      keyframes: [
-        { id: 'hang', label: 'Dead hang' },
-        { id: 'top', label: 'Chin over bar' },
+    sensation: {
+      working: 'The lats and biceps together, with the biceps more involved than in a pull-up.',
+      alsoNormal: [
+        'A strong squeeze through the upper back at the top.',
+        'Grip fatigue building across sets.',
       ],
-      loop: 'ping-pong',
+      notNormal: BAR_PAIN,
+    },
+    commonMistakes: [
+      { mistake: 'Kipping with the legs to clear the bar.', fix: 'Reduce the reps and pause at the bottom of each one.' },
+      { mistake: 'Stopping short of straight arms at the bottom.', fix: 'Reach full extension every rep; partial reps build partial strength.' },
+      { mistake: 'Craning the neck to get the chin over.', fix: 'Keep your neck neutral and pull higher instead.' },
+    ],
+    cues: ['Blades down first.', 'Elbows to your ribs.', 'Full extension at the bottom.'],
+    safety: {
+      normalEffort: 'Hard from the first rep.',
+      normalFatigue: 'Lats and biceps burning; grip usually gives out last.',
+      concerningPain: BAR_PAIN,
+      stopIf: BAR_STOP,
+      modifyIf: [
+        ...BAR_MODIFY,
+        'You cannot manage 4 clean reps: go back to negatives and rows.',
+        'Your elbows ache: reduce the volume and avoid snapping into full extension.',
+      ],
+    },
+    demo: {
+      scene: 'bar',
+      keyframes: [
+        { id: 'hang', label: 'Dead hang', caption: 'Straight arms, palms facing you, body still.', pose: DEAD_HANG },
+        { id: 'top', label: 'Chin over bar', caption: 'Elbows driven to the ribs, chin clear, neck neutral.', pose: PULL_UP_TOP },
+        { id: 'end', label: 'Lower', caption: 'Back down to completely straight arms.', pose: DEAD_HANG },
+      ],
+      loop: 'cycle',
     },
     tags: ['staple', 'upper-body'],
   },
@@ -204,82 +449,70 @@ export const PULL_EXERCISES: Exercise[] = [
     regression: 'chin-up',
     progression: null,
     summary: 'The benchmark vertical pull, palms facing away.',
-    instructions: {
-      setup: [
-        'Grip the bar slightly wider than your shoulders with your palms facing away.',
-        'Hang with straight arms, ribs down and glutes squeezed.',
-      ],
-      execution: [
-        'Pull your shoulder blades down and back to start the rep.',
-        'Drive your elbows down toward your sides until your chin clears the bar.',
-        'Lower under control all the way to straight arms.',
-      ],
+    startingPosition: {
+      hands: 'Gripping the bar slightly wider than your shoulders, palms facing away, thumbs wrapped.',
+      feet: 'Off the ground, legs together and slightly in front of you.',
+      body: 'A gentle hollow: ribs down, legs forward, no arch.',
+      spine: 'Neutral, held rigid so the body moves as one piece.',
+      head: 'Neutral throughout, eyes forward.',
+      shoulders: 'Relaxed at the bottom, pulled down and back to start each rep.',
+      hips: 'Slightly forward, glutes squeezed to keep the body from swinging.',
     },
-    breathing: 'Exhale through the pull, inhale on the descent.',
-    cues: [
-      'Squeeze the bar hard; grip tension travels up the arm.',
-      'Keep a hollow body: ribs down, legs slightly in front.',
+    steps: [
+      'Grip the bar slightly wider than your shoulders with your palms facing away.',
+      'Hang with straight arms, ribs down and glutes squeezed.',
+      'Pull your shoulder blades down and back to start the rep before the elbows bend.',
+      'Drive your elbows down toward your sides.',
+      'Pull until your chin clears the bar with your neck neutral.',
+      'Lower under control all the way to straight arms.',
+      'Pause for a second at the bottom to kill any swing before the next rep.',
     ],
+    breathing: {
+      inhale: 'At the bottom, before the pull.',
+      exhale: 'Through the pull, finishing at the top.',
+    },
+    tempo: {
+      phases: [
+        { label: 'Pull', seconds: 1 },
+        { label: 'Pause at the top', seconds: 1 },
+        { label: 'Lower', seconds: 2 },
+      ],
+      note: 'Pausing at the bottom of every rep is what separates strict pull-ups from swinging ones.',
+    },
+    sensation: {
+      working: 'The lats, felt as a broad pull down the sides of the back.',
+      alsoNormal: [
+        'A strong squeeze through the whole upper back at the top.',
+        'Grip going before the back does in later sets.',
+      ],
+      notNormal: BAR_PAIN,
+    },
     commonMistakes: [
       { mistake: 'Swinging or kicking to generate momentum.', fix: 'Pause for a second at the bottom of each rep.' },
       { mistake: 'Shrugging the shoulders up at the start of the pull.', fix: 'Begin every rep with a scapular pull.' },
+      { mistake: 'Cutting the bottom short to save energy.', fix: 'Straighten the arms fully every rep, even if it costs you reps.' },
     ],
-    safetyNotes: BAR_SAFETY,
-    demo: {
-      keyframes: [
-        { id: 'hang', label: 'Dead hang' },
-        { id: 'top', label: 'Chin over bar' },
-      ],
-      loop: 'ping-pong',
-    },
-    tags: ['staple', 'upper-body'],
-  },
-  {
-    id: 'negative-pull-up',
-    name: 'Negative Pull-Up',
-    category: 'pull',
-    movementPattern: 'vertical-pull',
-    family: 'pull',
-    primaryMuscles: ['lats', 'biceps'],
-    secondaryMuscles: ['rhomboids', 'forearms', 'abs'],
-    equipment: ['pullup-bar'],
-    difficulty: 3,
-    beginnerSuitability: 'suitable',
-    measurement: 'reps',
-    prescription: { sets: { min: 3, max: 4 }, target: { min: 3, max: 6 }, restSeconds: 120 },
-    progressionLevel: 4,
-    regression: 'australian-row',
-    progression: 'chin-up',
-    summary: 'Only the lowering half of a pull-up, which you can control long before you can pull.',
-    instructions: {
-      setup: [
-        'Grip the bar slightly wider than your shoulders with your palms facing away.',
-        'Step, jump or climb up until your chin is over the bar.',
-      ],
-      execution: [
-        'Hold the top position for a second with your shoulder blades pulled down.',
-        'Lower yourself as slowly as you can, aiming for five seconds.',
-        'Finish with your arms completely straight.',
-        'Step back up rather than pulling; only the descent counts.',
+    cues: ['Squeeze the bar.', 'Ribs down.', 'Elbows to your sides.', 'Pause at the bottom.'],
+    safety: {
+      normalEffort: 'Hard. Four strict reps is a genuine working set.',
+      normalFatigue: 'Lats burning, grip fading, and shaking in the last rep.',
+      concerningPain: BAR_PAIN,
+      stopIf: BAR_STOP,
+      modifyIf: [
+        ...BAR_MODIFY,
+        'You cannot manage 4 strict reps: use chin-ups and negatives instead.',
+        'Your shoulders feel unstable at the bottom: keep a slight active tension rather than hanging fully relaxed.',
       ],
     },
-    breathing: 'Inhale at the top, exhale slowly through the descent.',
-    cues: [
-      'Count the descent out loud. When it drops below three seconds, the set is over.',
-      'Fight all the way to straight arms; the last third is where the strength is built.',
-    ],
-    commonMistakes: [
-      { mistake: 'Dropping through the bottom half.', fix: 'Reduce the reps and keep the tempo even the whole way down.' },
-      { mistake: 'Pulling back up between reps, which turns it into a set of pull-ups.', fix: 'Step or climb back to the top each time.' },
-    ],
-    safetyNotes: BAR_SAFETY,
     demo: {
+      scene: 'bar',
       keyframes: [
-        { id: 'top', label: 'Chin over bar' },
-        { id: 'bottom', label: 'Dead hang' },
+        { id: 'hang', label: 'Dead hang', caption: 'Straight arms, ribs down, legs slightly forward.', pose: DEAD_HANG },
+        { id: 'top', label: 'Chin over bar', caption: 'Elbows driven down to the sides, body still in one piece.', pose: PULL_UP_TOP },
+        { id: 'end', label: 'Lower', caption: 'Controlled descent back to full extension.', pose: DEAD_HANG },
       ],
       loop: 'cycle',
     },
-    tags: ['technique', 'upper-body'],
+    tags: ['staple', 'upper-body'],
   },
 ];

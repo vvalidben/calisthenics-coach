@@ -24,22 +24,64 @@ describe('every exercise is fully written', () => {
     expect(offenders((e) => e.summary.trim().length < 25)).toEqual([]);
   });
 
-  it('has setup instructions', () => {
-    expect(offenders((e) => e.instructions.setup.length < 1)).toEqual([]);
+  it('describes all seven parts of the starting position', () => {
+    const thin = (e: Exercise) =>
+      Object.values(e.startingPosition).some((slot) => slot.trim().length < 12);
+    expect(offenders(thin)).toEqual([]);
   });
 
-  it('has at least three execution steps', () => {
-    expect(offenders((e) => e.instructions.execution.length < 3)).toEqual([]);
+  it('has at least three movement steps', () => {
+    expect(offenders((e) => e.steps.length < 3)).toEqual([]);
   });
 
-  it('writes every instruction as a real sentence', () => {
-    const shortSteps = (e: Exercise) =>
-      [...e.instructions.setup, ...e.instructions.execution].some((s) => s.trim().length < 15);
-    expect(offenders(shortSteps)).toEqual([]);
+  it('writes every step as a real sentence', () => {
+    expect(offenders((e) => e.steps.some((s) => s.trim().length < 15))).toEqual([]);
   });
 
-  it('explains the breathing pattern', () => {
-    expect(offenders((e) => e.breathing.trim().length < 20)).toEqual([]);
+  it('says when to inhale and when to exhale', () => {
+    const thin = (e: Exercise) =>
+      e.breathing.inhale.trim().length < 10 || e.breathing.exhale.trim().length < 10;
+    expect(offenders(thin)).toEqual([]);
+  });
+
+  it('names the muscles that should be working', () => {
+    expect(offenders((e) => e.sensation.working.trim().length < 20)).toEqual([]);
+  });
+
+  it('never presents pain as a normal sensation', () => {
+    const paintedAsNormal = (e: Exercise) =>
+      [e.sensation.working, ...e.sensation.alsoNormal].some((s) =>
+        /sharp|pinch|stabbing|shooting/i.test(s),
+      );
+    expect(offenders(paintedAsNormal)).toEqual([]);
+  });
+
+  it('lists at least one sensation that means stop', () => {
+    expect(offenders((e) => e.sensation.notNormal.length < 1)).toEqual([]);
+  });
+
+  it('explains normal effort and normal fatigue', () => {
+    const thin = (e: Exercise) =>
+      e.safety.normalEffort.trim().length < 12 || e.safety.normalFatigue.trim().length < 12;
+    expect(offenders(thin)).toEqual([]);
+  });
+
+  it('says what pain is concerning, when to stop, and how to modify', () => {
+    const thin = (e: Exercise) =>
+      e.safety.concerningPain.length < 1 ||
+      e.safety.stopIf.length < 1 ||
+      e.safety.modifyIf.length < 1;
+    expect(offenders(thin)).toEqual([]);
+  });
+
+  it('keeps coaching cues short enough to remember mid-set', () => {
+    expect(offenders((e) => e.cues.some((c) => c.length > 45))).toEqual([]);
+  });
+
+  it('gives a tempo wherever the movement is counted in reps', () => {
+    const counted = (e: Exercise) =>
+      e.measurement === 'reps' || e.measurement === 'reps-per-side';
+    expect(offenders((e) => counted(e) && e.tempo === undefined)).toEqual([]);
   });
 
   it('gives at least two coaching cues', () => {
@@ -80,6 +122,11 @@ describe('every exercise is fully written', () => {
     expect(offenders(bad)).toEqual([]);
   });
 
+  it('captions every keyframe so the picture is never the only explanation', () => {
+    const bad = (e: Exercise) => e.demo.keyframes.some((k) => k.caption.trim().length < 15);
+    expect(offenders(bad)).toEqual([]);
+  });
+
   it('prescribes a sensible dose', () => {
     const bad = (e: Exercise) => {
       const { sets, target, restSeconds } = e.prescription;
@@ -105,12 +152,15 @@ describe('nothing in the library improvises a rig', () => {
   const allText = (e: Exercise) =>
     [
       e.summary,
-      e.breathing,
-      ...e.instructions.setup,
-      ...e.instructions.execution,
+      e.breathing.inhale,
+      e.breathing.exhale,
+      ...Object.values(e.startingPosition),
+      ...e.steps,
       ...e.cues,
       ...e.commonMistakes.flatMap((m) => [m.mistake, m.fix]),
-      ...(e.safetyNotes ?? []),
+      ...e.safety.concerningPain,
+      ...e.safety.stopIf,
+      ...e.safety.modifyIf,
     ]
       .join(' ')
       .toLowerCase();
@@ -138,7 +188,11 @@ describe('nothing in the library improvises a rig', () => {
       const found = EXERCISES.filter((e) => {
         const text = allText(e);
         // A safety note warning *against* the thing is the point, not a breach.
-        const warnsAgainst = (e.safetyNotes ?? [])
+        const warnsAgainst = [
+          ...e.safety.stopIf,
+          ...e.safety.modifyIf,
+          ...e.safety.concerningPain,
+        ]
           .join(' ')
           .toLowerCase()
           .includes(phrase);
@@ -153,11 +207,7 @@ describe('nothing in the library improvises a rig', () => {
     expect(onFurniture.length).toBeGreaterThan(0);
 
     const untested = onFurniture.filter(
-      (e) =>
-        !(e.safetyNotes ?? [])
-          .join(' ')
-          .toLowerCase()
-          .match(/slide|shift|stead|test it|load it|cannot move|cannot slide/),
+      (e) => !allText(e).match(/slide|shift|stead|test it|load it|cannot move|brace/),
     );
     expect(untested.map((e) => e.id)).toEqual([]);
   });

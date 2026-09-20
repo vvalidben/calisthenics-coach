@@ -1,6 +1,28 @@
 import type { Exercise } from '../../domain/exercise';
+import {
+  LUNGE_BACK_BOTTOM,
+  PISTOL_ASSISTED_BOTTOM,
+  PISTOL_BOTTOM,
+  SPLIT_BOTTOM,
+  SPLIT_TOP,
+  SQUAT_ASSISTED_BOTTOM,
+  SQUAT_BOTTOM,
+  STAND,
+  STAND_ARMS_FORWARD,
+} from '../poses';
 
-/** Squat and lunge patterns, progressing from two legs to one. */
+const KNEE_PAIN = [
+  'Sharp pain inside or around the kneecap, as opposed to muscular effort in the thigh.',
+  'A painful click or catch in the knee.',
+  'Pain in the lower back rather than the legs.',
+];
+
+const LEG_STOP = [
+  'Anything sharp, stabbing or electric in the knee or back.',
+  'Your knees collapse inward and you cannot push them back out.',
+  'Your heels lift and you cannot keep them down.',
+];
+
 export const SQUAT_EXERCISES: Exercise[] = [
   {
     id: 'assisted-squat',
@@ -19,34 +41,69 @@ export const SQUAT_EXERCISES: Exercise[] = [
     regression: null,
     progression: 'bodyweight-squat',
     summary: 'A squat with your hands on a support, so you can reach full depth before you have the balance for it.',
-    instructions: {
-      setup: [
-        'Stand facing a door frame, a windowsill or the back of a chair braced against a wall.',
-        'Hold on lightly at about chest height with your feet a little wider than your hips.',
-      ],
-      execution: [
-        'Push your hips back and bend your knees, using the support only for balance.',
-        'Descend until your thighs are at least parallel to the floor.',
-        'Keep your heels flat and your chest up.',
-        'Drive through your whole foot to stand back up.',
-      ],
+    startingPosition: {
+      hands: 'Holding a door frame or fixed rail at about chest height, fingertips only where possible.',
+      feet: 'A little wider than your hips, toes turned out about 15 degrees, whole foot flat.',
+      body: 'Upright and tall, weight over the middle of your feet.',
+      spine: 'Neutral with the ribs stacked over the hips.',
+      head: 'Neutral, eyes forward rather than down at your feet.',
+      shoulders: 'Down and relaxed, not hauling on the support.',
+      hips: 'Square and level, ready to travel back and down.',
     },
-    breathing: 'Inhale as you descend, exhale as you stand.',
-    cues: [
-      'Balance, not weight. If you are hauling yourself up, you are pulling too hard.',
-      'Take your fingers off the support for a second at the bottom to test your balance.',
+    steps: [
+      'Stand facing a door frame or fixed rail and hold it lightly at chest height.',
+      'Set your feet a little wider than your hips with the toes turned slightly out.',
+      'Push your hips back and bend your knees at the same time.',
+      'Use the support only for balance, not to pull yourself up or down.',
+      'Descend until your thighs are at least parallel to the floor.',
+      'Keep your heels flat and your chest up throughout.',
+      'Drive through your whole foot to stand back up.',
     ],
+    breathing: {
+      inhale: 'As you descend.',
+      exhale: 'As you drive back up to standing.',
+    },
+    tempo: {
+      phases: [
+        { label: 'Lower', seconds: 2 },
+        { label: 'Pause at the bottom', seconds: 1 },
+        { label: 'Stand', seconds: 1 },
+      ],
+      note: 'Take your fingers off the support for a second at the bottom to test how much you actually need it.',
+    },
+    sensation: {
+      working: 'The front of the thighs and the glutes.',
+      alsoNormal: [
+        'A stretch through the hips and ankles at the bottom.',
+        'Legs burning by the last few reps.',
+      ],
+      notNormal: KNEE_PAIN,
+    },
     commonMistakes: [
       { mistake: 'Pulling hard on the support to stand up.', fix: 'Use fingertips only, so your legs have to do the work.' },
-      { mistake: 'Stopping well above parallel.', fix: 'This variation exists to let you go deep. Use the support and go lower.' },
+      { mistake: 'Stopping well above parallel.', fix: 'This variation exists so you can go deep. Use the support and get lower.' },
+      { mistake: 'Knees collapsing inward.', fix: 'Push your knees out in line with your toes throughout.' },
     ],
-    safetyNotes: ['Hold something fixed. Do not use a chair that can slide or tip toward you.'],
-    demo: {
-      keyframes: [
-        { id: 'stand', label: 'Standing' },
-        { id: 'bottom', label: 'Bottom' },
+    cues: ['Fingertips only.', 'Knees out.', 'Chest up.'],
+    safety: {
+      normalEffort: 'Light to moderate.',
+      normalFatigue: 'A burn in the thighs in the last few reps.',
+      concerningPain: KNEE_PAIN,
+      stopIf: [...LEG_STOP, 'The support you are holding moves.'],
+      modifyIf: [
+        'Your heels lift: stand on a folded towel under your heels and widen your stance.',
+        'Your knees ache: reduce the depth and build it back gradually.',
+        'You barely need the support: move on to the bodyweight squat.',
       ],
-      loop: 'ping-pong',
+    },
+    demo: {
+      scene: 'floor',
+      keyframes: [
+        { id: 'stand', label: 'Start', caption: 'Standing tall, hands on the support at chest height.', pose: STAND_ARMS_FORWARD },
+        { id: 'bottom', label: 'Bottom', caption: 'Thighs at least parallel, heels flat, chest up.', pose: SQUAT_ASSISTED_BOTTOM },
+        { id: 'end', label: 'Stand up', caption: 'Driving through the whole foot back to standing.', pose: STAND_ARMS_FORWARD },
+      ],
+      loop: 'cycle',
     },
     tags: ['beginner', 'lower-body'],
   },
@@ -67,33 +124,68 @@ export const SQUAT_EXERCISES: Exercise[] = [
     regression: 'assisted-squat',
     progression: 'tempo-squat',
     summary: 'The foundation of every lower-body movement.',
-    instructions: {
-      setup: [
-        'Stand with your feet a little wider than your hips.',
-        'Turn your toes out slightly and let your arms hang in front for balance.',
-      ],
-      execution: [
-        'Push your hips back and bend your knees at the same time.',
-        'Descend until your thighs are at least parallel to the floor.',
-        'Keep your heels flat and your chest up.',
-        'Drive through your whole foot to stand back up.',
+    startingPosition: {
+      hands: 'Hanging at your sides, ready to reach forward as a counterweight.',
+      feet: 'A little wider than your hips, toes turned out about 15 degrees, weight spread across the whole foot.',
+      body: 'Tall and upright, weight over the middle of your feet.',
+      spine: 'Neutral, ribs stacked over hips, no arching or rounding.',
+      head: 'Neutral, eyes forward.',
+      shoulders: 'Down and back, chest open.',
+      hips: 'Level and square, ready to travel back and down together.',
+    },
+    steps: [
+      'Stand with your feet a little wider than your hips, toes turned slightly out.',
+      'Take a breath and brace your abs lightly.',
+      'Push your hips back and bend your knees at the same time.',
+      'Reach your arms forward as you descend to balance you.',
+      'Descend until your thighs are at least parallel to the floor.',
+      'Keep your heels flat, your knees tracking over your toes and your chest up.',
+      'Drive through your whole foot to stand back up and squeeze your glutes at the top.',
+    ],
+    breathing: {
+      inhale: 'At the top, then hold it lightly as you descend.',
+      exhale: 'As you drive up, finishing as you stand tall.',
+    },
+    tempo: {
+      phases: [
+        { label: 'Lower', seconds: 2 },
+        { label: 'Pause', seconds: 1 },
+        { label: 'Stand', seconds: 1 },
       ],
     },
-    breathing: 'Inhale as you descend, exhale as you stand.',
-    cues: [
-      'Spread the floor with your feet to keep your knees tracking out.',
-      'Keep your weight over the middle of your foot.',
-    ],
-    commonMistakes: [
-      { mistake: 'Heels lift off the floor.', fix: 'Work on ankle mobility and sit back more; widen your stance slightly.' },
-      { mistake: 'Knees collapse inward.', fix: 'Push your knees out in line with your toes throughout.' },
-    ],
-    demo: {
-      keyframes: [
-        { id: 'stand', label: 'Standing' },
-        { id: 'bottom', label: 'Bottom' },
+    sensation: {
+      working: 'The front of the thighs and the glutes, with the glutes strongest at the top.',
+      alsoNormal: [
+        'A stretch through the hips and ankles at the bottom.',
+        'A strong burn in the thighs above 15 reps.',
       ],
-      loop: 'ping-pong',
+      notNormal: KNEE_PAIN,
+    },
+    commonMistakes: [
+      { mistake: 'Heels lift off the floor.', fix: 'Work on ankle mobility, sit back more and widen your stance slightly.' },
+      { mistake: 'Knees collapse inward.', fix: 'Push your knees out in line with your toes throughout the rep.' },
+      { mistake: 'Chest drops so it becomes a good-morning rather than a squat.', fix: 'Reach your arms forward and keep your ribs stacked over your hips.' },
+    ],
+    cues: ['Spread the floor.', 'Knees out.', 'Chest up.', 'Squeeze at the top.'],
+    safety: {
+      normalEffort: 'Moderate. Above 15 reps it becomes genuinely hard.',
+      normalFatigue: 'Thighs burning, legs shaking slightly after a long set.',
+      concerningPain: KNEE_PAIN,
+      stopIf: LEG_STOP,
+      modifyIf: [
+        'Your heels lift: put a folded towel under them and work on ankle mobility.',
+        'You cannot reach parallel: use the assisted squat until you can.',
+        'Your knees ache: slow the descent and reduce depth slightly for a week or two.',
+      ],
+    },
+    demo: {
+      scene: 'floor',
+      keyframes: [
+        { id: 'stand', label: 'Start', caption: 'Standing tall, feet slightly wider than hips.', pose: STAND },
+        { id: 'bottom', label: 'Bottom', caption: 'Thighs parallel, heels flat, knees tracking over toes.', pose: SQUAT_BOTTOM },
+        { id: 'end', label: 'Stand up', caption: 'Driving through the whole foot, glutes squeezed at the top.', pose: STAND },
+      ],
+      loop: 'cycle',
     },
     tags: ['staple', 'lower-body'],
   },
@@ -114,33 +206,69 @@ export const SQUAT_EXERCISES: Exercise[] = [
     regression: 'bodyweight-squat',
     progression: 'reverse-lunge',
     summary: 'The same squat slowed down and paused, which is how you add load when you have no weights.',
-    instructions: {
-      setup: [
-        'Set up exactly as for a bodyweight squat.',
-        'Decide your tempo before the set: three seconds down, two seconds paused, one second up.',
-      ],
-      execution: [
-        'Lower over a full three seconds, counting them out.',
-        'Hold the bottom position for two seconds without relaxing.',
-        'Stand up over one second.',
-        'Do not rest at the top; start the next rep straight away.',
-      ],
+    startingPosition: {
+      hands: 'At your sides or reaching forward, as in a bodyweight squat.',
+      feet: 'A little wider than your hips, toes slightly out, flat on the floor.',
+      body: 'Tall and braced, ready to hold tension for longer than usual.',
+      spine: 'Neutral and held there for the whole slow rep.',
+      head: 'Neutral, eyes forward.',
+      shoulders: 'Down and back, chest open.',
+      hips: 'Square, ready to travel back and down slowly.',
     },
-    breathing: 'Inhale through the descent, hold lightly through the pause, exhale as you stand.',
-    cues: [
-      'Time under tension replaces weight. Six slow reps beat twenty fast ones.',
-      'Stay tight in the pause. Sinking and relaxing wastes the hardest part.',
+    steps: [
+      'Set up exactly as for a bodyweight squat.',
+      'Decide your tempo before the set: three seconds down, two seconds paused, one second up.',
+      'Lower over a full three seconds, counting them out loud.',
+      'Hold the bottom position for two seconds without relaxing into it.',
+      'Keep your knees pushed out and your chest up through the whole pause.',
+      'Stand up over one second.',
+      'Begin the next rep straight away rather than resting at the top.',
     ],
+    breathing: {
+      inhale: 'Before you begin the descent, and hold it lightly through the lowering.',
+      exhale: 'As you stand up.',
+      note: 'The pause is long enough that you may need a small breath in the bottom. Take it rather than straining.',
+    },
+    tempo: {
+      phases: [
+        { label: 'Lower', seconds: 3 },
+        { label: 'Pause at the bottom', seconds: 2 },
+        { label: 'Stand', seconds: 1 },
+      ],
+      note: 'Time under tension replaces weight. Six slow reps beat twenty fast ones.',
+    },
+    sensation: {
+      working: 'The thighs, burning much sooner than in a normal squat.',
+      alsoNormal: [
+        'A burn arriving by rep four rather than rep fifteen.',
+        'Legs shaking during the pause.',
+      ],
+      notNormal: KNEE_PAIN,
+    },
     commonMistakes: [
       { mistake: 'Speeding up as the set gets hard.', fix: 'Count out loud. When the count slips, end the set.' },
       { mistake: 'Relaxing at the bottom of the pause.', fix: 'Keep your knees pushed out and your chest up for the whole two seconds.' },
+      { mistake: 'Shortening the depth to make the tempo survivable.', fix: 'Keep the depth and reduce the reps instead.' },
     ],
-    demo: {
-      keyframes: [
-        { id: 'stand', label: 'Standing' },
-        { id: 'bottom', label: 'Paused bottom' },
+    cues: ['Count out loud.', 'Stay tight in the pause.', 'Same depth every rep.'],
+    safety: {
+      normalEffort: 'Hard. Six reps should feel like a real set.',
+      normalFatigue: 'Deep burning in the thighs and shaking during the pause.',
+      concerningPain: KNEE_PAIN,
+      stopIf: [...LEG_STOP, 'You can no longer hold the tempo without your form breaking.'],
+      modifyIf: [
+        'The pause is too much: start with a one-second pause and build to two.',
+        'Your knees ache: shorten the pause rather than the depth.',
       ],
-      loop: 'ping-pong',
+    },
+    demo: {
+      scene: 'floor',
+      keyframes: [
+        { id: 'stand', label: 'Start', caption: 'Standing tall, braced before the slow descent.', pose: STAND },
+        { id: 'bottom', label: 'Paused bottom', caption: 'Two seconds at depth, knees out, chest up, still tight.', pose: SQUAT_BOTTOM },
+        { id: 'end', label: 'Stand up', caption: 'One second up, straight into the next rep.', pose: STAND },
+      ],
+      loop: 'cycle',
     },
     tags: ['lower-body', 'tempo', 'no-equipment'],
   },
@@ -161,32 +289,68 @@ export const SQUAT_EXERCISES: Exercise[] = [
     regression: 'tempo-squat',
     progression: 'split-squat',
     summary: 'Stepping backward into a lunge, the kindest single-leg entry point for knees and balance.',
-    instructions: {
-      setup: [
-        'Stand tall with your feet under your hips and your hands on your hips.',
-      ],
-      execution: [
-        'Step one foot straight back and lower until your back knee almost touches the floor.',
-        'Keep your front shin close to vertical and your torso upright.',
-        'Push through your front heel to step back to standing.',
-        'Alternate sides, or finish all reps on one side first.',
-      ],
+    startingPosition: {
+      hands: 'On your hips, or held in front for balance.',
+      feet: 'Together or hip-width, both pointing forward.',
+      body: 'Standing tall, weight even across both feet.',
+      spine: 'Neutral with the ribs over the hips.',
+      head: 'Neutral, eyes on a fixed point ahead to help your balance.',
+      shoulders: 'Down and back, chest open.',
+      hips: 'Level and square, and staying square through the whole rep.',
     },
-    breathing: 'Inhale as you step back and lower, exhale as you drive back up.',
-    cues: [
-      'Stepping back rather than forward keeps the load off the front knee.',
-      'Land on the ball of your back foot, softly.',
+    steps: [
+      'Stand tall with your feet under your hips and your hands on your hips.',
+      'Fix your eyes on a point ahead of you to steady your balance.',
+      'Step one foot straight back, landing softly on the ball of that foot.',
+      'Lower until your back knee almost touches the floor.',
+      'Keep your front shin close to vertical and your torso upright.',
+      'Push through your front heel to bring the back foot forward to standing.',
+      'Finish all reps on one side, or alternate, then repeat on the other.',
     ],
+    breathing: {
+      inhale: 'As you step back and lower.',
+      exhale: 'As you drive back up to standing.',
+    },
+    tempo: {
+      phases: [
+        { label: 'Step back and lower', seconds: 2 },
+        { label: 'Pause', seconds: 1 },
+        { label: 'Drive up', seconds: 1 },
+      ],
+      note: 'Stepping back rather than forward keeps the shear off the front knee, which is why this comes before other lunges.',
+    },
+    sensation: {
+      working: 'The front leg’s thigh and glute doing most of the work.',
+      alsoNormal: [
+        'A stretch across the front of the back leg’s hip.',
+        'Balance wobbling noticeably at first.',
+      ],
+      notNormal: [...KNEE_PAIN, 'Sharp pain in the back knee where it touches the floor.'],
+    },
     commonMistakes: [
       { mistake: 'Short step, so the front knee shoots forward.', fix: 'Step further back until your front shin is vertical at the bottom.' },
       { mistake: 'Torso pitching forward.', fix: 'Brace your abs and keep your ribs stacked over your hips.' },
+      { mistake: 'Crashing the back knee into the floor.', fix: 'Stop a couple of centimetres short and lower under control.' },
     ],
-    demo: {
-      keyframes: [
-        { id: 'stand', label: 'Standing' },
-        { id: 'bottom', label: 'Back knee low' },
+    cues: ['Step straight back.', 'Front shin vertical.', 'Drive through the front heel.'],
+    safety: {
+      normalEffort: 'Moderate. Balance makes it feel harder than the load suggests.',
+      normalFatigue: 'Front thigh and glute burning; balance getting worse as you tire.',
+      concerningPain: KNEE_PAIN,
+      stopIf: [...LEG_STOP, 'You lose balance repeatedly and cannot control the descent.'],
+      modifyIf: [
+        'Your balance is poor: hold a wall or door frame with one hand.',
+        'Your back knee is sore: put a cushion where it lands, or reduce the depth.',
       ],
-      loop: 'ping-pong',
+    },
+    demo: {
+      scene: 'floor',
+      keyframes: [
+        { id: 'stand', label: 'Start', caption: 'Standing tall, feet under the hips.', pose: STAND },
+        { id: 'bottom', label: 'Bottom', caption: 'Back knee near the floor, front shin vertical, torso upright.', pose: LUNGE_BACK_BOTTOM },
+        { id: 'end', label: 'Drive up', caption: 'Pushing through the front heel back to standing.', pose: STAND },
+      ],
+      loop: 'cycle',
     },
     tags: ['unilateral', 'lower-body', 'no-equipment'],
   },
@@ -207,31 +371,68 @@ export const SQUAT_EXERCISES: Exercise[] = [
     regression: 'reverse-lunge',
     progression: 'bulgarian-split-squat',
     summary: 'A stationary lunge that loads one leg at a time and exposes side-to-side imbalances.',
-    instructions: {
-      setup: [
-        'Step one foot forward into a long stride.',
-        'Keep your front foot flat and rise onto the ball of your back foot.',
-        'Stack your shoulders over your hips.',
-      ],
-      execution: [
-        'Lower straight down until your back knee almost touches the floor.',
-        'Keep your front shin close to vertical.',
-        'Drive through your front heel to stand back up.',
-        'Finish all reps on one side before switching.',
+    startingPosition: {
+      hands: 'On your hips, or one hand lightly on a wall for balance.',
+      feet: 'In a long stride, front foot flat, back foot up on the ball with the heel raised.',
+      body: 'Upright, with about 70 percent of your weight on the front leg.',
+      spine: 'Neutral, ribs stacked over hips.',
+      head: 'Neutral, eyes on a fixed point ahead.',
+      shoulders: 'Level and square, down away from the ears.',
+      hips: 'Square to the front and level side to side.',
+    },
+    steps: [
+      'Step one foot forward into a long stride and rise onto the ball of your back foot.',
+      'Shift about 70 percent of your weight onto the front leg.',
+      'Brace your abs and stack your shoulders over your hips.',
+      'Lower straight down, not forward, until your back knee almost touches the floor.',
+      'Keep your front shin close to vertical throughout.',
+      'Drive through your front heel to return to the start.',
+      'Finish all reps on one side before switching.',
+    ],
+    breathing: {
+      inhale: 'On the way down.',
+      exhale: 'As you drive back up.',
+    },
+    tempo: {
+      phases: [
+        { label: 'Lower', seconds: 2 },
+        { label: 'Pause', seconds: 1 },
+        { label: 'Drive up', seconds: 1 },
       ],
     },
-    breathing: 'Inhale down, exhale up.',
-    cues: ['Move straight down, not forward.', 'Keep 70 percent of your weight on the front leg.'],
-    commonMistakes: [
-      { mistake: 'Stride too short, so the front knee shoots past the toes.', fix: 'Step further forward before starting.' },
-      { mistake: 'Torso leans forward.', fix: 'Brace your abs and keep your ribs stacked over your hips.' },
-    ],
-    demo: {
-      keyframes: [
-        { id: 'top', label: 'Standing split' },
-        { id: 'bottom', label: 'Back knee low' },
+    sensation: {
+      working: 'The front leg’s thigh and glute, with the back leg mostly balancing.',
+      alsoNormal: [
+        'A stretch across the front of the back hip.',
+        'One side feeling clearly weaker than the other.',
       ],
-      loop: 'ping-pong',
+      notNormal: KNEE_PAIN,
+    },
+    commonMistakes: [
+      { mistake: 'Stride too short, so the front knee shoots past the toes.', fix: 'Step further forward before starting the set.' },
+      { mistake: 'Torso leaning forward.', fix: 'Brace your abs and keep your ribs stacked over your hips.' },
+      { mistake: 'Pushing off the back foot to stand up.', fix: 'Keep the back leg passive and drive only through the front heel.' },
+    ],
+    cues: ['Straight down, not forward.', 'Seventy percent on the front leg.', 'Back leg is a kickstand.'],
+    safety: {
+      normalEffort: 'Hard on the front leg.',
+      normalFatigue: 'Front thigh and glute burning strongly; noticeable difference between sides.',
+      concerningPain: KNEE_PAIN,
+      stopIf: LEG_STOP,
+      modifyIf: [
+        'Your balance is poor: hold a wall with one hand.',
+        'Your back knee is sore: kneel onto a cushion, or reduce the depth.',
+        'One side is much weaker: start every set on that side and match the reps on the strong side to it.',
+      ],
+    },
+    demo: {
+      scene: 'floor',
+      keyframes: [
+        { id: 'top', label: 'Start', caption: 'Long split stance, back heel raised, torso tall.', pose: SPLIT_TOP },
+        { id: 'bottom', label: 'Bottom', caption: 'Back knee near the floor, front shin vertical.', pose: SPLIT_BOTTOM },
+        { id: 'end', label: 'Drive up', caption: 'Back to the start through the front heel.', pose: SPLIT_TOP },
+      ],
+      loop: 'cycle',
     },
     tags: ['unilateral', 'lower-body'],
   },
@@ -252,35 +453,69 @@ export const SQUAT_EXERCISES: Exercise[] = [
     regression: 'split-squat',
     progression: 'assisted-pistol-squat',
     summary: 'A split squat with the back foot raised, loading the front leg far harder.',
-    instructions: {
-      setup: [
-        'Stand about a stride in front of a sofa, bed edge or stable chair, facing away from it.',
-        'Place the top of your back foot on it.',
-        'Adjust your front foot until your front shin is vertical at the bottom.',
-      ],
-      execution: [
-        'Lower straight down until your front thigh is roughly parallel to the floor.',
-        'Keep your torso tall and your front heel planted.',
-        'Drive through your front heel back to the start.',
-        'Finish all reps on one side before switching.',
-      ],
+    startingPosition: {
+      hands: 'On your hips, or one hand on a wall while you learn the position.',
+      feet: 'Front foot flat about a stride forward; the top of the back foot resting on a sofa, bed edge or stable chair.',
+      body: 'Upright, almost all the weight on the front leg.',
+      spine: 'Neutral, ribs over hips.',
+      head: 'Neutral, eyes forward.',
+      shoulders: 'Level and square.',
+      hips: 'Square to the front; the raised back leg will try to twist them.',
     },
-    breathing: 'Inhale down, exhale up.',
-    cues: ['Your back leg is a kickstand, not an engine.', 'Find your foot position before the first rep, not during it.'],
+    steps: [
+      'Stand about a stride in front of a sofa, bed edge or stable chair, facing away from it.',
+      'Place the top of your back foot on it and test that it cannot slide.',
+      'Adjust your front foot forward or back until your front shin will be vertical at the bottom.',
+      'Brace your abs and square your hips.',
+      'Lower straight down until your front thigh is roughly parallel to the floor.',
+      'Keep your torso tall and your front heel planted.',
+      'Drive through your front heel back to the start, then finish all reps before switching.',
+    ],
+    breathing: {
+      inhale: 'On the way down.',
+      exhale: 'As you drive up.',
+    },
+    tempo: {
+      phases: [
+        { label: 'Lower', seconds: 2 },
+        { label: 'Pause', seconds: 1 },
+        { label: 'Drive up', seconds: 1 },
+      ],
+      note: 'Find your foot position before the first rep, not during it. Getting it wrong makes every rep a knee exercise.',
+    },
+    sensation: {
+      working: 'The front leg’s thigh and glute, harder than any other two-legged exercise here.',
+      alsoNormal: [
+        'A strong stretch across the front of the raised leg’s hip.',
+        'Balance being the limiting factor for the first few sessions.',
+      ],
+      notNormal: KNEE_PAIN,
+    },
     commonMistakes: [
       { mistake: 'Front foot too close, forcing the knee far past the toes.', fix: 'Move the front foot forward until the shin stays vertical.' },
       { mistake: 'Losing balance every rep.', fix: 'Drop back to split squats until the pattern is stable.' },
+      { mistake: 'Hips twisting toward the raised leg.', fix: 'Square your hips before each rep and slow down.' },
     ],
-    safetyNotes: [
-      'Use something that cannot slide. A sofa or bed edge is steadier than a chair.',
-      'Hold a wall for balance while you learn the position.',
-    ],
-    demo: {
-      keyframes: [
-        { id: 'top', label: 'Standing' },
-        { id: 'bottom', label: 'Thigh parallel' },
+    cues: ['Shin vertical.', 'Hips square.', 'Back leg is a kickstand.'],
+    safety: {
+      normalEffort: 'Very hard on one leg.',
+      normalFatigue: 'Deep burning in the front thigh and glute, and next-day soreness.',
+      concerningPain: KNEE_PAIN,
+      stopIf: [...LEG_STOP, 'The surface under your back foot moves.'],
+      modifyIf: [
+        'Your balance is poor: hold a wall with one hand, and use a lower surface.',
+        'Your front knee aches: move your front foot further forward.',
+        'The stretch on the back hip is too strong: lower the surface your back foot rests on.',
       ],
-      loop: 'ping-pong',
+    },
+    demo: {
+      scene: 'chair',
+      keyframes: [
+        { id: 'top', label: 'Start', caption: 'Back foot raised behind, torso tall, weight on the front leg.', pose: SPLIT_TOP },
+        { id: 'bottom', label: 'Bottom', caption: 'Front thigh parallel, shin vertical, hips square.', pose: SPLIT_BOTTOM },
+        { id: 'end', label: 'Drive up', caption: 'Back to the start through the front heel.', pose: SPLIT_TOP },
+      ],
+      loop: 'cycle',
     },
     tags: ['unilateral', 'lower-body', 'furniture'],
   },
@@ -301,34 +536,69 @@ export const SQUAT_EXERCISES: Exercise[] = [
     regression: 'bulgarian-split-squat',
     progression: 'pistol-squat',
     summary: 'A one-legged squat with a hand on a support, which removes the balance problem so you can train the strength.',
-    instructions: {
-      setup: [
-        'Stand beside a door frame or a fixed rail and hold it at about waist height.',
-        'Lift one foot off the floor and extend that leg in front of you.',
+    startingPosition: {
+      hands: 'One hand on a door frame or fixed rail at about waist height.',
+      feet: 'Standing on one foot, flat; the other leg extended in front and off the floor.',
+      body: 'Upright, ready to sit back and down on one leg.',
+      spine: 'Neutral, ribs down.',
+      head: 'Neutral, eyes forward.',
+      shoulders: 'Level; do not let the supporting arm hitch one shoulder up.',
+      hips: 'Level, and staying level as you descend on one side.',
+    },
+    steps: [
+      'Stand beside a door frame or fixed rail and hold it at about waist height.',
+      'Lift one foot off the floor and extend that leg in front of you.',
+      'Sit back and down on the standing leg, keeping the raised leg off the floor.',
+      'Use the support only as much as you need to stay balanced.',
+      'Descend as far as you can control, aiming eventually for the full bottom.',
+      'Keep your standing heel flat on the floor throughout.',
+      'Drive through your standing heel back to standing, then finish the reps before switching.',
+    ],
+    breathing: {
+      inhale: 'As you descend.',
+      exhale: 'As you drive up.',
+    },
+    tempo: {
+      phases: [
+        { label: 'Lower', seconds: 3 },
+        { label: 'Pause', seconds: 1 },
+        { label: 'Drive up', seconds: 2 },
       ],
-      execution: [
-        'Sit back and down on the standing leg, keeping the other leg off the floor.',
-        'Use the support only as much as you need to stay balanced.',
-        'Descend as far as you can control, aiming eventually for the bottom.',
-        'Drive through your standing heel to stand back up.',
+      note: 'Reduce the assistance over the weeks: whole hand, then two fingers, then one.',
+    },
+    sensation: {
+      working: 'One thigh and glute carrying your whole bodyweight.',
+      alsoNormal: [
+        'A deep stretch at the bottom through the ankle and hip.',
+        'The standing calf working hard to keep you balanced.',
+      ],
+      notNormal: KNEE_PAIN,
+    },
+    commonMistakes: [
+      { mistake: 'Hauling yourself up with the arm.', fix: 'Reduce to fingertips so the leg has to do the work.' },
+      { mistake: 'Standing heel lifting at the bottom.', fix: 'Work on ankle mobility; this is almost always the limiter.' },
+      { mistake: 'Dropping fast into the bottom.', fix: 'Take three seconds down; the control is the point.' },
+    ],
+    cues: ['Fingertips only.', 'Heel stays down.', 'Sit back, not forward.'],
+    safety: {
+      normalEffort: 'Very hard on one leg.',
+      normalFatigue: 'Thigh burning deeply and the standing leg shaking at the bottom.',
+      concerningPain: KNEE_PAIN,
+      stopIf: [...LEG_STOP, 'You can no longer control the descent.'],
+      modifyIf: [
+        'Your heel lifts: put a folded towel under it and work on ankle mobility separately.',
+        'You cannot reach depth: descend only as far as you control, and add range over weeks.',
+        'Your knee aches: return to Bulgarian split squats for a few weeks.',
       ],
     },
-    breathing: 'Inhale down, exhale up.',
-    cues: [
-      'Reduce the assistance over the weeks: whole hand, then two fingers, then one.',
-      'Keep the raised leg straight and your heel down.',
-    ],
-    commonMistakes: [
-      { mistake: 'Hauling yourself up with the arm.', fix: 'Reduce to fingertips so your leg has to do the work.' },
-      { mistake: 'Standing heel lifting at the bottom.', fix: 'Work on ankle mobility; this is almost always the limiter.' },
-    ],
-    safetyNotes: ['Hold something structural like a door frame, never furniture that can move.'],
     demo: {
+      scene: 'floor',
       keyframes: [
-        { id: 'stand', label: 'Standing' },
-        { id: 'bottom', label: 'Bottom' },
+        { id: 'stand', label: 'Start', caption: 'Standing on one leg, other leg extended, hand on support.', pose: STAND_ARMS_FORWARD },
+        { id: 'bottom', label: 'Bottom', caption: 'Sitting back and down on one leg, heel flat, hips level.', pose: PISTOL_ASSISTED_BOTTOM },
+        { id: 'end', label: 'Drive up', caption: 'Standing back up through the heel.', pose: STAND_ARMS_FORWARD },
       ],
-      loop: 'ping-pong',
+      loop: 'cycle',
     },
     tags: ['unilateral', 'lower-body', 'advanced'],
   },
@@ -349,36 +619,67 @@ export const SQUAT_EXERCISES: Exercise[] = [
     regression: 'assisted-pistol-squat',
     progression: null,
     summary: 'A full one-legged squat with no support. The end of the no-equipment leg ladder.',
-    instructions: {
-      setup: [
-        'Stand on one leg with the other extended straight in front of you.',
-        'Hold your arms out in front for balance.',
-      ],
-      execution: [
-        'Sit back and down on the standing leg under full control.',
-        'Keep the raised leg off the floor and your standing heel planted.',
-        'Descend until your hamstring touches your calf.',
-        'Drive back up without touching the raised foot down.',
+    startingPosition: {
+      hands: 'Reaching forward at about shoulder height as a counterweight.',
+      feet: 'Standing on one foot, flat; the other leg straight out in front, heel off the floor.',
+      body: 'Upright and balanced over the standing foot.',
+      spine: 'Neutral; it will round slightly at the very bottom, which is normal here.',
+      head: 'Neutral, eyes forward.',
+      shoulders: 'Level and relaxed.',
+      hips: 'Level and square over the standing foot.',
+    },
+    steps: [
+      'Stand on one leg with the other extended straight in front of you.',
+      'Reach both arms forward at shoulder height to counterbalance.',
+      'Sit back and down on the standing leg under full control.',
+      'Keep the raised leg off the floor and the standing heel planted.',
+      'Descend until your hamstring touches your calf.',
+      'Drive back up without touching the raised foot down.',
+      'Finish all reps on one side before switching.',
+    ],
+    breathing: {
+      inhale: 'Before and during the descent.',
+      exhale: 'Hard on the way up.',
+    },
+    tempo: {
+      phases: [
+        { label: 'Lower', seconds: 3 },
+        { label: 'Pause at the bottom', seconds: 1 },
+        { label: 'Drive up', seconds: 2 },
       ],
     },
-    breathing: 'Inhale down, exhale hard on the way up.',
-    cues: [
-      'Reach your arms forward as a counterweight.',
-      'Ankle mobility is usually the limiter, not leg strength.',
-    ],
+    sensation: {
+      working: 'One thigh, extremely hard, with the glute finishing the movement.',
+      alsoNormal: [
+        'The standing calf and foot working constantly to balance you.',
+        'A deep stretch through the ankle at the bottom.',
+      ],
+      notNormal: KNEE_PAIN,
+    },
     commonMistakes: [
       { mistake: 'Falling backward at the bottom.', fix: 'Reach further forward with your arms and your free leg.' },
       { mistake: 'Dropping fast and bouncing out of the bottom.', fix: 'Go back to assisted pistols until you can control the descent.' },
+      { mistake: 'Attempting these before the assisted version is solid.', fix: 'Own 8 controlled assisted reps a side first.' },
     ],
-    safetyNotes: [
-      'A lot of load lands on one knee at full depth. Build up through the assisted version rather than attempting these early.',
-    ],
-    demo: {
-      keyframes: [
-        { id: 'stand', label: 'Standing' },
-        { id: 'bottom', label: 'Full depth' },
+    cues: ['Reach forward.', 'Heel stays down.', 'Control the descent.'],
+    safety: {
+      normalEffort: 'Maximal for most people. Three reps a side is a full set.',
+      normalFatigue: 'Deep thigh burn and significant next-day soreness.',
+      concerningPain: [...KNEE_PAIN, 'Any pain at the very bottom where the knee is most bent.'],
+      stopIf: [...LEG_STOP, 'You cannot control the descent and are dropping into the bottom.'],
+      modifyIf: [
+        'You cannot control it: return to the assisted version; there is no shame and a lot of knee safety in it.',
+        'Your knee aches at full depth: stop above the bottom and build range slowly.',
       ],
-      loop: 'ping-pong',
+    },
+    demo: {
+      scene: 'floor',
+      keyframes: [
+        { id: 'stand', label: 'Start', caption: 'Standing on one leg, arms and free leg reaching forward.', pose: STAND_ARMS_FORWARD },
+        { id: 'bottom', label: 'Full depth', caption: 'Hamstring to calf, heel flat, hips level.', pose: PISTOL_BOTTOM },
+        { id: 'end', label: 'Drive up', caption: 'Back to standing without touching the free foot down.', pose: STAND_ARMS_FORWARD },
+      ],
+      loop: 'cycle',
     },
     tags: ['unilateral', 'lower-body', 'advanced', 'goal'],
   },

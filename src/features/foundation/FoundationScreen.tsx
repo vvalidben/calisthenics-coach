@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { isExerciseAvailable, missingEquipmentFor } from '../../domain/availability';
 import type { Equipment } from '../../domain/primitives';
 import type { ProgressionState } from '../../domain/progression';
@@ -50,7 +51,15 @@ const Family = ({ state, profile }: { state: ProgressionState; profile: UserProf
         <h2 className="family__name">{info.name}</h2>
         <span className="family__step">{step}</span>
       </div>
-      <p className="family__current">{current?.name ?? state.currentExerciseId}</p>
+      <p className="family__current">
+        {current ? (
+          <Link to={`/library/${current.id}`} className="family__link">
+            {current.name}
+          </Link>
+        ) : (
+          state.currentExerciseId
+        )}
+      </p>
 
       <div className="rungs" role="img" aria-label={`${info.name}: ${step}`}>
         {chain.map((exercise, index) => {

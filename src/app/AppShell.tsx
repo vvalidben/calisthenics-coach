@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
-import { NavLink, Route, Routes } from 'react-router-dom';
+import { NavLink, Route, Routes, useParams } from 'react-router-dom';
+import { exerciseById } from '../content/catalog';
 import { FoundationScreen } from '../features/foundation/FoundationScreen';
+import { ExerciseDetail } from '../features/library/ExerciseDetail';
+import { ExerciseList } from '../features/library/ExerciseList';
 import { TodayScreen } from '../features/today/TodayScreen';
+import type { UserProfile } from '../domain/profile';
 import type { StorageAdapter } from '../storage/adapter';
 import { CURRENT_SCHEMA_VERSION } from '../storage/migrations';
 import { bootstrap, type BootstrapResult } from './bootstrap';
@@ -18,6 +22,17 @@ const CalendarGlyph = () => (
   <svg className="tabbar__glyph" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
     <rect x="2.5" y="4.5" width="15" height="13" rx="2" fill="none" stroke="currentColor" />
     <path d="M2.5 8.5h15M6.5 2.5v3M13.5 2.5v3" stroke="currentColor" strokeLinecap="round" />
+  </svg>
+);
+
+const BookGlyph = () => (
+  <svg className="tabbar__glyph" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
+    <path
+      d="M3.5 3.5h5a2 2 0 0 1 2 2v11a2 2 0 0 0-2-2h-5zM16.5 3.5h-5a2 2 0 0 0-2 2v11a2 2 0 0 1 2-2h5z"
+      fill="none"
+      stroke="currentColor"
+      strokeLinejoin="round"
+    />
   </svg>
 );
 
@@ -38,12 +53,36 @@ const TabBar = () => (
       <CalendarGlyph />
       Today
     </NavLink>
+    <NavLink to="/library" className="tabbar__link">
+      <BookGlyph />
+      Exercises
+    </NavLink>
     <NavLink to="/progressions" className="tabbar__link">
       <LadderGlyph />
       Progressions
     </NavLink>
   </nav>
 );
+
+/** Resolves the :id in the URL to an exercise, or says it does not exist. */
+const ExerciseRoute = ({ profile }: { profile: UserProfile }) => {
+  const { id } = useParams();
+  const exercise = id === undefined ? undefined : exerciseById(id);
+
+  if (!exercise) {
+    return (
+      <div className="state">
+        <h1 className="state__title">No such exercise</h1>
+        <p className="state__body">
+          Nothing in the library has the id &ldquo;{id}&rdquo;. Go back to Exercises and pick one
+          from the list.
+        </p>
+      </div>
+    );
+  }
+
+  return <ExerciseDetail exercise={exercise} profile={profile} />;
+};
 
 /**
  * Loads the store, then renders the app. Three states only: loading, failed,
@@ -85,6 +124,8 @@ export const AppShell = ({ adapter, today = localIsoDate() }: AppShellProps) => 
       <main className="shell__main">
         <Routes>
           <Route path="/" element={<TodayScreen profile={data.profile} today={today} />} />
+          <Route path="/library" element={<ExerciseList profile={data.profile} />} />
+          <Route path="/library/:id" element={<ExerciseRoute profile={data.profile} />} />
           <Route
             path="/progressions"
             element={

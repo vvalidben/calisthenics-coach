@@ -1,9 +1,30 @@
 import type { Exercise } from '../../domain/exercise';
+import {
+  DECLINE_BOTTOM,
+  DECLINE_TOP,
+  INCLINE_BOTTOM,
+  INCLINE_TOP,
+  KNEE_PLANK_BOTTOM,
+  KNEE_PLANK_TOP,
+  PLANK_BOTTOM,
+  PLANK_TOP,
+  WALL_PUSH_BOTTOM,
+  WALL_PUSH_TOP,
+} from '../poses';
 
-/**
- * Horizontal pressing, from vertical against a wall through to one-sided work
- * on the floor. Nothing here needs more than a wall, a chair and the ground.
- */
+/** Shared across pressing: what a shoulder problem actually feels like. */
+const PRESS_PAIN = [
+  'A sharp pinch at the front of the shoulder near the top of the arm.',
+  'A click or catch in the shoulder that hurts, as opposed to a painless click.',
+  'Pain in the wrist joint itself rather than a stretch across the front of it.',
+];
+
+const STOP_RULES = [
+  'Anything sharp, stabbing or electric.',
+  'Pain that grows rep by rep instead of easing as you warm up.',
+  'Your form breaks and you cannot get it back after a short rest.',
+];
+
 export const PUSH_EXERCISES: Exercise[] = [
   {
     id: 'wall-push-up',
@@ -22,33 +43,72 @@ export const PUSH_EXERCISES: Exercise[] = [
     regression: null,
     progression: 'incline-push-up',
     summary: 'The gentlest press, used to groove the movement and warm the shoulders.',
-    instructions: {
-      setup: [
-        'Stand an arm’s length from a wall.',
-        'Place your hands on the wall slightly wider than your shoulders, at chest height.',
-        'Step your feet back until your body is a straight line from heels to head.',
+    startingPosition: {
+      hands: 'Flat on the wall, slightly wider than your shoulders, level with the middle of your chest.',
+      feet: 'Together or hip-width, about an arm’s length back from the wall, heels flat on the floor.',
+      body: 'One straight line from heels to head, leaning into the wall like a plank tipped upright.',
+      spine: 'Neutral. Ribs pulled down so your lower back does not arch.',
+      head: 'In line with your spine, eyes on the wall between your hands.',
+      shoulders: 'Pulled down away from your ears, not shrugged.',
+      hips: 'In line with your shoulders and heels, neither pushed back nor sagging forward.',
+    },
+    steps: [
+      'Set your hands on the wall and step back until your arms are straight.',
+      'Brace your abs and squeeze your glutes so your body is one rigid line.',
+      'Bend your elbows and let your chest travel toward the wall.',
+      'Keep your elbows angled back at about 45 degrees, not flared straight out to the sides.',
+      'Stop when your chest is a few centimetres from the wall.',
+      'Press the wall away until your elbows are straight again.',
+      'Reset your brace and begin the next rep without resting against the wall.',
+    ],
+    breathing: {
+      inhale: 'As you bend your elbows and travel toward the wall.',
+      exhale: 'As you press the wall away and your elbows straighten.',
+    },
+    tempo: {
+      phases: [
+        { label: 'Lower', seconds: 2 },
+        { label: 'Pause near the wall', seconds: 1 },
+        { label: 'Press', seconds: 1 },
       ],
-      execution: [
-        'Bend your elbows and lower your chest toward the wall.',
-        'Stop when your chest is a few centimetres from the wall.',
-        'Press the wall away until your elbows are straight.',
+      note: 'Slower is harder here. If 20 reps feel easy, slow the lowering to three seconds before moving to the next step.',
+    },
+    sensation: {
+      working: 'A light effort across the chest and the back of the upper arms.',
+      alsoNormal: [
+        'Warmth building across the chest as the set goes on.',
+        'Your abs working to stop your hips sagging.',
+      ],
+      notNormal: [
+        'A pinch at the front of the shoulder.',
+        'Pain in the wrist joint rather than a stretch across it.',
       ],
     },
-    breathing: 'Inhale as you lower toward the wall, exhale as you press away.',
-    cues: [
-      'Keep your elbows at roughly 45 degrees, not flared to the sides.',
-      'Squeeze your glutes so your hips do not lead.',
-    ],
     commonMistakes: [
-      { mistake: 'Hips push back so only the arms move.', fix: 'Brace your abs and move as one plank from heel to head.' },
-      { mistake: 'Standing too close to the wall.', fix: 'Step back until your arms are fully straight at the start.' },
+      { mistake: 'Hips push back so only the arms move.', fix: 'Brace your abs and squeeze your glutes, then move as one plank from heel to head.' },
+      { mistake: 'Standing too close to the wall.', fix: 'Step back until your arms are fully straight at the start of the rep.' },
+      { mistake: 'Elbows flare straight out to the sides.', fix: 'Aim your elbows back toward your hips so your upper arms stay near your ribs.' },
     ],
-    demo: {
-      keyframes: [
-        { id: 'start', label: 'Arms straight' },
-        { id: 'bottom', label: 'Chest near wall' },
+    cues: ['Squeeze your glutes.', 'Push the wall away.', 'One line, heel to head.'],
+    safety: {
+      normalEffort: 'Light. You should be able to talk through the whole set.',
+      normalFatigue: 'A mild burn across the chest and triceps in the last few reps.',
+      concerningPain: PRESS_PAIN,
+      stopIf: STOP_RULES,
+      modifyIf: [
+        'Your wrists ache: press through the heel of your hand, or make fists and press on your knuckles.',
+        'It feels too easy at 20 reps: step your feet further back rather than adding more reps.',
       ],
-      loop: 'ping-pong',
+    },
+    demo: {
+      scene: 'wall',
+      keyframes: [
+        { id: 'start', label: 'Start', caption: 'Arms straight, body in one line from heels to head.', pose: WALL_PUSH_TOP },
+        { id: 'bottom', label: 'Chest near wall', caption: 'Elbows angled back, chest a few centimetres from the wall.', pose: WALL_PUSH_BOTTOM },
+        { id: 'end', label: 'Press back', caption: 'Back to straight arms with the line unbroken.', pose: WALL_PUSH_TOP },
+      ],
+      loop: 'cycle',
+      alignment: ['toe', 'head'],
     },
     tags: ['beginner', 'warm-up', 'upper-body'],
   },
@@ -69,36 +129,72 @@ export const PUSH_EXERCISES: Exercise[] = [
     regression: 'wall-push-up',
     progression: 'knee-push-up',
     summary: 'A push-up with your hands raised, so you press a smaller share of your bodyweight.',
-    instructions: {
-      setup: [
-        'Find a stable raised surface: a kitchen counter, a windowsill, a stair, or a chair seat braced against a wall.',
-        'Place your hands on it slightly wider than your shoulders.',
-        'Walk your feet back until your body forms a straight line.',
+    startingPosition: {
+      hands: 'Flat on a stable raised surface, slightly wider than your shoulders, fingers pointing forward.',
+      feet: 'Hip-width, toes tucked under, far enough back that your body is straight.',
+      body: 'One straight line from heels to head at roughly 45 degrees to the floor.',
+      spine: 'Neutral, with your ribs pulled down toward your hips.',
+      head: 'Neck long and in line with your spine, eyes on your hands.',
+      shoulders: 'Stacked over your hands and pulled down away from your ears.',
+      hips: 'Level with your shoulders and heels, not lifted into a tent.',
+    },
+    steps: [
+      'Find a stable surface: a kitchen counter, a windowsill, a stair, or a chair seat braced against a wall.',
+      'Place your hands on it and walk your feet back until your body forms one straight line.',
+      'Brace your abs and squeeze your glutes.',
+      'Bend your elbows and lower your chest toward the edge of the surface.',
+      'Keep your upper arms angled back toward your ribs rather than flared wide.',
+      'Touch your chest lightly to the surface, or come within a couple of centimetres.',
+      'Press back up until your elbows are straight, keeping the line unbroken.',
+    ],
+    breathing: {
+      inhale: 'On the way down, as your chest approaches the surface.',
+      exhale: 'As you press back up to straight arms.',
+    },
+    tempo: {
+      phases: [
+        { label: 'Lower', seconds: 2 },
+        { label: 'Touch', seconds: 1 },
+        { label: 'Press', seconds: 1 },
       ],
-      execution: [
-        'Lower your chest toward the edge of the surface.',
-        'Touch lightly, keeping your elbows tucked at about 45 degrees.',
-        'Press back up until your elbows are straight.',
+      note: 'The lower the surface, the harder the exercise. A counter is easy; a single stair is close to a floor push-up.',
+    },
+    sensation: {
+      working: 'The chest and the back of the upper arms, with the shoulders helping.',
+      alsoNormal: [
+        'Your abs and glutes working hard to hold the line.',
+        'A burn across the chest in the last few reps.',
+      ],
+      notNormal: [
+        'A pinch at the front of the shoulder as you reach the bottom.',
+        'Sharp pain in the wrist joint.',
       ],
     },
-    breathing: 'Inhale on the way down, exhale as you press up.',
-    cues: [
-      'The lower the surface, the harder the exercise. A counter is easy; a stair is hard.',
-      'Keep your neck long; look at your hands, not at your feet.',
-    ],
     commonMistakes: [
-      { mistake: 'Using a surface that slides or tips.', fix: 'Prefer a counter or stair. If you use a chair, brace it against a wall first.' },
-      { mistake: 'Flaring the elbows out to the sides.', fix: 'Aim your elbows back toward your hips.' },
+      { mistake: 'Using a surface that slides or tips.', fix: 'Prefer a counter or a stair. If you use a chair, brace it against a wall and test it first.' },
+      { mistake: 'Flaring the elbows out to the sides.', fix: 'Aim your elbows back toward your hips throughout the rep.' },
+      { mistake: 'Hips lifting into a tent to shorten the range.', fix: 'Squeeze your glutes and lower your hips until you are one straight line.' },
     ],
-    safetyNotes: [
-      'Load the surface with your full weight before you step back. If it shifts at all, pick something else.',
-    ],
-    demo: {
-      keyframes: [
-        { id: 'top', label: 'Top' },
-        { id: 'bottom', label: 'Chest to surface' },
+    cues: ['Elbows back, not out.', 'Squeeze your glutes.', 'Chest leads, not chin.'],
+    safety: {
+      normalEffort: 'Moderate. Talking should be possible but not comfortable by the last reps.',
+      normalFatigue: 'A clear burn in the chest and triceps, and shaking in the final rep or two.',
+      concerningPain: PRESS_PAIN,
+      stopIf: [...STOP_RULES, 'The surface shifts underneath you at any point.'],
+      modifyIf: [
+        'Your wrists ache: use a higher surface, or grip the edge so your wrist stays straighter.',
+        'You cannot reach 8 clean reps: use a higher surface rather than cutting the range short.',
       ],
-      loop: 'ping-pong',
+    },
+    demo: {
+      scene: 'chair',
+      keyframes: [
+        { id: 'start', label: 'Start', caption: 'Hands on the surface, arms straight, body in one line.', pose: INCLINE_TOP },
+        { id: 'bottom', label: 'Chest to surface', caption: 'Elbows angled back, chest touching the edge.', pose: INCLINE_BOTTOM },
+        { id: 'end', label: 'Press up', caption: 'Back to straight arms without the hips sagging.', pose: INCLINE_TOP },
+      ],
+      loop: 'cycle',
+      alignment: ['toe', 'head'],
     },
     tags: ['beginner', 'upper-body', 'furniture'],
   },
@@ -119,34 +215,72 @@ export const PUSH_EXERCISES: Exercise[] = [
     regression: 'incline-push-up',
     progression: 'push-up',
     summary: 'A floor push-up with the knees down, shortening the lever without shortening the range.',
-    instructions: {
-      setup: [
-        'Kneel on the floor and place your hands under your shoulders, slightly wider than shoulder width.',
-        'Walk your hands forward until your body forms a straight line from knees to head.',
-        'Cross your ankles and lift your feet.',
+    startingPosition: {
+      hands: 'Flat on the floor under your shoulders, slightly wider than shoulder width, fingers spread and pointing forward.',
+      feet: 'Lifted off the floor with your ankles crossed behind you.',
+      body: 'One straight line from knees to head, hips forward over your knees.',
+      spine: 'Neutral, ribs pulled down so the lower back does not arch.',
+      head: 'Neck long, eyes on the floor slightly ahead of your hands.',
+      shoulders: 'Directly over your hands, pulled down away from your ears.',
+      hips: 'In line between knees and shoulders, never sitting back toward your heels.',
+    },
+    steps: [
+      'Kneel and place your hands on the floor under your shoulders.',
+      'Walk your hands forward until your hips are over your knees and your body is one line.',
+      'Cross your ankles and lift your feet off the floor.',
+      'Brace your abs and squeeze your glutes.',
+      'Bend your elbows and lower your chest toward the floor under control.',
+      'Stop when your upper arms are roughly parallel to the floor.',
+      'Press the floor away until your elbows are straight, keeping the knee-to-head line unbroken.',
+    ],
+    breathing: {
+      inhale: 'On the descent, as your chest approaches the floor.',
+      exhale: 'As you press the floor away.',
+    },
+    tempo: {
+      phases: [
+        { label: 'Lower', seconds: 2 },
+        { label: 'Pause', seconds: 1 },
+        { label: 'Press', seconds: 1 },
       ],
-      execution: [
-        'Lower your chest toward the floor under control.',
-        'Stop when your upper arms are roughly parallel to the floor.',
-        'Press the floor away until your elbows are straight.',
-        'Keep the line from knees to head unbroken.',
+      note: 'Use the same tempo and full range you want on a full push-up. This step exists to build that, not to rush reps.',
+    },
+    sensation: {
+      working: 'The chest and triceps, with the shoulders assisting through the press.',
+      alsoNormal: [
+        'Pressure on the kneecaps, which is why a folded towel helps.',
+        'Your abs working to stop your hips dropping.',
+      ],
+      notNormal: [
+        'Sharp pain in the kneecap itself.',
+        'A pinch at the front of the shoulder near the bottom.',
       ],
     },
-    breathing: 'Inhale on the descent, exhale as you press up.',
-    cues: [
-      'Hips stay forward. If you sit back toward your heels the exercise gets much easier.',
-      'Put something soft under your knees if the floor is hard.',
-    ],
     commonMistakes: [
-      { mistake: 'Hips pushed back, so the torso barely moves.', fix: 'Walk your hands further forward until your hips are over your knees.' },
+      { mistake: 'Hips pushed back, so the torso barely travels.', fix: 'Walk your hands further forward until your hips sit over your knees.' },
       { mistake: 'Treating it as a lesser exercise and rushing the reps.', fix: 'Use the same tempo and full range you want on a full push-up.' },
+      { mistake: 'Lower back arching as the set gets hard.', fix: 'Squeeze your glutes and pull your ribs down; end the set when you cannot hold it.' },
     ],
-    demo: {
-      keyframes: [
-        { id: 'top', label: 'Top' },
-        { id: 'bottom', label: 'Chest to floor' },
+    cues: ['Hips over knees.', 'Chest to the floor.', 'One line, knee to head.'],
+    safety: {
+      normalEffort: 'Moderate to hard. The last two reps should be a real effort.',
+      normalFatigue: 'A burn in the chest and triceps, and arms shaking slightly at the end of a set.',
+      concerningPain: [...PRESS_PAIN, 'Sharp pain directly under the kneecap.'],
+      stopIf: STOP_RULES,
+      modifyIf: [
+        'Your knees hurt on a hard floor: kneel on a folded towel, a mat or a cushion.',
+        'Your wrists ache: make fists and press on your knuckles, keeping the wrist straight.',
       ],
-      loop: 'ping-pong',
+    },
+    demo: {
+      scene: 'floor',
+      keyframes: [
+        { id: 'start', label: 'Start', caption: 'Arms straight, hips over knees, one line from knee to head.', pose: KNEE_PLANK_TOP },
+        { id: 'bottom', label: 'Bottom', caption: 'Chest near the floor, upper arms parallel to it.', pose: KNEE_PLANK_BOTTOM },
+        { id: 'end', label: 'Press up', caption: 'Back to straight arms, line still unbroken.', pose: KNEE_PLANK_TOP },
+      ],
+      loop: 'cycle',
+      alignment: ['knee', 'head'],
     },
     tags: ['beginner', 'upper-body'],
   },
@@ -167,37 +301,77 @@ export const PUSH_EXERCISES: Exercise[] = [
     regression: 'knee-push-up',
     progression: 'diamond-push-up',
     summary: 'The benchmark horizontal press and the backbone of upper-body calisthenics.',
-    instructions: {
-      setup: [
-        'Lie face down and place your hands under your shoulders, slightly wider than shoulder width.',
-        'Tuck your toes under and press up into a plank.',
-        'Brace your abs and squeeze your glutes.',
+    startingPosition: {
+      hands: 'Flat on the floor under your shoulders, slightly wider than shoulder width, fingers spread and gripping the floor.',
+      feet: 'Toes tucked under, heels together or up to hip-width apart.',
+      body: 'One straight line from heels to head, as rigid as a plank.',
+      spine: 'Neutral, ribs pulled down, no arch in the lower back.',
+      head: 'Neck long and in line with your spine, eyes on the floor slightly ahead of your hands.',
+      shoulders: 'Stacked over your hands, pulled down and back away from your ears.',
+      hips: 'Level with your shoulders and heels, neither sagging nor piked up.',
+    },
+    steps: [
+      'Lie face down and place your hands under your shoulders, slightly wider than shoulder width.',
+      'Tuck your toes under and press up into a straight-arm plank.',
+      'Brace your abs as if bracing for a punch, and squeeze your glutes.',
+      'Bend your elbows and lower your chest toward the floor under control.',
+      'Keep your upper arms angled back at about 45 degrees to your ribs.',
+      'Stop when your upper arms are roughly parallel to the floor.',
+      'Press the floor away until your elbows are straight, holding the line the whole way.',
+    ],
+    breathing: {
+      inhale: 'On the descent, filling your ribs as your chest nears the floor.',
+      exhale: 'Forcefully as you press up, finishing as your elbows lock out.',
+      note: 'If you lose the rhythm, take one breath at the top before the next rep rather than holding your breath through several.',
+    },
+    tempo: {
+      phases: [
+        { label: 'Lower', seconds: 2 },
+        { label: 'Pause', seconds: 1 },
+        { label: 'Press', seconds: 1 },
       ],
-      execution: [
-        'Lower your chest toward the floor under control.',
-        'Stop when your upper arms are roughly parallel to the floor.',
-        'Press the floor away until your elbows are straight.',
-        'Keep your body in one line throughout.',
+      note: 'Pausing at the bottom removes the bounce and is the honest way to make the exercise harder before changing variation.',
+    },
+    sensation: {
+      working: 'The chest doing most of the work, with the triceps finishing the press and the front of the shoulders assisting.',
+      alsoNormal: [
+        'A strong burn across the chest in the last few reps.',
+        'Your abs and glutes tiring from holding the plank.',
+        'Arms shaking on the final rep of a hard set.',
+      ],
+      notNormal: [
+        'A sharp pinch at the front of the shoulder.',
+        'Pain in the wrist joint rather than a stretch across the front of it.',
+        'Pain in the lower back, which means the hips are sagging.',
       ],
     },
-    breathing: 'Inhale on the descent, exhale forcefully as you press up.',
-    cues: [
-      'Screw your hands into the floor to set your shoulders.',
-      'Think "push the floor away", not "lift myself up".',
-      'Squeeze your glutes to stop your hips sagging.',
-    ],
     commonMistakes: [
-      { mistake: 'Hips sag toward the floor.', fix: 'Brace your abs and squeeze your glutes before the first rep.' },
-      { mistake: 'Head drops forward and leads the movement.', fix: 'Keep your chin tucked and your neck in line with your spine.' },
-      { mistake: 'Only going halfway down.', fix: 'Reduce the reps or move back to knee push-ups until full range is clean.' },
+      { mistake: 'Hips sag toward the floor.', fix: 'Brace your abs and squeeze your glutes before the first rep, and end the set when the line breaks.' },
+      { mistake: 'Head drops forward and leads the movement.', fix: 'Keep your chin tucked and let your chest reach the floor first.' },
+      { mistake: 'Only going halfway down.', fix: 'Reduce the reps or step back to knee push-ups until full range is clean.' },
+      { mistake: 'Elbows flare to 90 degrees from the body.', fix: 'Angle them back toward your hips so your arms form an arrow, not a T.' },
     ],
-    safetyNotes: ['Stop the set if you feel a pinch at the front of the shoulder.'],
-    demo: {
-      keyframes: [
-        { id: 'top', label: 'Top' },
-        { id: 'bottom', label: 'Bottom' },
+    cues: ['Push the floor away.', 'Squeeze your glutes.', 'Elbows back, not out.', 'Chest leads.'],
+    safety: {
+      normalEffort: 'Hard. By the last rep you should not be able to hold a conversation.',
+      normalFatigue: 'A deep burn in the chest and triceps, and noticeable shaking near failure.',
+      concerningPain: PRESS_PAIN,
+      stopIf: [...STOP_RULES, 'Your hips drop and you cannot lift them back into line.'],
+      modifyIf: [
+        'Your wrists ache: make fists and press on your knuckles with the wrist straight.',
+        'You cannot manage 6 clean reps: drop back to knee push-ups rather than cutting the range.',
+        'Your shoulders pinch at the bottom: stop a little higher and build the range gradually.',
       ],
-      loop: 'ping-pong',
+    },
+    demo: {
+      scene: 'floor',
+      keyframes: [
+        { id: 'start', label: 'Start', caption: 'Arms straight, one rigid line from heels to head.', pose: PLANK_TOP },
+        { id: 'bottom', label: 'Bottom', caption: 'Chest near the floor, upper arms parallel, elbows angled back.', pose: PLANK_BOTTOM },
+        { id: 'end', label: 'Lockout', caption: 'Pressed back to straight arms with the line unchanged.', pose: PLANK_TOP },
+      ],
+      loop: 'cycle',
+      alignment: ['toe', 'head'],
     },
     tags: ['staple', 'upper-body'],
   },
@@ -218,33 +392,71 @@ export const PUSH_EXERCISES: Exercise[] = [
     regression: 'push-up',
     progression: 'decline-push-up',
     summary: 'A narrow-hand push-up that shifts the work onto the triceps.',
-    instructions: {
-      setup: [
-        'Start in a push-up position.',
-        'Bring your hands together under your chest so your thumbs and index fingers form a diamond.',
-      ],
-      execution: [
-        'Lower your chest toward your hands, keeping your elbows close to your ribs.',
-        'Touch your chest lightly to the back of your hands.',
-        'Press back up until your elbows are straight.',
+    startingPosition: {
+      hands: 'Together under your chest, thumbs and index fingers touching to form a diamond.',
+      feet: 'Toes tucked, feet hip-width apart for a slightly wider base than a normal push-up.',
+      body: 'One straight line from heels to head.',
+      spine: 'Neutral, ribs down, no arch.',
+      head: 'Neck long, eyes on your hands.',
+      shoulders: 'Over your hands, pulled down away from your ears.',
+      hips: 'Level, neither sagging nor lifted.',
+    },
+    steps: [
+      'Start in a push-up position with your hands under your shoulders.',
+      'Walk your hands together until your thumbs and index fingers form a diamond under your chest.',
+      'Widen your feet slightly for balance and brace your abs.',
+      'Lower your chest toward your hands, keeping your elbows brushing past your ribs.',
+      'Touch your chest lightly to the back of your hands.',
+      'Press back up until your elbows are straight.',
+      'Keep your hips level throughout; they will try to rise as you tire.',
+    ],
+    breathing: {
+      inhale: 'As you lower toward your hands.',
+      exhale: 'As you press back up.',
+    },
+    tempo: {
+      phases: [
+        { label: 'Lower', seconds: 2 },
+        { label: 'Touch', seconds: 1 },
+        { label: 'Press', seconds: 1 },
       ],
     },
-    breathing: 'Inhale down, exhale up.',
-    cues: [
-      'Elbows brush past your ribs, never out to the sides.',
-      'If your wrists complain, widen the diamond slightly.',
-    ],
-    commonMistakes: [
-      { mistake: 'Hips rise to shorten the range.', fix: 'Slow down and stop the set when the line breaks.' },
-      { mistake: 'Elbows flare wide, turning it back into a normal push-up.', fix: 'Keep your upper arms glued to your sides.' },
-    ],
-    safetyNotes: ['This loads the wrists. Warm your wrists up first and stop if you feel joint pain.'],
-    demo: {
-      keyframes: [
-        { id: 'top', label: 'Top' },
-        { id: 'bottom', label: 'Chest to hands' },
+    sensation: {
+      working: 'The triceps, strongly, with the inner chest helping.',
+      alsoNormal: [
+        'A stretch across the front of the wrists in the bottom position.',
+        'The triceps burning well before the chest does.',
       ],
-      loop: 'ping-pong',
+      notNormal: [
+        'Pain inside the elbow joint.',
+        'Sharp wrist pain as opposed to a stretch.',
+      ],
+    },
+    commonMistakes: [
+      { mistake: 'Hips rise to shorten the range.', fix: 'Slow down and end the set the moment the line breaks.' },
+      { mistake: 'Elbows flare wide, turning it back into a normal push-up.', fix: 'Keep your upper arms glued to your sides the whole way down.' },
+      { mistake: 'Hands so close the wrists are forced into an extreme angle.', fix: 'Widen the diamond into a triangle until your wrists are comfortable.' },
+    ],
+    cues: ['Elbows brush your ribs.', 'Chest to your hands.', 'Hips stay level.'],
+    safety: {
+      normalEffort: 'Hard. Expect fewer reps than a standard push-up.',
+      normalFatigue: 'Triceps burning and shaking by the last rep.',
+      concerningPain: [...PRESS_PAIN, 'Pain inside the elbow joint rather than muscular effort in the triceps.'],
+      stopIf: STOP_RULES,
+      modifyIf: [
+        'Your wrists complain: widen the diamond into a triangle shape.',
+        'Your elbows hurt: return to standard push-ups for a few weeks before trying again.',
+      ],
+    },
+    demo: {
+      scene: 'floor',
+      keyframes: [
+        { id: 'start', label: 'Start', caption: 'Hands together under the chest, arms straight.', pose: PLANK_TOP },
+        { id: 'bottom', label: 'Bottom', caption: 'Chest to the back of the hands, elbows tight to the ribs.', pose: PLANK_BOTTOM },
+        { id: 'end', label: 'Press up', caption: 'Straight arms with the hips still level.', pose: PLANK_TOP },
+      ],
+      loop: 'cycle',
+      alignment: ['toe', 'head'],
     },
     tags: ['triceps', 'upper-body'],
   },
@@ -265,37 +477,72 @@ export const PUSH_EXERCISES: Exercise[] = [
     regression: 'diamond-push-up',
     progression: 'archer-push-up',
     summary: 'A push-up with the feet raised, moving weight onto the hands and the upper chest.',
-    instructions: {
-      setup: [
-        'Set up in a push-up position with your feet on a chair, step or sofa edge.',
-        'Walk your hands out until your body is one straight line, shoulders under your hands.',
-        'Brace your abs so your lower back does not arch.',
+    startingPosition: {
+      hands: 'Flat on the floor, slightly wider than your shoulders, directly under them.',
+      feet: 'Up on a chair, step or sofa edge, toes tucked, on a surface they cannot slide off.',
+      body: 'One straight line from heels to head, sloping down toward your hands.',
+      spine: 'Neutral. This is where a decline goes wrong, so pull your ribs down hard.',
+      head: 'Neck long, eyes on the floor just ahead of your hands.',
+      shoulders: 'Stacked over your wrists, not drifting forward past them.',
+      hips: 'In line, resisting the urge to pike up or sag down.',
+    },
+    steps: [
+      'Put your feet on a stable raised surface and set your hands on the floor.',
+      'Walk your hands out until your shoulders sit directly over your wrists.',
+      'Brace your abs hard and squeeze your glutes; the higher your feet, the more your back wants to arch.',
+      'Lower your chest toward the floor under control.',
+      'Keep your elbows angled back toward your hips.',
+      'Stop when your upper arms are roughly parallel to the floor.',
+      'Press back up to straight arms without letting the hips drop.',
+    ],
+    breathing: {
+      inhale: 'On the way down.',
+      exhale: 'As you press up, finishing at lockout.',
+    },
+    tempo: {
+      phases: [
+        { label: 'Lower', seconds: 2 },
+        { label: 'Pause', seconds: 1 },
+        { label: 'Press', seconds: 1 },
       ],
-      execution: [
-        'Lower your chest toward the floor under control.',
-        'Stop when your upper arms are roughly parallel to the floor.',
-        'Press back up to straight arms.',
+      note: 'The higher your feet, the harder the press. Raise them gradually over weeks rather than all at once.',
+    },
+    sensation: {
+      working: 'The upper chest and the front of the shoulders, more than a flat push-up.',
+      alsoNormal: [
+        'More pressure through the wrists than usual.',
+        'Your abs working noticeably harder to stop the back arching.',
+      ],
+      notNormal: [
+        'Pain in the lower back, which means your hips have dropped.',
+        'A pinch at the front of the shoulder.',
       ],
     },
-    breathing: 'Inhale down, exhale up.',
-    cues: [
-      'The higher your feet, the harder the press. Start low.',
-      'Ribs stay pulled down; the lower back is where this one goes wrong.',
-    ],
     commonMistakes: [
-      { mistake: 'Lower back arches as the hips drop.', fix: 'Lower your feet and squeeze your glutes harder.' },
+      { mistake: 'Lower back arches as the hips drop.', fix: 'Lower your feet to a smaller step and squeeze your glutes harder.' },
       { mistake: 'Shoulders creep forward past the hands.', fix: 'Walk your hands forward so your shoulders stack over your wrists.' },
+      { mistake: 'Feet on something that slides.', fix: 'Use a step or a sofa edge and load it with your weight before committing.' },
     ],
-    safetyNotes: [
-      'Use something your feet cannot slide off. Load it before committing your weight.',
-      'More weight sits on your wrists and shoulders here. Warm both up first.',
-    ],
-    demo: {
-      keyframes: [
-        { id: 'top', label: 'Top' },
-        { id: 'bottom', label: 'Chest to floor' },
+    cues: ['Ribs down.', 'Shoulders over wrists.', 'Squeeze your glutes.'],
+    safety: {
+      normalEffort: 'Hard. Expect fewer reps than a flat push-up at the same fitness.',
+      normalFatigue: 'Upper chest and shoulders burning, wrists feeling the extra load.',
+      concerningPain: [...PRESS_PAIN, 'Lower back pain, which is a sign the position has broken down.'],
+      stopIf: [...STOP_RULES, 'Your lower back starts to ache rather than your chest.'],
+      modifyIf: [
+        'Your back arches: lower the surface your feet are on.',
+        'Your wrists ache: reduce the foot height, or press on your knuckles with straight wrists.',
       ],
-      loop: 'ping-pong',
+    },
+    demo: {
+      scene: 'chair',
+      keyframes: [
+        { id: 'start', label: 'Start', caption: 'Feet raised, arms straight, one line sloping to the hands.', pose: DECLINE_TOP },
+        { id: 'bottom', label: 'Bottom', caption: 'Chest near the floor, hips still in line.', pose: DECLINE_BOTTOM },
+        { id: 'end', label: 'Press up', caption: 'Back to straight arms, ribs still pulled down.', pose: DECLINE_TOP },
+      ],
+      loop: 'cycle',
+      alignment: ['toe', 'head'],
     },
     tags: ['upper-body', 'furniture'],
   },
@@ -316,37 +563,72 @@ export const PUSH_EXERCISES: Exercise[] = [
     regression: 'decline-push-up',
     progression: null,
     summary: 'A wide push-up that loads one arm at a time, the last step before one-arm work.',
-    instructions: {
-      setup: [
-        'Start in a push-up position with your hands much wider than your shoulders.',
-        'Turn your fingers slightly outward.',
+    startingPosition: {
+      hands: 'Flat on the floor, much wider than your shoulders, fingers turned slightly outward.',
+      feet: 'Wide, about shoulder-width or more, toes tucked for a stable base.',
+      body: 'One straight line from heels to head.',
+      spine: 'Neutral with the ribs pulled down.',
+      head: 'Neck long, eyes on the floor between your hands.',
+      shoulders: 'Both pulled down away from your ears; the wide position tempts them to shrug.',
+      hips: 'Square to the floor, both hip bones level. Keeping them level is the hard part.',
+    },
+    steps: [
+      'Start in a push-up position and walk your hands out much wider than your shoulders.',
+      'Turn your fingers slightly outward and brace your abs.',
+      'Bend one arm and lower your chest toward that hand.',
+      'Let the other arm stay straight and slide out sideways as a support, not a pressing arm.',
+      'Descend until your chest is near the bent-arm hand and your upper arm is roughly parallel to the floor.',
+      'Press back up through the bent arm only.',
+      'Finish all reps on one side, then repeat on the other.',
+    ],
+    breathing: {
+      inhale: 'As you lower toward the working arm.',
+      exhale: 'As you press back up to the centre.',
+    },
+    tempo: {
+      phases: [
+        { label: 'Lower to one side', seconds: 2 },
+        { label: 'Pause', seconds: 1 },
+        { label: 'Press back', seconds: 1 },
       ],
-      execution: [
-        'Bend one arm and lower toward that hand, keeping the other arm straight.',
-        'Let the straight arm slide out to the side as a support, not a pressing arm.',
-        'Press back up through the bent arm.',
-        'Finish all reps on one side before switching.',
+      note: 'The straighter the support arm, the harder the rep. Let it bend a little at first and straighten it over the weeks.',
+    },
+    sensation: {
+      working: 'One side of the chest and that triceps, taking most of your bodyweight.',
+      alsoNormal: [
+        'A stretch across the chest of the straight-arm side.',
+        'Your obliques working to stop the hips twisting.',
+      ],
+      notNormal: [
+        'A pinch or sharp stretch at the front of the straight arm’s shoulder.',
+        'Pain in the elbow of the straight arm.',
       ],
     },
-    breathing: 'Inhale as you lower toward the working arm, exhale as you press back.',
-    cues: [
-      'The straighter the support arm, the harder the rep.',
-      'Keep your hips square; do not let them rotate toward the working side.',
-    ],
     commonMistakes: [
       { mistake: 'Pressing equally with both arms.', fix: 'Keep the support arm locked straight so it cannot contribute.' },
-      { mistake: 'Hips twisting to help.', fix: 'Reduce the reps and hold your hips level throughout.' },
+      { mistake: 'Hips twisting toward the working side.', fix: 'Reduce the reps and hold both hip bones level throughout.' },
+      { mistake: 'Going too wide too soon.', fix: 'Start with a moderately wide stance and widen it over several weeks.' },
     ],
-    safetyNotes: [
-      'The wide position stretches the shoulder. Build up gradually and stop at any pinching.',
-    ],
+    cues: ['Hips square.', 'Support arm stays straight.', 'Press through one side.'],
+    safety: {
+      normalEffort: 'Very hard. This is close to a one-arm push-up in demand.',
+      normalFatigue: 'One side of the chest burning strongly; the set ends when the hips start to rotate.',
+      concerningPain: [...PRESS_PAIN, 'A sharp stretch at the front of the straight arm’s shoulder.'],
+      stopIf: [...STOP_RULES, 'Your hips rotate and you cannot square them again.'],
+      modifyIf: [
+        'Your shoulder pinches: narrow your hand position and let the support arm bend slightly.',
+        'You cannot manage 3 clean reps a side: return to decline push-ups and build more pressing strength first.',
+      ],
+    },
     demo: {
+      scene: 'floor',
       keyframes: [
-        { id: 'top', label: 'Top' },
-        { id: 'left', label: 'Down to left' },
-        { id: 'right', label: 'Down to right' },
+        { id: 'start', label: 'Start', caption: 'Wide hands, arms straight, hips square.', pose: PLANK_TOP },
+        { id: 'loaded', label: 'Down to one side', caption: 'Chest lowered toward one hand, the other arm straight.', pose: PLANK_BOTTOM },
+        { id: 'end', label: 'Press back', caption: 'Back to the centre with the hips still square.', pose: PLANK_TOP },
       ],
       loop: 'cycle',
+      alignment: ['toe', 'head'],
     },
     tags: ['unilateral', 'upper-body', 'advanced'],
   },

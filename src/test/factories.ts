@@ -1,4 +1,5 @@
 import type { Exercise } from '../domain/exercise';
+import { PLANK_BOTTOM, PLANK_TOP } from '../content/poses';
 import type { UserProfile } from '../domain/profile';
 import type { ProgressionState } from '../domain/progression';
 import type { WorkoutSession } from '../domain/session';
@@ -26,14 +27,36 @@ export const anExercise = (overrides: Partial<Exercise> = {}): Exercise => ({
   regression: null,
   progression: null,
   summary: 'The benchmark horizontal press.',
-  instructions: { setup: ['Hands under shoulders.'], execution: ['Lower.', 'Press up.'] },
-  breathing: 'Inhale down, exhale up.',
+  startingPosition: {
+    hands: 'Under your shoulders.',
+    feet: 'Toes tucked, hip-width.',
+    body: 'One straight line from heels to head.',
+    spine: 'Neutral, ribs down.',
+    head: 'Neck long, eyes on the floor.',
+    shoulders: 'Over your hands, pulled down.',
+    hips: 'Level with shoulders and heels.',
+  },
+  steps: ['Set your hands.', 'Lower your chest.', 'Press back up.'],
+  breathing: { inhale: 'On the way down.', exhale: 'As you press up.' },
+  sensation: {
+    working: 'The chest and triceps.',
+    alsoNormal: ['A burn in the last few reps.'],
+    notNormal: ['A pinch at the front of the shoulder.'],
+  },
   cues: ['Squeeze your glutes.'],
   commonMistakes: [{ mistake: 'Sagging hips.', fix: 'Brace your abs.' }],
+  safety: {
+    normalEffort: 'Hard by the last rep.',
+    normalFatigue: 'A burn in the chest.',
+    concerningPain: ['Sharp shoulder pain.'],
+    stopIf: ['Anything sharp.'],
+    modifyIf: ['Your wrists ache: press on your knuckles.'],
+  },
   demo: {
+    scene: 'floor',
     keyframes: [
-      { id: 'top', label: 'Top' },
-      { id: 'bottom', label: 'Bottom' },
+      { id: 'top', label: 'Top', caption: 'Arms straight.', pose: PLANK_TOP },
+      { id: 'bottom', label: 'Bottom', caption: 'Chest near the floor.', pose: PLANK_BOTTOM },
     ],
     loop: 'ping-pong',
   },

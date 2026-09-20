@@ -15,10 +15,18 @@ const renderApp = (adapter = new MemoryAdapter()) =>
 
 describe('AppShell', () => {
   it('lands on Today once the store is ready', async () => {
+    // 2026-09-20 is a Sunday, which the programme leaves as a rest day.
     renderApp();
-    expect(await screen.findByRole('heading', { level: 1 })).toHaveTextContent(
-      /no workout scheduled/i,
+    expect(await screen.findByRole('heading', { level: 1 })).toHaveTextContent(/rest day/i);
+  });
+
+  it('shows the prescribed session on a training day', async () => {
+    render(
+      <MemoryRouter>
+        <AppShell adapter={new MemoryAdapter()} today="2026-09-21" />
+      </MemoryRouter>,
     );
+    expect(await screen.findByRole('heading', { level: 1 })).toHaveTextContent('Push and Core');
   });
 
   it('shows both tabs', async () => {

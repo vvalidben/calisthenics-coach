@@ -3,6 +3,7 @@ import { StorageKeys } from '../storage/adapter';
 import { MemoryAdapter } from '../storage/memory-adapter';
 import { CURRENT_SCHEMA_VERSION } from '../storage/migrations';
 import { SEED_PROFILE } from '../content/seed-profile';
+import { PROGRAM } from '../content/program';
 import { FAMILIES } from '../domain/primitives';
 import { bootstrap } from './bootstrap';
 
@@ -26,6 +27,21 @@ describe('bootstrap', () => {
   it('seeds a progression state for every family on first run', async () => {
     const { progression } = await bootstrap(adapter);
     expect(progression.map((s) => s.family).sort()).toEqual([...FAMILIES].sort());
+  });
+
+  it('seeds the four program workouts on first run', async () => {
+    const { workouts } = await bootstrap(adapter);
+    expect(workouts.map((w) => w.id).sort()).toEqual(PROGRAM.map((w) => w.id).sort());
+  });
+
+  it('does not overwrite a workout that has already been changed', async () => {
+    const { repositories } = await bootstrap(adapter);
+    const monday = (await repositories.workouts.get('foundation-w1-d1'))!;
+    await repositories.workouts.save({ ...monday, name: 'My Monday' });
+
+    const { workouts } = await bootstrap(adapter);
+
+    expect(workouts.find((w) => w.id === 'foundation-w1-d1')?.name).toBe('My Monday');
   });
 
   it('reports that it seeded on the first run and not on the second', async () => {

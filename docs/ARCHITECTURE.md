@@ -86,6 +86,22 @@ every pose and that limb lengths stay consistent from pose to pose.
 The captions are always on screen. The drawing supports the written
 instructions and never replaces them.
 
+### The program
+
+`content/program.ts` holds four authored `Workout` records, one per training
+day. It is fixed content, not generated: nothing adapts, and the progression
+engine is a later sprint.
+
+`domain/duration.ts` computes how long a workout takes from its tempo, targets
+and rest, so "20 to 30 minutes" is checked rather than asserted. The estimate is
+deliberately slightly high — rest is charged after the final set too, because in
+practice that time is spent walking to the next exercise.
+
+`content/program.test.ts` enforces the programming rules: never more than two
+training days in a row, a different focus each day, no pressing on consecutive
+days, nothing needing equipment the athlete lacks, and every prescribed exercise
+carrying its full Sprint 3 instructions.
+
 ### Availability vs. ability
 
 Two separate ideas, deliberately not merged:
@@ -134,10 +150,9 @@ profile or logged sessions.
 
 | Capability | Attaches to |
 |---|---|
-| Program engine and schedule | Reads `UserProfile` and the catalog, writes `Workout` records via `repositories.workouts` |
+| Progression engine | Reads sessions, updates `ProgressionState`, and rewrites the `Workout` records the program seeded |
 | Workout player | Reads a `Workout`, writes a `WorkoutSession` |
 | Progress tracking and calendar | Reads `repositories.sessions.list()`, already ordered by date |
-| Progression engine | Reads sessions, updates `ProgressionState` against its own criteria, moves along the catalog's family chains |
 | Exercise demonstrations | Already built: `features/demo/FigureDemo.tsx`. `videoUrl` is left empty on every exercise because external links could not be verified from the build environment |
 | Anything that prescribes work | Must filter through `isExerciseAvailable` so it never programs an exercise the athlete has no equipment for |
 | Reminders | Reads `profile.trainingDays` and `profile.preferredTrainingTime` |

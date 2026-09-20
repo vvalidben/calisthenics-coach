@@ -1,3 +1,5 @@
+import type { Weekday } from './primitives';
+
 /**
  * The calendar date the athlete is actually living in.
  *
@@ -10,4 +12,20 @@ export const localIsoDate = (date: Date = new Date()): string => {
   const month = `${date.getMonth() + 1}`.padStart(2, '0');
   const day = `${date.getDate()}`.padStart(2, '0');
   return `${year}-${month}-${day}`;
+};
+
+const WEEKDAYS = [
+  'sunday',
+  'monday',
+  'tuesday',
+  'wednesday',
+  'thursday',
+  'friday',
+  'saturday',
+] as const;
+
+/** Which day of the week an ISO calendar date falls on. */
+export const weekdayOf = (iso: string): Weekday => {
+  const date = new Date(`${iso}T12:00:00`);
+  return WEEKDAYS[date.getDay()]!;
 };

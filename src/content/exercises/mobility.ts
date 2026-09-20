@@ -1052,10 +1052,10 @@ export const ANKLE_MOBILITY_EXERCISES: Exercise[] = [
     },
     tempo: {
       phases: [
-        { label: 'One full circle', seconds: 4 },
-        { label: 'Next circle', seconds: 4 },
+        { label: 'Toes down and round', seconds: 2 },
+        { label: 'Toes up and round', seconds: 2 },
       ],
-      note: 'Bigger, slower circles beat fast small ones.',
+      note: 'Bigger, slower circles beat fast small ones. One circle is one rep.',
     },
     sensation: {
       working: 'Movement rather than effort: a mild stretch at the extremes of the circle.',

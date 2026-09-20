@@ -868,3 +868,182 @@ a {
   font-size: var(--step--1);
   color: var(--chalk-faint);
 }
+
+/* ---- today: the prescribed session ------------------------------------- */
+
+.today__meta {
+  margin-top: 8px;
+  font-size: var(--step--1);
+  color: var(--signal);
+  text-transform: lowercase;
+}
+
+.today__next {
+  margin-top: 22px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-size: var(--step--1);
+  color: var(--chalk-dim);
+}
+
+.today__next strong {
+  display: block;
+  color: var(--chalk);
+  font-size: var(--step-0);
+  font-weight: 700;
+}
+
+.block {
+  margin-top: 34px;
+}
+
+.block__heading {
+  font-size: var(--step-1);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.block__items {
+  margin-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.prescribed {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.prescribed__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.prescribed__name {
+  font-size: var(--step-0);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.prescribed__difficulty {
+  flex: none;
+  font-size: var(--step--1);
+  color: var(--chalk-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.prescribed__dose {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin-top: 8px;
+  font-size: var(--step--1);
+  font-variant-numeric: tabular-nums;
+  color: var(--chalk);
+}
+
+.prescribed__dose span + span {
+  position: relative;
+  padding-left: 15px;
+}
+
+.prescribed__dose span + span::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--chalk-faint);
+}
+
+.prescribed__cue {
+  margin-top: 8px;
+  color: var(--signal);
+  font-size: var(--step--1);
+  font-weight: 600;
+}
+
+.prescribed__note {
+  margin-top: 6px;
+  max-width: 52ch;
+  font-size: var(--step--1);
+  line-height: 1.5;
+  color: var(--chalk-faint);
+}
+
+.prescribed__link {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 6px 13px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: var(--step--1);
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--chalk-dim);
+}
+
+/* ---- the week strip ---------------------------------------------------- */
+
+.week {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.week__heading {
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--chalk-faint);
+}
+
+.week__days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-top: 12px;
+}
+
+.week__day {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 9px 3px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  text-align: center;
+}
+
+.week__day--training {
+  background: var(--steel-1);
+  border-color: var(--steel-2);
+}
+
+.week__day[aria-current="date"] {
+  border-color: var(--signal);
+}
+
+.week__name {
+  font-size: var(--step--1);
+  font-weight: 700;
+}
+
+.week__day:not(.week__day--training) .week__name {
+  color: var(--chalk-faint);
+  font-weight: 400;
+}
+
+.week__label {
+  font-size: 0.6875rem;
+  line-height: 1.2;
+  color: var(--chalk-faint);
+  text-transform: lowercase;
+}
+
+.week__day--training .week__label {
+  color: var(--chalk-dim);
+}

@@ -1,7 +1,9 @@
+import { PROGRAM } from '../content/program';
 import { SEED_PROFILE } from '../content/seed-profile';
 import { SEED_PROGRESSION } from '../content/seed-progression';
 import type { UserProfile } from '../domain/profile';
 import type { ProgressionState } from '../domain/progression';
+import type { Workout } from '../domain/workout';
 import type { StorageAdapter } from '../storage/adapter';
 import { defaultAdapter } from '../storage/default-adapter';
 import { runMigrations } from '../storage/migrations';
@@ -11,6 +13,7 @@ export interface BootstrapResult {
   repositories: Repositories;
   profile: UserProfile;
   progression: ProgressionState[];
+  workouts: Workout[];
   /** True only on the run that wrote the seed data. */
   seeded: boolean;
 }
@@ -38,10 +41,18 @@ export const bootstrap = async (
 
   const progression = await repositories.progression.list();
 
+  const existingWorkouts = await repositories.workouts.list();
+  const storedIds = new Set(existingWorkouts.map((w) => w.id));
+  const missingWorkouts = PROGRAM.filter((w) => !storedIds.has(w.id));
+  await Promise.all(missingWorkouts.map((w) => repositories.workouts.save(w)));
+
+  const workouts = await repositories.workouts.list();
+
   return {
     repositories,
     profile,
     progression,
-    seeded: existingProfile === null || missing.length > 0,
+    workouts,
+    seeded: existingProfile === null || missing.length > 0 || missingWorkouts.length > 0,
   };
 };

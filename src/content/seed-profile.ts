@@ -13,9 +13,9 @@ export const SEED_DATE = '2026-09-20';
  * is a fact about their equipment. Adding `'pullup-bar'` to the list below is
  * the only change needed to unlock the entire pull ladder.
  *
- * Two fields are assumptions rather than stated facts, flagged so they are easy
- * to correct: which four days of the week are training days, and the preferred
- * training time.
+ * The training days come from the athlete's own suggested schedule. The
+ * preferred training time is still an assumption, flagged so it is easy to
+ * correct; it only matters once reminders exist.
  */
 export const SEED_PROFILE: UserProfile = {
   goals: ['build-muscle', 'get-stronger', 'mobility-flexibility'],
@@ -35,8 +35,9 @@ export const SEED_PROFILE: UserProfile = {
 
   availableEquipment: ['none', 'floor', 'wall', 'chair', 'towel'],
 
-  // ASSUMPTION: an even Mon/Tue + Thu/Fri split. Change freely.
-  trainingDays: ['monday', 'tuesday', 'thursday', 'friday'],
+  // Mon, Tue, rest, Thu, rest, Sat, rest. Never more than two days in a row,
+  // and a full rest day before each of the two harder sessions.
+  trainingDays: ['monday', 'tuesday', 'thursday', 'saturday'],
   // ASSUMPTION: evening training. Only used once reminders land.
   preferredTrainingTime: '18:00',
   sessionDuration: { min: 20, max: 30 },

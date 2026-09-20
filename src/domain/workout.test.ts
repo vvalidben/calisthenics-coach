@@ -16,6 +16,7 @@ const validWorkout: Workout = {
       measurement: 'reps',
       target: { min: 8, max: 10 },
       restSeconds: 0,
+      cue: 'Start from the tailbone.',
     },
   ],
   mainWork: [
@@ -25,6 +26,7 @@ const validWorkout: Workout = {
       measurement: 'reps',
       target: { min: 6, max: 10 },
       restSeconds: 90,
+      cue: 'Push the floor away.',
     },
     {
       exerciseId: 'bodyweight-squat',
@@ -32,6 +34,7 @@ const validWorkout: Workout = {
       measurement: 'reps',
       target: { min: 8, max: 12 },
       restSeconds: 90,
+      cue: 'Push the floor away.',
     },
   ],
   mobility: [
@@ -41,6 +44,7 @@ const validWorkout: Workout = {
       measurement: 'time',
       target: { min: 30, max: 45 },
       restSeconds: 30,
+      cue: 'Relax into it.',
     },
   ],
   notes: 'Keep every rep clean; stop two reps short of failure.',
@@ -75,6 +79,20 @@ describe('workoutSchema', () => {
     const result = workoutSchema.safeParse({
       ...validWorkout,
       mainWork: [{ ...validWorkout.mainWork[0]!, restSeconds: -1 }],
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it('requires a technique cue on every exercise', () => {
+    const { cue: _cue, ...withoutCue } = validWorkout.mainWork[0]!;
+    const result = workoutSchema.safeParse({ ...validWorkout, mainWork: [withoutCue] });
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects an empty technique cue', () => {
+    const result = workoutSchema.safeParse({
+      ...validWorkout,
+      mainWork: [{ ...validWorkout.mainWork[0]!, cue: '' }],
     });
     expect(result.success).toBe(false);
   });

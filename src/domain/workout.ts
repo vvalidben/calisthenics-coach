@@ -22,8 +22,12 @@ export type WorkoutFocus = z.infer<typeof workoutFocusSchema>;
 
 /**
  * One prescribed exercise inside a workout: what to do, how much, how long to
- * rest. The range lets the progression engine move a target without rewriting
- * the workout.
+ * rest, and the one thing to concentrate on while doing it.
+ *
+ * `cue` is required and deliberately per-workout rather than read from the
+ * exercise: the same movement is worth thinking about differently on a heavy
+ * day and on a light one. Difficulty is not stored here — it belongs to the
+ * exercise, and duplicating it would let the two disagree.
  */
 export const workoutItemSchema = z.object({
   exerciseId: slugSchema,
@@ -32,6 +36,8 @@ export const workoutItemSchema = z.object({
   /** Reps per set, or seconds per set when measured in time. */
   target: rangeSchema,
   restSeconds: z.number().int().nonnegative(),
+  /** The single technique cue to hold in mind for this exercise today. */
+  cue: z.string().min(1),
   note: z.string().optional(),
 });
 export type WorkoutItem = z.infer<typeof workoutItemSchema>;

@@ -9,7 +9,7 @@ import type { UserProfile } from '../domain/profile';
 import type { StorageAdapter } from '../storage/adapter';
 import { CURRENT_SCHEMA_VERSION } from '../storage/migrations';
 import { bootstrap, type BootstrapResult } from './bootstrap';
-import { localIsoDate } from './today';
+import { localIsoDate } from '../domain/calendar';
 
 interface AppShellProps {
   /** Injected in tests; defaults to IndexedDB in the browser. */
@@ -123,7 +123,12 @@ export const AppShell = ({ adapter, today = localIsoDate() }: AppShellProps) => 
     <div className="shell">
       <main className="shell__main">
         <Routes>
-          <Route path="/" element={<TodayScreen profile={data.profile} today={today} />} />
+          <Route
+            path="/"
+            element={
+              <TodayScreen profile={data.profile} today={today} workouts={data.workouts} />
+            }
+          />
           <Route path="/library" element={<ExerciseList profile={data.profile} />} />
           <Route path="/library/:id" element={<ExerciseRoute profile={data.profile} />} />
           <Route

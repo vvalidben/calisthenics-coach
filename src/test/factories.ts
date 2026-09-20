@@ -90,10 +90,24 @@ export const aWorkout = (overrides: Partial<Workout> = {}): Workout => ({
   focus: 'full-body',
   estimatedMinutes: 25,
   warmUp: [
-    { exerciseId: 'cat-cow', sets: 1, measurement: 'reps', target: { min: 8, max: 10 }, restSeconds: 0 },
+    {
+      exerciseId: 'cat-cow',
+      sets: 1,
+      measurement: 'reps',
+      target: { min: 8, max: 10 },
+      restSeconds: 0,
+      cue: 'Start from the tailbone.',
+    },
   ],
   mainWork: [
-    { exerciseId: 'push-up', sets: 3, measurement: 'reps', target: { min: 6, max: 10 }, restSeconds: 90 },
+    {
+      exerciseId: 'push-up',
+      sets: 3,
+      measurement: 'reps',
+      target: { min: 6, max: 10 },
+      restSeconds: 90,
+      cue: 'Push the floor away.',
+    },
   ],
   mobility: [],
   ...overrides,

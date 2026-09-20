@@ -1916,3 +1916,252 @@ a {
   font-variant-numeric: tabular-nums;
   color: var(--chalk-faint);
 }
+
+/* --- History: the calendar and one session read back ------------------- */
+
+/* Four numbers pair up better than they fit across three columns. */
+.tiles--pairs {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.week {
+  margin-top: 26px;
+}
+
+.week__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+.week__title {
+  font-size: var(--step-0);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.week__count {
+  flex: none;
+  font-size: var(--step--1);
+  font-variant-numeric: tabular-nums;
+  color: var(--chalk-faint);
+}
+
+.week__days {
+  margin-top: 6px;
+}
+
+.day {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 9px 2px;
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 55%, transparent);
+  font-size: var(--step--1);
+}
+
+/* A rest day is part of the plan, not a gap in it — present but quiet. */
+.day--rest {
+  color: var(--chalk-faint);
+}
+
+.day--today {
+  color: var(--signal);
+}
+
+.day__link {
+  display: contents;
+  color: inherit;
+  text-decoration: none;
+}
+
+.day__when {
+  flex: none;
+  display: flex;
+  gap: 6px;
+  width: 4.5rem;
+  color: var(--chalk-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.day--today .day__when {
+  color: inherit;
+  font-weight: 700;
+}
+
+.day__weekday {
+  width: 2.2rem;
+}
+
+.day__what {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+  min-width: 0;
+  font-weight: 600;
+}
+
+.day--rest .day__what {
+  font-weight: 400;
+}
+
+.day__mobility {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--chalk-faint);
+}
+
+.day__status {
+  flex: none;
+  font-weight: 600;
+}
+
+.day--completed .day__status {
+  color: var(--done);
+}
+
+.day--partial .day__status {
+  color: var(--chalk-dim);
+}
+
+.day--missed .day__status {
+  color: var(--missed);
+}
+
+.day--planned .day__status {
+  color: var(--chalk-faint);
+}
+
+.day__link:hover .day__what,
+.day__link:focus-visible .day__what {
+  text-decoration: underline;
+}
+
+.detail__back {
+  display: inline-block;
+  margin-bottom: 14px;
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--chalk-dim);
+  text-decoration: none;
+}
+
+.detail__back:hover,
+.detail__back:focus-visible {
+  color: var(--chalk);
+}
+
+.detail__missed {
+  max-width: 44ch;
+  margin-top: 22px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--missed);
+  border-radius: 8px;
+  font-size: var(--step--1);
+  color: var(--chalk-dim);
+}
+
+.detail__block {
+  margin-top: 30px;
+}
+
+.detail__heading {
+  font-size: var(--step-1);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.detail__exercises {
+  margin-top: 12px;
+}
+
+.logged {
+  padding: 13px 0;
+  border-top: 1px solid var(--line);
+}
+
+.logged__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.logged__name {
+  font-weight: 700;
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid var(--chalk-faint);
+}
+
+.logged__prescription {
+  flex: none;
+  font-size: var(--step--1);
+  color: var(--chalk-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.logged__sets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.logged__note {
+  margin-top: 8px;
+  font-size: var(--step--1);
+  color: var(--chalk-dim);
+}
+
+.set {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: var(--step--1);
+  font-variant-numeric: tabular-nums;
+}
+
+.set--skipped {
+  color: var(--chalk-faint);
+  border-style: dashed;
+}
+
+.set__number {
+  color: var(--chalk-faint);
+}
+
+.set__amount {
+  font-weight: 700;
+}
+
+.set__effort {
+  color: var(--chalk-dim);
+}
+
+.set__effort--very-hard,
+.set__effort--failed {
+  color: var(--missed);
+}
+
+.detail__none {
+  margin-top: 10px;
+  font-size: var(--step--1);
+  color: var(--chalk-faint);
+}
+
+.detail__notes {
+  margin-top: 10px;
+  max-width: 44ch;
+  color: var(--chalk-dim);
+}

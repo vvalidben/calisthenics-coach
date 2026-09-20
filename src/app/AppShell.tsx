@@ -6,7 +6,10 @@ import { ExerciseDetail } from '../features/library/ExerciseDetail';
 import { ExerciseList } from '../features/library/ExerciseList';
 import { WorkoutRoute } from '../features/player/WorkoutRoute';
 import { DashboardScreen } from '../features/dashboard/DashboardScreen';
+import { HistoryScreen } from '../features/history/HistoryScreen';
+import { SessionDetail } from '../features/history/SessionDetail';
 import type { UserProfile } from '../domain/profile';
+import type { Workout } from '../domain/workout';
 import type { StorageAdapter } from '../storage/adapter';
 import type { WorkoutSession } from '../domain/session';
 import { bootstrap, type BootstrapResult } from './bootstrap';
@@ -48,6 +51,13 @@ const LadderGlyph = () => (
   </svg>
 );
 
+const ClockGlyph = () => (
+  <svg className="tabbar__glyph" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
+    <circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" />
+    <path d="M10 5.5V10l3 2" stroke="currentColor" strokeLinecap="round" fill="none" />
+  </svg>
+);
+
 const TabBar = () => (
   <nav className="tabbar" aria-label="Sections">
     <NavLink to="/" end className="tabbar__link">
@@ -61,6 +71,10 @@ const TabBar = () => (
     <NavLink to="/pathways" className="tabbar__link">
       <LadderGlyph />
       Pathways
+    </NavLink>
+    <NavLink to="/history" className="tabbar__link">
+      <ClockGlyph />
+      History
     </NavLink>
   </nav>
 );
@@ -83,6 +97,37 @@ const ExerciseRoute = ({ profile }: { profile: UserProfile }) => {
   }
 
   return <ExerciseDetail exercise={exercise} profile={profile} />;
+};
+
+/** Resolves the :sessionId in the URL to a saved session, or says it does not exist. */
+const SessionRoute = ({
+  sessions,
+  workouts,
+}: {
+  sessions: WorkoutSession[];
+  workouts: Workout[];
+}) => {
+  const { sessionId } = useParams();
+  const session = sessions.find((s) => s.id === sessionId);
+
+  if (!session) {
+    return (
+      <div className="state">
+        <h1 className="state__title">No such session</h1>
+        <p className="state__body">
+          Nothing saved has the id &ldquo;{sessionId}&rdquo;. Go back to History and pick a day
+          from the calendar.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <SessionDetail
+      session={session}
+      workout={workouts.find((w) => w.id === session.workoutId)}
+    />
+  );
 };
 
 /**
@@ -153,6 +198,21 @@ export const AppShell = ({ adapter, today = localIsoDate() }: AppShellProps) => 
           />
           <Route path="/library" element={<ExerciseList profile={data.profile} />} />
           <Route path="/library/:id" element={<ExerciseRoute profile={data.profile} />} />
+          <Route
+            path="/history"
+            element={
+              <HistoryScreen
+                profile={data.profile}
+                today={today}
+                workouts={data.workouts}
+                sessions={sessions}
+              />
+            }
+          />
+          <Route
+            path="/history/:sessionId"
+            element={<SessionRoute sessions={sessions} workouts={data.workouts} />}
+          />
           <Route
             path="/pathways"
             element={<PathwaysScreen progression={data.progression} profile={data.profile} />}

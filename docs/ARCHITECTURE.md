@@ -184,6 +184,39 @@ The streak counts consecutive *scheduled* training days, so a rest day never
 breaks it, and today is forgiven until the day is over: a streak that dies at
 breakfast discourages rather than motivates.
 
+### The calendar
+
+`domain/history.ts` builds the training calendar, and its one structural
+decision is that **a missed day is derived, never stored**. If the app is not
+opened on a Monday there is no record of that Monday at all, so `historyWeeks`
+works it out from the schedule instead: a training day in the past with nothing
+completed on it was missed. Nothing is written back and nothing is moved, which
+is what makes the athlete's rule — mark it missed, do not reschedule, continue
+normally — hold by construction rather than by remembering to enforce it.
+
+`dayFor` resolves each date in one pass, in this order:
+
+1. a completed or partial training session → `completed` / `partial`
+2. otherwise a scheduled day already past → `missed`
+3. otherwise a scheduled day → `planned` (today is still `planned`; the day is
+   not over)
+4. otherwise → `rest`
+
+`mobilityCount` is counted separately at every step and never fills in for a
+missed workout, for the same reason mobility is counted separately everywhere
+else.
+
+Weeks, not a month grid: a month boundary means nothing to a training
+programme, and "3 of 4 this week" is the number that says how the week is
+going. `features/history/HistoryScreen.tsx` renders each week as seven rows
+rather than seven squares, because the name of the workout is the part worth
+reading and a seven-across grid has no room for it.
+
+`features/history/SessionDetail.tsx` reads one session back — duration,
+exercises, every set with its reps or seconds and the difficulty word, notes —
+grouped by block. It is history only: nothing on that screen changes the
+program, because the progression engine has already had its say.
+
 ### Mobility
 
 `content/routines.ts` holds six optional restorative routines: one per mobility
@@ -260,7 +293,7 @@ profile or logged sessions.
 |---|---|
 | Progression engine | Built: `domain/progression-engine.ts`, run from the player's `onFinish` |
 | Workout player | Built: `features/player/`. Reads a `Workout`, writes a `WorkoutSession` after every set |
-| Progress tracking and calendar | Reads `repositories.sessions.list()`, already ordered by date |
+| Progress tracking and calendar | Built: `domain/history.ts` + `features/history/`. Reads `repositories.sessions.list()` and derives missed days from the schedule |
 | Exercise demonstrations | Already built: `features/demo/FigureDemo.tsx`. `videoUrl` is left empty on every exercise because external links could not be verified from the build environment |
 | Anything that prescribes work | Must filter through `isExerciseAvailable` so it never programs an exercise the athlete has no equipment for |
 | Reminders | Reads `profile.trainingDays` and `profile.preferredTrainingTime` |

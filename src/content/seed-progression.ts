@@ -50,11 +50,12 @@ export const initialProgressionFor = (
  * already doing push-ups and squats, no dips at all, and untested on the plank
  * and handstand so both start at the bottom.
  *
- * The two bar families are seeded at their entry step rather than at the
- * athlete's recorded pull-up ability. Nothing in them can be trained today, so
- * claiming a position on a ladder he cannot reach would be a lie the
- * progression engine would later act on. When a bar arrives, these two get
- * re-assessed like any other untested movement.
+ * The bar families and the handstand are seeded at their entry step. Nothing in
+ * them has been trained, so claiming a position further up would be a lie the
+ * progression engine would later act on.
+ *
+ * When a bar arrives, the two pull families get re-assessed like any other
+ * untested movement.
  */
 const STARTING_VARIATIONS: ExerciseId[] = [
   'push-up',
@@ -66,7 +67,7 @@ const STARTING_VARIATIONS: ExerciseId[] = [
   'front-plank',
   'knee-side-plank',
   'hanging-knee-raise',
-  'plank-to-pike-hold',
+  'wrist-preparation',
   'wall-angel',
   'cat-cow',
   'ninety-ninety-hip-switch',

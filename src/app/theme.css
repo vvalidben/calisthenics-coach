@@ -1457,3 +1457,144 @@ a {
   line-height: 1.5;
   color: var(--chalk-dim);
 }
+
+/* ---- pathway map ------------------------------------------------------- */
+
+.pathway {
+  margin-top: 40px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+.pathway__name {
+  font-size: var(--step-3);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.pathway__summary {
+  margin-top: 6px;
+  max-width: 48ch;
+  color: var(--chalk-dim);
+  font-size: var(--step--1);
+}
+
+.pathway__note {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-left: 3px solid var(--signal);
+  background: var(--steel-1);
+  max-width: 56ch;
+  font-size: var(--step--1);
+  line-height: 1.55;
+  color: var(--chalk-dim);
+}
+
+.ladder {
+  margin-top: 26px;
+}
+
+.ladder__name {
+  font-size: var(--step-1);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.ladder__goal {
+  margin-top: 2px;
+  max-width: 48ch;
+  font-size: var(--step--1);
+  color: var(--chalk-faint);
+}
+
+.ladder__caveat {
+  margin-top: 8px;
+  padding-left: 12px;
+  border-left: 2px solid var(--line);
+  max-width: 56ch;
+  font-size: var(--step--1);
+  line-height: 1.5;
+  color: var(--chalk-faint);
+}
+
+.ladder__steps {
+  margin-top: 12px;
+  border-left: 2px solid var(--line);
+  padding-left: 0;
+}
+
+.step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 12px;
+  padding: 10px 0 10px 22px;
+}
+
+.step::before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  top: 16px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--steel-0);
+  border: 2px solid var(--line);
+}
+
+.step--cleared::before {
+  background: var(--chalk-faint);
+  border-color: var(--chalk-faint);
+}
+
+.step--current::before {
+  background: var(--signal);
+  border-color: var(--signal);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--signal) 25%, transparent);
+}
+
+.step__level {
+  position: absolute;
+  left: -34px;
+  top: 12px;
+  width: 18px;
+  text-align: right;
+  font-size: var(--step--1);
+  font-variant-numeric: tabular-nums;
+  color: var(--chalk-faint);
+}
+
+.step__name {
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--chalk);
+}
+
+.step--current .step__name {
+  color: var(--signal);
+}
+
+.step--locked .step__name,
+.step--cleared .step__name {
+  color: var(--chalk-dim);
+}
+
+.step__status {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: baseline;
+  font-size: var(--step--1);
+  color: var(--chalk-faint);
+  text-align: right;
+}
+
+.step--current .step__status {
+  color: var(--signal);
+  font-weight: 600;
+}
+
+.pathways .ladder__steps {
+  margin-left: 34px;
+}

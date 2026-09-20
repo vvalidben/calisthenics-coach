@@ -13,8 +13,14 @@ import { categorySchema, equipmentSchema, familySchema } from './primitives';
  * a comment nobody reads. Floor-based pulling uses it to say plainly that it is
  * not a substitute for hanging from a bar.
  */
+export const PATHWAYS = ['push', 'legs', 'core', 'pull', 'skill', 'mobility'] as const;
+export const pathwaySchema = z.enum(PATHWAYS);
+export type Pathway = z.infer<typeof pathwaySchema>;
+
 export const familyInfoSchema = z.object({
   id: familySchema,
+  /** The movement pattern this family belongs to, for grouping. */
+  pathway: pathwaySchema,
   name: z.string().min(1),
   category: categorySchema,
   /** What reaching the top of this family means. */

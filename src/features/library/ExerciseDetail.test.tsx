@@ -104,7 +104,7 @@ describe('the ten sections', () => {
   it('links to the harder version', () => {
     renderDetail();
     const harder = section(/harder|progression/i);
-    expect(within(harder).getByRole('link', { name: /diamond push-up/i })).toBeInTheDocument();
+    expect(within(harder).getByRole('link', { name: /tempo push-up/i })).toBeInTheDocument();
   });
 
   it('says plainly when there is no easier version', () => {

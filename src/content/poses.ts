@@ -250,3 +250,10 @@ export const ANKLE_WALL_START = pose([46, 22], [46, 32], [56, 38], [66, 40], [46
 export const ANKLE_WALL_FORWARD = pose([44, 24], [44, 34], [56, 38], [68, 40], [42, 58], [60, 72], [48, 86], [56, 88]);
 export const ANKLE_CIRCLE_POINT = pose([34, 44], [34, 54], [44, 62], [56, 66], [34, 78], [54, 82], [70, 78], [78, 72]);
 export const ANKLE_CIRCLE_FLEX = pose([34, 44], [34, 54], [44, 62], [56, 66], [34, 78], [54, 82], [70, 78], [74, 68]);
+
+// --- wrist and handstand preparation --------------------------------------
+
+export const WRIST_ROCK_BACK = pose([70, 58], [64, 62], [66, 75], [68, 88], [38, 64], [34, 88], [24, 84], [18, 82]);
+export const WRIST_ROCK_FORWARD = pose([80, 56], [74, 60], [73, 74], [72, 88], [46, 64], [40, 88], [30, 84], [24, 82]);
+export const HANDSTAND_CHEST_WALL = pose([52, 70], [52, 60], [52, 74], [52, 88], [50, 38], [48, 24], [46, 12], [40, 10]);
+export const HANDSTAND_SHOULDER_TAP = pose([44, 72], [44, 62], [50, 68], [46, 64], [46, 40], [48, 26], [50, 14], [56, 12]);

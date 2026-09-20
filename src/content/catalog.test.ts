@@ -4,7 +4,13 @@ import { exerciseSchema } from '../domain/exercise';
 import { familyInfoSchema } from '../domain/family';
 import { EQUIPMENT, FAMILIES, type Family } from '../domain/primitives';
 import { EXERCISES, exerciseById, exercisesInFamily, familyChain } from './catalog';
-import { FAMILY_INFO, familyInfo, requireFamilyInfo } from './families';
+import {
+  FAMILY_INFO,
+  PATHWAY_INFO,
+  familiesByPathway,
+  familyInfo,
+  requireFamilyInfo,
+} from './families';
 import { SEED_PROFILE } from './seed-profile';
 
 describe('exercise catalog', () => {
@@ -202,8 +208,52 @@ describe('family registry', () => {
     expect(familyInfo('pull-prep')?.caveat).toMatch(/not pulling exercises/i);
   });
 
-  it('warns in the pull family against improvising a bar', () => {
-    expect(familyInfo('pull')?.caveat).toMatch(/chairs|door/i);
+  it('says the pull family is locked until a bar exists', () => {
+    expect(familyInfo('pull')?.caveat).toMatch(/pull-up bar/i);
+  });
+});
+
+describe('the pull pathway', () => {
+  const pull = PATHWAY_INFO.find((p) => p.id === 'pull');
+
+  it('explains that vertical pulling needs a safe setup', () => {
+    expect(pull?.note).toMatch(/safe to hang from/i);
+  });
+
+  it('warns against improvising one, naming the usual bad ideas', () => {
+    expect(pull?.note).toMatch(/two chairs/i);
+    expect(pull?.note).toMatch(/door handle/i);
+    expect(pull?.note).toMatch(/door frame/i);
+  });
+
+  it('says what happens when a real bar arrives', () => {
+    expect(pull?.note).toMatch(/unlocks at once/i);
+  });
+
+  it('is honest that floor work does not substitute', () => {
+    expect(pull?.note).toMatch(/will build a pull-up|no substitute/i);
+  });
+});
+
+describe('the pathway grouping', () => {
+  it('places every family under exactly one pathway', () => {
+    const grouped = familiesByPathway().flatMap((g) => g.families.map((f) => f.id));
+    expect([...grouped].sort()).toEqual([...FAMILY_INFO.map((f) => f.id)].sort());
+  });
+
+  it('keeps the three core ladders separate', () => {
+    const core = familiesByPathway().find((g) => g.pathway.id === 'core');
+    expect(core?.families.map((f) => f.id)).toEqual(['core', 'side-core', 'hanging-core']);
+  });
+
+  it('explains why they are separate rather than merged', () => {
+    const core = PATHWAY_INFO.find((p) => p.id === 'core');
+    expect(core?.note).toMatch(/parallel ladders/i);
+  });
+
+  it('keeps the handstand out of the programme and says so', () => {
+    const skill = PATHWAY_INFO.find((p) => p.id === 'skill');
+    expect(skill?.note).toMatch(/not in your programme/i);
   });
 });
 

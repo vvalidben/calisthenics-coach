@@ -33,16 +33,25 @@ describe('AppShell', () => {
     renderApp();
     await screen.findByRole('heading', { level: 1 });
     expect(screen.getByRole('link', { name: /today/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /progressions/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /pathways/i })).toBeInTheDocument();
   });
 
-  it('switches to the progressions tab', async () => {
+  it('switches to the pathways tab', async () => {
     renderApp();
     await screen.findByRole('heading', { level: 1 });
 
-    await userEvent.click(screen.getByRole('link', { name: /progressions/i }));
+    await userEvent.click(screen.getByRole('link', { name: /pathways/i }));
 
-    expect(await screen.findByText(/schema version 1/i)).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { level: 1, name: /pathways/i })).toBeInTheDocument();
+  });
+
+  it('reaches an exercise from the pathway map', async () => {
+    renderApp();
+    await screen.findByRole('heading', { level: 1 });
+    await userEvent.click(screen.getByRole('link', { name: /pathways/i }));
+    await userEvent.click(await screen.findByRole('link', { name: 'Tempo Push-Up' }));
+
+    expect(await screen.findByRole('heading', { level: 1 })).toHaveTextContent('Tempo Push-Up');
   });
 
   it('seeds the store on first run', async () => {

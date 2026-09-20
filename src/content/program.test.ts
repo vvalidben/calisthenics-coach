@@ -212,8 +212,15 @@ describe('the program serves the stated goals', () => {
     expect(families).toContain('hinge');
   });
 
-  it('works toward the handstand goal', () => {
-    expect(families).toContain('handstand');
+  it('leaves handstand work out of the beginner program', () => {
+    // A handstand is a skill built over years. It has its own pathway to
+    // follow whenever he wants it; it does not belong inside a 26-minute
+    // beginner session.
+    expect(families).not.toContain('handstand');
+  });
+
+  it('still trains the sides of the trunk, not only the front', () => {
+    expect(families).toContain('side-core');
   });
 
   it('covers at least three of the five mobility areas each week', () => {

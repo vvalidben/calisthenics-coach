@@ -20,7 +20,9 @@ import type { Workout } from '../domain/workout';
  * **What is deliberately absent.** No dips beyond the chair version, because he
  * has none. No vertical pulling at all, because there is no bar: Day 3 leans on
  * floor-based upper-back work, which maintains posture and shoulder health and
- * is labelled throughout as not being a pull.
+ * is labelled throughout as not being a pull. And no handstand work: it is a
+ * skill built over years and belongs on its own time, not inside a 26-minute
+ * beginner session. The pathway is there to follow whenever he wants it.
  *
  * Nothing here adapts. Progression is the next sprint's job.
  */
@@ -297,13 +299,13 @@ const day3: Workout = {
 
 const day4: Workout = {
   id: 'foundation-w1-d4',
-  name: 'Full Body and Skill',
+  name: 'Full Body',
   day: 'saturday' satisfies Weekday,
   weekIndex: WEEK,
   focus: 'full-body',
   estimatedMinutes: 26,
   notes:
-    'A rest day in front of it, so this is where the handstand work goes: skill practice needs a fresh nervous system, not a tired one.',
+    'A rest day in front of it, so this is the strongest session of the week. Handstand work is deliberately not here — it is a skill to train on its own time, not something to squeeze into 26 minutes.',
   warmUp: [
     {
       exerciseId: 'cat-cow',
@@ -357,13 +359,13 @@ const day4: Workout = {
       cue: 'Hips stay level.',
     },
     {
-      exerciseId: 'plank-to-pike-hold',
+      exerciseId: 'knee-side-plank',
       sets: 2,
-      measurement: 'time',
-      target: { min: 20, max: 30 },
+      measurement: 'time-per-side',
+      target: { min: 15, max: 30 },
       restSeconds: 45,
-      cue: 'Push the floor away.',
-      note: 'The first step toward a handstand. Warm your wrists up properly before it.',
+      cue: 'Stack the hips.',
+      note: 'The front plank trains the front of the trunk; this trains the sides, which it never touches.',
     },
   ],
   mobility: [

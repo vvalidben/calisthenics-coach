@@ -1,5 +1,14 @@
 import type { Exercise } from '../../domain/exercise';
-import { PIKE_HOLD, PLANK_TOP, WALL_HANDSTAND } from '../poses';
+import {
+  HANDSTAND_CHEST_WALL,
+  HANDSTAND_SHOULDER_TAP,
+  PIKE_HOLD,
+  PLANK_TOP,
+  QUADRUPED,
+  WALL_HANDSTAND,
+  WRIST_ROCK_BACK,
+  WRIST_ROCK_FORWARD,
+} from '../poses';
 
 const INVERSION_PAIN = [
   'Sharp pain in the wrist joint rather than a stretch across the front of it.',
@@ -13,8 +22,108 @@ const INVERSION_STOP = [
   'You can no longer control coming down.',
 ];
 
-/** The handstand ladder. The athlete cannot currently hold a handstand. */
+/**
+ * The handstand ladder, in four stages: wrist preparation, wall drills,
+ * controlled holds, then balance work.
+ *
+ * Deliberately absent from the four-day programme. A handstand is a skill
+ * built over years, and a complete beginner has better uses for a 25-minute
+ * session than being upside down. Train it when you feel like it, on a rest
+ * day or after a session, and treat every step as its own project.
+ */
 export const SKILL_EXERCISES: Exercise[] = [
+  {
+    id: 'wrist-preparation',
+    name: 'Wrist Preparation',
+    category: 'skill',
+    movementPattern: 'mobility',
+    family: 'handstand',
+    primaryMuscles: ['wrists', 'forearms'],
+    secondaryMuscles: ['front-delts'],
+    equipment: ['floor'],
+    difficulty: 1,
+    beginnerSuitability: 'ideal',
+    measurement: 'reps',
+    prescription: { sets: { min: 2, max: 3 }, target: { min: 8, max: 12 }, restSeconds: 20 },
+    progressionLevel: 1,
+    regression: null,
+    progression: 'plank-to-pike-hold',
+    summary: 'Loading the wrists gradually on all fours. The first stage of any handstand work, and the one most people skip.',
+    startingPosition: {
+      hands: 'Flat on the floor under your shoulders, fingers spread wide and pointing forward.',
+      feet: 'Toes flat or tucked, knees under your hips.',
+      body: 'On all fours with a flat back, weight shared between hands and knees.',
+      spine: 'Neutral and flat.',
+      head: 'In line with your spine, eyes on the floor between your hands.',
+      shoulders: 'Directly over your wrists, pressed away from the floor.',
+      hips: 'Over your knees at the start, travelling forward and back as you rock.',
+    },
+    steps: [
+      'Kneel on all fours with your hands under your shoulders and fingers spread wide.',
+      'Press the whole hand into the floor, especially the base of the index finger.',
+      'Rock your weight forward so your shoulders travel past your wrists.',
+      'Go only as far as is a stretch across the front of the wrist, never a pinch.',
+      'Rock back until your shoulders are behind your wrists.',
+      'Move slowly and keep your elbows straight throughout.',
+      'Finish by turning your hands to face your knees and rocking gently back.',
+    ],
+    breathing: {
+      inhale: 'As you rock back.',
+      exhale: 'As you rock forward into the stretch.',
+      note: 'Nothing here should require bracing. If you are holding your breath, you have gone too far forward.',
+    },
+    tempo: {
+      phases: [
+        { label: 'Rock forward', seconds: 2 },
+        { label: 'Rock back', seconds: 2 },
+      ],
+      note: 'This is preparation, not a workout. Two minutes before any hand-balancing is enough.',
+    },
+    sensation: {
+      working: 'A broad stretch across the front of the wrists and into the forearms.',
+      alsoNormal: [
+        'A surprising amount of sensation for such a small movement.',
+        'One wrist being noticeably stiffer than the other.',
+      ],
+      notNormal: [
+        'Pain inside the wrist joint rather than a stretch across the front of it.',
+        'Any tingling into the fingers.',
+        'Pain at the base of the thumb.',
+      ],
+    },
+    commonMistakes: [
+      { mistake: 'Rocking so far forward that the wrist pinches.', fix: 'Go to the edge of a stretch and stop; the range grows over weeks.' },
+      { mistake: 'Letting the palm lift so all the weight sits on the heel of the hand.', fix: 'Press the base of the index finger down throughout.' },
+      { mistake: 'Skipping it and going straight to inverted work.', fix: 'Two minutes here prevents most of the wrist pain that ends handstand training.' },
+    ],
+    cues: ['Spread the fingers.', 'Grip the floor.', 'Stretch, never pinch.'],
+    safety: {
+      normalEffort: 'Very light. This is preparation rather than training.',
+      normalFatigue: 'None. You should finish with wrists that feel readier, not tired.',
+      concerningPain: [
+        'Pain inside the wrist joint rather than across the front of it.',
+        'Tingling or numbness in the fingers.',
+      ],
+      stopIf: [
+        'Anything sharp inside the joint.',
+        'Any tingling into the hand.',
+      ],
+      modifyIf: [
+        'Your wrists are very stiff: work on your fists or on a rolled towel until the range improves.',
+        'You have a wrist injury: skip hand-balancing entirely until it has been looked at.',
+      ],
+    },
+    demo: {
+      scene: 'floor',
+      keyframes: [
+        { id: 'back', label: 'Rocked back', caption: 'Shoulders behind the wrists, weight off the hands.', pose: WRIST_ROCK_BACK },
+        { id: 'neutral', label: 'Stacked', caption: 'Shoulders directly over the wrists, fingers gripping.', pose: QUADRUPED },
+        { id: 'forward', label: 'Rocked forward', caption: 'Shoulders past the wrists, stretching the front of the wrist.', pose: WRIST_ROCK_FORWARD },
+      ],
+      loop: 'ping-pong',
+    },
+    tags: ['handstand', 'wrists', 'preparation'],
+  },
   {
     id: 'plank-to-pike-hold',
     name: 'Plank to Pike Hold',
@@ -28,8 +137,8 @@ export const SKILL_EXERCISES: Exercise[] = [
     beginnerSuitability: 'ideal',
     measurement: 'time',
     prescription: { sets: { min: 3, max: 3 }, target: { min: 20, max: 40 }, restSeconds: 60 },
-    progressionLevel: 1,
-    regression: null,
+    progressionLevel: 2,
+    regression: 'wrist-preparation',
     progression: 'handstand-back-to-wall',
     summary: 'A straight-arm hold that teaches the hands to carry weight and the shoulders to open.',
     startingPosition: {
@@ -102,9 +211,9 @@ export const SKILL_EXERCISES: Exercise[] = [
     beginnerSuitability: 'with-caution',
     measurement: 'time',
     prescription: { sets: { min: 3, max: 4 }, target: { min: 15, max: 40 }, restSeconds: 90 },
-    progressionLevel: 2,
+    progressionLevel: 3,
     regression: 'plank-to-pike-hold',
-    progression: null,
+    progression: 'handstand-chest-to-wall',
     summary: 'An inverted hold with your feet walked up a wall, building time upside down safely.',
     startingPosition: {
       hands: 'Flat on the floor, shoulder-width apart, fingers spread and gripping, a hand’s length from the wall once you are up.',
@@ -164,5 +273,184 @@ export const SKILL_EXERCISES: Exercise[] = [
       alignment: ['hand', 'toe'],
     },
     tags: ['handstand', 'skill', 'goal'],
+  },
+  {
+    id: 'handstand-chest-to-wall',
+    name: 'Handstand, Chest to Wall',
+    category: 'skill',
+    movementPattern: 'isometric-hold',
+    family: 'handstand',
+    primaryMuscles: ['front-delts', 'abs'],
+    secondaryMuscles: ['wrists', 'traps', 'glutes'],
+    equipment: ['wall', 'floor'],
+    difficulty: 4,
+    beginnerSuitability: 'with-caution',
+    measurement: 'time',
+    prescription: { sets: { min: 3, max: 4 }, target: { min: 15, max: 40 }, restSeconds: 90 },
+    progressionLevel: 4,
+    regression: 'handstand-back-to-wall',
+    progression: 'wall-handstand-shoulder-tap',
+    summary: 'Facing the wall instead of away from it, which forces a straight line rather than an arch. The first position that resembles a real handstand.',
+    startingPosition: {
+      hands: 'Flat on the floor about a hand\u2019 width from the wall, shoulder-width apart, fingers spread and gripping.',
+      feet: 'Walked up the wall until your chest and thighs are close to it, toes pointed.',
+      body: 'Close to vertical and genuinely straight, chest facing the wall.',
+      spine: 'Neutral with the ribs pulled down hard. Facing the wall makes an arch impossible to hide.',
+      head: 'Neutral between your arms; do not crane to look at the wall.',
+      shoulders: 'Pushed tall toward your ears, stacked over your wrists.',
+      hips: 'Stacked over your shoulders, glutes squeezed.',
+    },
+    steps: [
+      'Warm your wrists thoroughly and clear the floor around you.',
+      'Start in a press-up position with your feet against the base of the wall.',
+      'Walk your feet up the wall while walking your hands in toward it.',
+      'Stop when your hands are about a hand\u2019 width from the wall and your body is vertical.',
+      'Squeeze your glutes, pull your ribs down and push tall through your shoulders.',
+      'Hold for the target time, breathing steadily.',
+      'Walk back down the same way you came up, never dropping off.',
+    ],
+    breathing: {
+      inhale: 'Steadily through the hold.',
+      exhale: 'Steadily through the hold.',
+      note: 'Being inverted and close to a wall makes breathing feel restricted. Keep the holds short until it does not.',
+    },
+    sensation: {
+      working: 'The shoulders, harder than the back-to-wall version because the line is genuinely straight.',
+      alsoNormal: [
+        'Considerable load through the wrists.',
+        'Finding it much harder than back-to-wall, which is the point.',
+      ],
+      notNormal: [
+        'Wrist pain inside the joint rather than a stretch across the front.',
+        'Pinching at the front of the shoulder.',
+        'A pounding head, which means the hold went on too long.',
+      ],
+    },
+    commonMistakes: [
+      { mistake: 'Hands too far from the wall, so it is a steep pike rather than a handstand.', fix: 'Walk the hands in until they are roughly a hand\u2019 width away.' },
+      { mistake: 'Ribs flaring so the back arches away from straight.', fix: 'Pull the ribs down and squeeze the glutes; this position exists to expose that.' },
+      { mistake: 'Coming down by falling rather than walking.', fix: 'Walk the feet back down every time, even when tired.' },
+    ],
+    cues: ['Ribs down.', 'Push tall.', 'Walk down, never fall.'],
+    safety: {
+      normalEffort: 'Hard on the shoulders and hard on the wrists.',
+      normalFatigue: 'Shoulders burning, wrists loaded, a mild head-rush on coming down.',
+      concerningPain: [
+        'Wrist pain inside the joint.',
+        'Pinching at the front of the shoulder.',
+        'Headache or pressure behind the eyes.',
+      ],
+      stopIf: [
+        'Anything sharp in the wrists, shoulders or neck.',
+        'Dizziness or a pounding head.',
+        'You can no longer control walking down.',
+      ],
+      modifyIf: [
+        'You cannot walk close to the wall: stay further out and hold there; a partial position still builds the shoulders.',
+        'Your wrists complain: go back to wrist preparation and back-to-wall holds for a few weeks.',
+      ],
+    },
+    demo: {
+      scene: 'wall',
+      keyframes: [
+        { id: 'start', label: 'Feet low', caption: 'Press-up position with the feet at the base of the wall.', pose: PIKE_HOLD },
+        { id: 'vertical', label: 'Chest to wall', caption: 'Walked up to vertical, hands close in, body genuinely straight.', pose: HANDSTAND_CHEST_WALL },
+      ],
+      loop: 'ping-pong',
+      alignment: ['hand', 'toe'],
+    },
+    tags: ['handstand', 'skill'],
+  },
+  {
+    id: 'wall-handstand-shoulder-tap',
+    name: 'Wall Handstand Shoulder Tap',
+    category: 'skill',
+    movementPattern: 'balance',
+    family: 'handstand',
+    primaryMuscles: ['front-delts', 'abs'],
+    secondaryMuscles: ['wrists', 'traps', 'obliques'],
+    equipment: ['wall', 'floor'],
+    difficulty: 5,
+    beginnerSuitability: 'not-suitable',
+    measurement: 'reps-per-side',
+    prescription: { sets: { min: 3, max: 4 }, target: { min: 3, max: 8 }, restSeconds: 120 },
+    progressionLevel: 5,
+    regression: 'handstand-chest-to-wall',
+    progression: null,
+    summary: 'Shifting weight onto one hand while inverted. The first real balance work, and the bridge toward a free-standing handstand.',
+    startingPosition: {
+      hands: 'Flat on the floor about a hand\u2019 width from the wall, shoulder-width apart, fingers gripping hard.',
+      feet: 'Against the wall, toes pointed, taking as little weight as possible.',
+      body: 'Vertical and straight, chest toward the wall.',
+      spine: 'Neutral, ribs pulled down.',
+      head: 'Neutral between the arms.',
+      shoulders: 'Pushed tall and level, ready to carry your whole weight on one side.',
+      hips: 'Stacked and square, and staying square as the weight shifts.',
+    },
+    steps: [
+      'Take a chest-to-wall handstand you can already hold for thirty seconds.',
+      'Shift your weight onto one hand without letting your hips rotate.',
+      'Lift the other hand a centimetre off the floor, then tap the opposite shoulder.',
+      'Replace the hand under control rather than dropping it.',
+      'Reset the position fully before the next rep.',
+      'Alternate sides. One rep is one tap.',
+      'Walk down the wall the moment your shoulders start to give.',
+    ],
+    breathing: {
+      inhale: 'As you reset between taps.',
+      exhale: 'As you shift and tap.',
+      note: 'Keep the sets short. Holding your breath while inverted raises the pressure in your head quickly.',
+    },
+    tempo: {
+      phases: [
+        { label: 'Shift and tap', seconds: 2 },
+        { label: 'Replace and reset', seconds: 2 },
+      ],
+    },
+    sensation: {
+      working: 'One shoulder at a time, carrying most of your bodyweight overhead.',
+      alsoNormal: [
+        'The supporting wrist working very hard.',
+        'Managing far fewer reps than you expected.',
+      ],
+      notNormal: [
+        'Wrist pain inside the joint.',
+        'Pinching at the front of the shoulder.',
+        'Dizziness or a pounding head.',
+      ],
+    },
+    commonMistakes: [
+      { mistake: 'Attempting it before a thirty-second chest-to-wall hold is comfortable.', fix: 'Build the hold first; this needs a base, not courage.' },
+      { mistake: 'Hips rotating as the weight shifts.', fix: 'Slow the shift right down and keep both hip bones facing the wall.' },
+      { mistake: 'Dropping the free hand back down.', fix: 'Replace it under control; the lowering is part of the rep.' },
+    ],
+    cues: ['Shift, then lift.', 'Hips stay square.', 'Keep the sets short.'],
+    safety: {
+      normalEffort: 'Very hard, and as much a balance task as a strength one.',
+      normalFatigue: 'Shoulders and wrists burning; the set ends when the shift stops feeling controlled.',
+      concerningPain: [
+        'Wrist pain inside the joint.',
+        'Pinching at the front of the shoulder.',
+        'Headache or pressure behind the eyes.',
+      ],
+      stopIf: [
+        'Anything sharp in the wrists, shoulders or neck.',
+        'Dizziness at any point.',
+        'You cannot control replacing the hand.',
+      ],
+      modifyIf: [
+        'You cannot shift without rotating: hold the chest-to-wall position for longer instead and come back to this.',
+        'Your wrists give out first: shorten the sets and spend more weeks on wrist preparation.',
+      ],
+    },
+    demo: {
+      scene: 'wall',
+      keyframes: [
+        { id: 'hold', label: 'Both hands down', caption: 'Chest-to-wall handstand with the shoulders level.', pose: HANDSTAND_CHEST_WALL },
+        { id: 'tap', label: 'Tap', caption: 'Weight shifted to one hand, the other tapping the shoulder.', pose: HANDSTAND_SHOULDER_TAP },
+      ],
+      loop: 'ping-pong',
+    },
+    tags: ['handstand', 'skill', 'advanced', 'goal'],
   },
 ];

@@ -151,6 +151,24 @@ Rest and tempo are deliberately held constant — cutting rest makes a session
 harder without making the athlete stronger, and moving tempo alongside reps
 would confound both.
 
+### Pathways
+
+Families group under a `pathway` — push, legs, core, pull, skill, mobility —
+described in `content/families.ts` alongside `PATHWAY_INFO`. A pathway is a
+group of ladders, not one chain: Core holds three, because resisting extension,
+resisting sideways collapse and flexing under a hang are different qualities,
+and merging them would mean abandoning the front plank the day you start side
+planks. The UI says so rather than leaving it to be inferred.
+
+`features/pathways/PathwaysScreen.tsx` draws the whole map: every ladder as a
+vertical list of steps marked cleared / current / ahead / locked, each step a
+link into its instructions.
+
+Two pathways carry a note of their own. **Pull** states that meaningful vertical
+pulling needs something safe to hang from, names the improvisations that fail
+under load, and says the whole ladder unlocks at once when a real bar exists.
+**Skill** states that the handstand is deliberately absent from the programme.
+
 ### Availability vs. ability
 
 Two separate ideas, deliberately not merged:

@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react';
 import { NavLink, Route, Routes, useParams } from 'react-router-dom';
 import { exerciseById } from '../content/catalog';
-import { FoundationScreen } from '../features/foundation/FoundationScreen';
+import { PathwaysScreen } from '../features/pathways/PathwaysScreen';
 import { ExerciseDetail } from '../features/library/ExerciseDetail';
 import { ExerciseList } from '../features/library/ExerciseList';
 import { WorkoutRoute } from '../features/player/WorkoutRoute';
 import { TodayScreen } from '../features/today/TodayScreen';
 import type { UserProfile } from '../domain/profile';
 import type { StorageAdapter } from '../storage/adapter';
-import { CURRENT_SCHEMA_VERSION } from '../storage/migrations';
 import { bootstrap, type BootstrapResult } from './bootstrap';
 import { localIsoDate } from '../domain/calendar';
 
@@ -58,9 +57,9 @@ const TabBar = () => (
       <BookGlyph />
       Exercises
     </NavLink>
-    <NavLink to="/progressions" className="tabbar__link">
+    <NavLink to="/pathways" className="tabbar__link">
       <LadderGlyph />
-      Progressions
+      Pathways
     </NavLink>
   </nav>
 );
@@ -144,14 +143,8 @@ export const AppShell = ({ adapter, today = localIsoDate() }: AppShellProps) => 
           <Route path="/library" element={<ExerciseList profile={data.profile} />} />
           <Route path="/library/:id" element={<ExerciseRoute profile={data.profile} />} />
           <Route
-            path="/progressions"
-            element={
-              <FoundationScreen
-                progression={data.progression}
-                profile={data.profile}
-                schemaVersion={CURRENT_SCHEMA_VERSION}
-              />
-            }
+            path="/pathways"
+            element={<PathwaysScreen progression={data.progression} profile={data.profile} />}
           />
         </Routes>
       </main>

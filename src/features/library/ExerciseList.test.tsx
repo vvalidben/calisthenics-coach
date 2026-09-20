@@ -66,6 +66,6 @@ describe('ExerciseList', () => {
 
   it('counts what is usable so the gap is visible', () => {
     renderList();
-    expect(screen.getByText(/51 of 60/i)).toBeInTheDocument();
+    expect(screen.getByText(/55 of 64/i)).toBeInTheDocument();
   });
 });

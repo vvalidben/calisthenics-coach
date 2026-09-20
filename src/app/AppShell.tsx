@@ -135,6 +135,7 @@ export const AppShell = ({ adapter, today = localIsoDate() }: AppShellProps) => 
             element={
               <WorkoutRoute
                 workouts={data.workouts}
+                progression={data.progression}
                 date={today}
                 repositories={data.repositories}
               />

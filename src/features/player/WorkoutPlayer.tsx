@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import type { Decision } from '../../domain/progression-engine';
 import type { WorkoutSession } from '../../domain/session';
 import {
   LABELS,
@@ -26,6 +27,10 @@ interface WorkoutPlayerProps {
   previousSession?: WorkoutSession | undefined;
   /** Called after every change, so a closed tab never loses the workout. */
   onSessionChange: (session: WorkoutSession) => void;
+  /** Called exactly once, when the session closes out. */
+  onFinish?: ((session: WorkoutSession) => void) | undefined;
+  /** What the progression engine decided about this session. */
+  decisions?: Decision[] | undefined;
 }
 
 type Phase = 'ready' | 'working' | 'logging' | 'resting' | 'complete';
@@ -48,15 +53,17 @@ const RestTimer = ({ secondsLeft, onSkip }: { secondsLeft: number; onSkip: () =>
 /**
  * Guides one workout, one set at a time.
  *
- * The player records what happened and nothing more. It never changes a target,
- * advances a variation or decides what the next session should be — that is the
- * progression engine, which does not exist yet.
+ * The player records what happened and nothing more. Deciding what to prescribe
+ * next belongs to the progression engine, which runs once via `onFinish` and
+ * hands its decisions back for the completion screen to explain.
  */
 export const WorkoutPlayer = ({
   workout,
   date,
   previousSession,
   onSessionChange,
+  onFinish,
+  decisions = [],
 }: WorkoutPlayerProps) => {
   const items = workoutBlocks(workout);
 
@@ -82,8 +89,16 @@ export const WorkoutPlayer = ({
   const setNumber = Math.min(logged + 1, item.sets);
   const defaultEntry = timed ? Math.max(item.target.max, elapsed) : item.target.max;
 
+  // The workout can end from the last set or from the End workout button, and
+  // progression must run for one of those, not both.
+  const finished = useRef(false);
+
   const finish = (from: WorkoutSession = session) => {
-    save(finishSession(from, new Date().toISOString(), notes || undefined));
+    if (finished.current) return;
+    finished.current = true;
+    const done = finishSession(from, new Date().toISOString(), notes || undefined);
+    save(done);
+    onFinish?.(done);
     setPhase('complete');
   };
 
@@ -140,6 +155,7 @@ export const WorkoutPlayer = ({
         session={session}
         previousSession={previousSession}
         notes={notes}
+        decisions={decisions}
         onNotesChange={(value) => {
           setNotes(value);
           save({ ...session, notes: value });

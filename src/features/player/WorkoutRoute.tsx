@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { exerciseById } from '../../content/catalog';
+import { progressWorkout, type Decision } from '../../domain/progression-engine';
+import type { ProgressionState } from '../../domain/progression';
 import type { WorkoutSession } from '../../domain/session';
 import type { Workout } from '../../domain/workout';
 import type { Repositories } from '../../storage/repositories';
@@ -7,6 +10,7 @@ import { WorkoutPlayer } from './WorkoutPlayer';
 
 interface WorkoutRouteProps {
   workouts: Workout[];
+  progression: ProgressionState[];
   date: string;
   repositories: Repositories;
 }
@@ -19,11 +23,17 @@ interface WorkoutRouteProps {
  * a dead battery or an accidental back gesture costs at most the set in
  * progress.
  */
-export const WorkoutRoute = ({ workouts, date, repositories }: WorkoutRouteProps) => {
+export const WorkoutRoute = ({
+  workouts,
+  progression,
+  date,
+  repositories,
+}: WorkoutRouteProps) => {
   const { id } = useParams();
   const workout = workouts.find((w) => w.id === id);
 
   const [previous, setPrevious] = useState<WorkoutSession | undefined>();
+  const [decisions, setDecisions] = useState<Decision[]>([]);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -71,6 +81,19 @@ export const WorkoutRoute = ({ workouts, date, repositories }: WorkoutRouteProps
       previousSession={previous}
       onSessionChange={(session) => {
         void repositories.sessions.save(session);
+      }}
+      decisions={decisions}
+      onFinish={(session) => {
+        const result = progressWorkout(
+          session,
+          workout,
+          progression,
+          exerciseById,
+          date,
+        );
+        setDecisions(result.decisions);
+        void repositories.workouts.save(result.workout);
+        for (const state of result.states) void repositories.progression.save(state);
       }}
     />
   );

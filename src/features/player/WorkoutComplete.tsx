@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import type { WorkoutSession } from '../../domain/session';
 import { LABELS, compareToPrevious, sessionSummary } from '../../domain/session-log';
+import type { Decision } from '../../domain/progression-engine';
 import type { Workout } from '../../domain/workout';
 import { exerciseById } from '../../content/catalog';
 
@@ -10,7 +11,19 @@ interface WorkoutCompleteProps {
   previousSession: WorkoutSession | undefined;
   notes: string;
   onNotesChange: (notes: string) => void;
+  /** What the progression engine decided, if it has run yet. */
+  decisions: Decision[];
 }
+
+/** What each decision is called, in the athlete's terms rather than the code's. */
+const ACTION_LABELS: Record<Decision['action'], string> = {
+  hold: 'Unchanged',
+  'add-reps': 'More reps',
+  'add-set': 'Extra set',
+  'advance-variation': 'Harder version',
+  'reduce-reps': 'Fewer reps',
+  'regress-variation': 'Easier version',
+};
 
 const clock = (seconds: number) =>
   `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`;
@@ -22,6 +35,7 @@ export const WorkoutComplete = ({
   previousSession,
   notes,
   onNotesChange,
+  decisions,
 }: WorkoutCompleteProps) => {
   const summary = sessionSummary(session);
   const comparison = compareToPrevious(session, previousSession);
@@ -100,6 +114,31 @@ export const WorkoutComplete = ({
                   {row.totalDelta > 0 ? '+' : ''}
                   {row.totalDelta}
                 </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <section className="complete__section" aria-labelledby="next-heading">
+        <h2 className="complete__heading" id="next-heading">
+          Next time
+        </h2>
+        {decisions.length === 0 ? (
+          <p className="complete__none">
+            Nothing logged, so nothing changes. The same session will be waiting.
+          </p>
+        ) : (
+          <ul className="decisions">
+            {decisions.map((decision) => (
+              <li key={decision.exerciseId} className={`decision decision--${decision.action}`}>
+                <p className="decision__head">
+                  <span className="decision__name">
+                    {exerciseById(decision.exerciseId)?.name ?? decision.exerciseId}
+                  </span>
+                  <span className="decision__action">{ACTION_LABELS[decision.action]}</span>
+                </p>
+                <p className="decision__reason">{decision.reason}</p>
               </li>
             ))}
           </ul>

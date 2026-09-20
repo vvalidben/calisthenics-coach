@@ -121,6 +121,36 @@ same workout on the same day resumes the same record.
 Nothing in here changes a target or advances a variation. That is the
 progression engine, which does not exist yet.
 
+### Progression
+
+`domain/progression-engine.ts` decides what to prescribe next. Three rules, and
+only ever **one** change per decision:
+
+1. Clear every set at the top of the range, twice running, without it feeling
+   maximal → make it slightly harder. Reps first. Only when reps hit their
+   ceiling does a set get added; only when sets are capped too does the
+   variation change.
+2. Struggle, or fall short once → change nothing. Repeating a session is a
+   legitimate outcome.
+3. Fall short twice running → give something back, in reverse order: the target
+   returns to the exercise's own base range in one step, not one rep at a time,
+   and only at the base does the variation step back.
+
+Only main work progresses. Warm-ups and mobility are there to prepare the body,
+and a cat-cow that keeps gaining reps helps nobody. Accessory volume in a family
+progresses its reps but may not change variation — only the exercise the family
+state sits on can do that.
+
+Every decision carries a `reason` written to the athlete, which the completion
+screen shows under "Next time".
+
+**What it cannot see.** The app records reps, seconds, whether a set was
+completed, and how hard it felt. It cannot observe technique, range of motion or
+tempo, so "good technique" is a proxy: sets finished below a very-hard effort.
+Rest and tempo are deliberately held constant — cutting rest makes a session
+harder without making the athlete stronger, and moving tempo alongside reps
+would confound both.
+
 ### Availability vs. ability
 
 Two separate ideas, deliberately not merged:
@@ -169,7 +199,7 @@ profile or logged sessions.
 
 | Capability | Attaches to |
 |---|---|
-| Progression engine | Reads sessions, updates `ProgressionState`, and rewrites the `Workout` records the program seeded |
+| Progression engine | Built: `domain/progression-engine.ts`, run from the player's `onFinish` |
 | Workout player | Built: `features/player/`. Reads a `Workout`, writes a `WorkoutSession` after every set |
 | Progress tracking and calendar | Reads `repositories.sessions.list()`, already ordered by date |
 | Exercise demonstrations | Already built: `features/demo/FigureDemo.tsx`. `videoUrl` is left empty on every exercise because external links could not be verified from the build environment |

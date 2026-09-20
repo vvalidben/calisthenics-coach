@@ -1389,3 +1389,71 @@ a {
 .complete .button--primary {
   margin-top: 30px;
 }
+
+/* ---- progression decisions --------------------------------------------- */
+
+.decisions {
+  margin-top: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.decision {
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  border-left-width: 3px;
+  border-radius: 10px;
+  background: var(--steel-1);
+}
+
+.decision--add-reps,
+.decision--add-set,
+.decision--advance-variation {
+  border-left-color: var(--done);
+}
+
+.decision--reduce-reps,
+.decision--regress-variation {
+  border-left-color: var(--missed);
+}
+
+.decision--hold {
+  border-left-color: var(--chalk-faint);
+}
+
+.decision__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.decision__name {
+  font-weight: 700;
+}
+
+.decision__action {
+  flex: none;
+  font-size: var(--step--1);
+  font-weight: 700;
+  color: var(--chalk-dim);
+}
+
+.decision--add-reps .decision__action,
+.decision--add-set .decision__action,
+.decision--advance-variation .decision__action {
+  color: var(--done);
+}
+
+.decision--reduce-reps .decision__action,
+.decision--regress-variation .decision__action {
+  color: var(--missed);
+}
+
+.decision__reason {
+  margin-top: 6px;
+  max-width: 52ch;
+  font-size: var(--step--1);
+  line-height: 1.5;
+  color: var(--chalk-dim);
+}

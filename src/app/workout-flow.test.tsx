@@ -1,10 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { MemoryAdapter } from '../storage/memory-adapter';
 import { createRepositories } from '../storage/repositories';
 import { AppShell } from './AppShell';
+
+const NEXT_MONDAY = '2026-09-28';
 
 const MONDAY = '2026-09-21';
 let adapter: MemoryAdapter;
@@ -21,12 +23,27 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-const openApp = () =>
+const openApp = (today = MONDAY) =>
   render(
     <MemoryRouter>
-      <AppShell adapter={adapter} today={MONDAY} />
+      <AppShell adapter={adapter} today={today} />
     </MemoryRouter>,
   );
+
+/** Play a whole session, accepting every prefilled target at Moderate. */
+const playEverything = async () => {
+  for (let exercise = 0; exercise < 9; exercise += 1) {
+    if (/workout complete/i.test(screen.getByRole('heading', { level: 1 }).textContent ?? '')) {
+      return;
+    }
+    const setsText = screen.getByTestId('player-set-count').textContent ?? '';
+    const total = Number(/of (\d+)/.exec(setsText)?.[1] ?? '1');
+    for (let s = 0; s < total; s += 1) {
+      await user.click(screen.getByRole('button', { name: /start set/i }));
+      await logSet();
+    }
+  }
+};
 
 const logSet = async () => {
   await user.click(screen.getByRole('button', { name: /^finish set$/i }));
@@ -119,5 +136,91 @@ describe('a whole workout, through the real app', () => {
     );
     await screen.findByRole('heading', { level: 1 });
     expect(screen.queryByRole('link', { name: /start workout/i })).not.toBeInTheDocument();
+  });
+});
+
+describe('progression, through the real app', () => {
+  const runOneSession = async (today: string) => {
+    const view = openApp(today);
+    await screen.findByRole('heading', { level: 1 });
+    await user.click(screen.getByRole('link', { name: /start workout/i }));
+    await playEverything();
+    return view;
+  };
+
+  it('explains what happens next on the completion screen', async () => {
+    await runOneSession(MONDAY);
+    const next = within(screen.getByRole('region', { name: /next time/i }));
+    expect(next.getByText(/push-up/i)).toBeInTheDocument();
+  });
+
+  it('changes nothing after a single clean session', async () => {
+    await runOneSession(MONDAY);
+
+    const next = within(screen.getByRole('region', { name: /next time/i }));
+    expect(next.getAllByText(/unchanged/i).length).toBeGreaterThan(0);
+
+    const workouts = await createRepositories(adapter).workouts.list();
+    const pushUp = workouts
+      .find((w) => w.id === 'foundation-w1-d1')!
+      .mainWork.find((i) => i.exerciseId === 'push-up')!;
+    expect(pushUp.target).toEqual({ min: 6, max: 10 });
+  });
+
+  it('counts the clean session toward the next step', async () => {
+    await runOneSession(MONDAY);
+    const states = await createRepositories(adapter).progression.list();
+    expect(states.find((s) => s.family === 'push')!.consecutiveQualifyingSessions).toBe(1);
+  });
+
+  it('raises the target after a second clean session', async () => {
+    const first = await runOneSession(MONDAY);
+    first.unmount();
+
+    await runOneSession(NEXT_MONDAY);
+
+    const workouts = await createRepositories(adapter).workouts.list();
+    const pushUp = workouts
+      .find((w) => w.id === 'foundation-w1-d1')!
+      .mainWork.find((i) => i.exerciseId === 'push-up')!;
+    expect(pushUp.target).toEqual({ min: 7, max: 11 });
+  });
+
+  it('shows the athlete why it went up', async () => {
+    const first = await runOneSession(MONDAY);
+    first.unmount();
+    await runOneSession(NEXT_MONDAY);
+
+    const next = within(screen.getByRole('region', { name: /next time/i }));
+    expect(next.getByText(/goes up to 7.11 reps/i)).toBeInTheDocument();
+  });
+
+  it('carries the raised target into the next Monday session', async () => {
+    const first = await runOneSession(MONDAY);
+    first.unmount();
+    const second = await runOneSession(NEXT_MONDAY);
+    second.unmount();
+
+    openApp('2026-10-05');
+    await screen.findByRole('heading', { level: 1 });
+    const pushUp = screen.getByRole('listitem', { name: /push-up/i });
+    expect(pushUp).toHaveTextContent(/7.11 reps/i);
+  });
+
+  it('changes nothing when the workout was missed', async () => {
+    openApp(MONDAY);
+    await screen.findByRole('heading', { level: 1 });
+    await user.click(screen.getByRole('link', { name: /start workout/i }));
+    await user.click(screen.getByRole('button', { name: /start set/i }));
+    await user.click(screen.getByRole('button', { name: /skip this set/i }));
+    await user.click(screen.getByRole('button', { name: /end workout/i }));
+
+    expect(screen.getByText(/nothing logged, so nothing changes/i)).toBeInTheDocument();
+
+    const workouts = await createRepositories(adapter).workouts.list();
+    const pushUp = workouts
+      .find((w) => w.id === 'foundation-w1-d1')!
+      .mainWork.find((i) => i.exerciseId === 'push-up')!;
+    expect(pushUp.target).toEqual({ min: 6, max: 10 });
   });
 });

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { estimateWorkoutMinutes } from '../../domain/duration';
 import { WEEKDAYS, type Weekday } from '../../domain/primitives';
 import type { UserProfile } from '../../domain/profile';
-import type { Workout, WorkoutItem } from '../../domain/workout';
+import { describeTarget, type Workout, type WorkoutItem } from '../../domain/workout';
 import { exerciseById } from '../../content/catalog';
 import { weekdayOf } from '../../domain/calendar';
 
@@ -22,21 +22,6 @@ const LONG_DATE = new Intl.DateTimeFormat('en-GB', {
 const formatDate = (iso: string) => LONG_DATE.format(new Date(`${iso}T12:00:00`));
 
 const titleCase = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
-
-/** "6-10 reps", "20-45 seconds", "8-10 reps per side". */
-const describeTarget = (item: WorkoutItem): string => {
-  const range = item.target.min === item.target.max ? `${item.target.min}` : `${item.target.min}–${item.target.max}`;
-  switch (item.measurement) {
-    case 'reps':
-      return `${range} reps`;
-    case 'reps-per-side':
-      return `${range} reps per side`;
-    case 'time':
-      return `${range} seconds`;
-    case 'time-per-side':
-      return `${range} seconds per side`;
-  }
-};
 
 const PrescribedExercise = ({ item }: { item: WorkoutItem }) => {
   const exercise = exerciseById(item.exerciseId);
@@ -153,6 +138,10 @@ export const TodayScreen = ({ profile, today, workouts }: TodayScreenProps) => {
         {titleCase(profile.currentPhase.name.replace(/-/g, ' '))} phase
       </p>
       {workout.notes && <p className="today__lede">{workout.notes}</p>}
+
+      <Link className="today__start" to={`/workout/${workout.id}`}>
+        Start workout
+      </Link>
 
       <Block id="warm-up" title="Warm-up" items={workout.warmUp} />
       <Block id="main" title="Main workout" items={workout.mainWork} />

@@ -72,3 +72,27 @@ export const workoutBlocks = (workout: Workout): WorkoutItem[] => [
 
 export const workoutExerciseIds = (workout: Workout): ExerciseId[] =>
   workoutBlocks(workout).map((item) => item.exerciseId);
+
+/**
+ * A prescription in words: "6-10 reps", "20-45 seconds", "8 reps per side".
+ *
+ * Lives here rather than in a screen because two features render it and they
+ * must not drift apart.
+ */
+export const describeTarget = (item: WorkoutItem): string => {
+  const range =
+    item.target.min === item.target.max
+      ? `${item.target.min}`
+      : `${item.target.min}–${item.target.max}`;
+
+  switch (item.measurement) {
+    case 'reps':
+      return `${range} reps`;
+    case 'reps-per-side':
+      return `${range} reps per side`;
+    case 'time':
+      return `${range} seconds`;
+    case 'time-per-side':
+      return `${range} seconds per side`;
+  }
+};

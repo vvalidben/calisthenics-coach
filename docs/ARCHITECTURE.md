@@ -102,6 +102,25 @@ training days in a row, a different focus each day, no pressing on consecutive
 days, nothing needing equipment the athlete lacks, and every prescribed exercise
 carrying its full Sprint 3 instructions.
 
+### Performing a workout
+
+`domain/session-log.ts` holds the whole of it as pure functions over a
+`WorkoutSession`: `startSession`, `recordSet`, `finishSession`, `sessionSummary`
+and `compareToPrevious`. The player component owns only phase and timers.
+
+The five difficulty words the athlete is offered map onto RPE, so history is
+stored on a numeric scale and read back as words. A session is `completed` when
+every prescribed set was done, `partial` when some were, and `missed` when none
+were — and a missed session drops its logged sets, because the schema is right
+to refuse work nobody performed.
+
+The player writes after **every set**, not on finish, so a closed tab costs at
+most the set in progress. Session ids are `date-workoutId`, so reopening the
+same workout on the same day resumes the same record.
+
+Nothing in here changes a target or advances a variation. That is the
+progression engine, which does not exist yet.
+
 ### Availability vs. ability
 
 Two separate ideas, deliberately not merged:
@@ -151,7 +170,7 @@ profile or logged sessions.
 | Capability | Attaches to |
 |---|---|
 | Progression engine | Reads sessions, updates `ProgressionState`, and rewrites the `Workout` records the program seeded |
-| Workout player | Reads a `Workout`, writes a `WorkoutSession` |
+| Workout player | Built: `features/player/`. Reads a `Workout`, writes a `WorkoutSession` after every set |
 | Progress tracking and calendar | Reads `repositories.sessions.list()`, already ordered by date |
 | Exercise demonstrations | Already built: `features/demo/FigureDemo.tsx`. `videoUrl` is left empty on every exercise because external links could not be verified from the build environment |
 | Anything that prescribes work | Must filter through `isExerciseAvailable` so it never programs an exercise the athlete has no equipment for |

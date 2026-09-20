@@ -4,6 +4,7 @@ import { exerciseById } from '../content/catalog';
 import { FoundationScreen } from '../features/foundation/FoundationScreen';
 import { ExerciseDetail } from '../features/library/ExerciseDetail';
 import { ExerciseList } from '../features/library/ExerciseList';
+import { WorkoutRoute } from '../features/player/WorkoutRoute';
 import { TodayScreen } from '../features/today/TodayScreen';
 import type { UserProfile } from '../domain/profile';
 import type { StorageAdapter } from '../storage/adapter';
@@ -127,6 +128,16 @@ export const AppShell = ({ adapter, today = localIsoDate() }: AppShellProps) => 
             path="/"
             element={
               <TodayScreen profile={data.profile} today={today} workouts={data.workouts} />
+            }
+          />
+          <Route
+            path="/workout/:id"
+            element={
+              <WorkoutRoute
+                workouts={data.workouts}
+                date={today}
+                repositories={data.repositories}
+              />
             }
           />
           <Route path="/library" element={<ExerciseList profile={data.profile} />} />

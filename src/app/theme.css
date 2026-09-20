@@ -1047,3 +1047,345 @@ a {
 .week__day--training .week__label {
   color: var(--chalk-dim);
 }
+
+/* ---- shared controls --------------------------------------------------- */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.button {
+  display: inline-block;
+  padding: 14px 22px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--steel-1);
+  color: var(--chalk);
+  font: inherit;
+  font-size: var(--step-0);
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button--primary {
+  width: 100%;
+  border-color: transparent;
+  background: var(--signal);
+  color: #1a1206;
+  font-size: var(--step-1);
+  font-weight: 900;
+  letter-spacing: -0.01em;
+}
+
+.button--quiet {
+  padding: 8px 14px;
+  border-color: transparent;
+  background: transparent;
+  color: var(--chalk-faint);
+  font-size: var(--step--1);
+  font-weight: 600;
+}
+
+.today__start {
+  display: block;
+  width: 100%;
+  margin-top: 24px;
+  padding: 18px 22px;
+  border-radius: 12px;
+  background: var(--signal);
+  color: #1a1206;
+  font-size: var(--step-2);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  text-align: center;
+  text-decoration: none;
+}
+
+/* ---- the player -------------------------------------------------------- */
+
+.player__progress {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: var(--step--1);
+  color: var(--chalk-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.player__title {
+  margin-top: 10px;
+  font-size: var(--step-3);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.player__setcount {
+  margin-top: 4px;
+  font-size: var(--step-1);
+  font-weight: 700;
+  color: var(--signal);
+  font-variant-numeric: tabular-nums;
+}
+
+.player__prescription {
+  display: flex;
+  gap: 28px;
+  margin-top: 18px;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.player__prescription dt {
+  font-size: var(--step--1);
+  color: var(--chalk-faint);
+}
+
+.player__prescription dd {
+  margin: 2px 0 0;
+  font-size: var(--step-1);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.player__cue {
+  margin-top: 16px;
+  color: var(--signal);
+  font-size: var(--step-1);
+  font-weight: 600;
+}
+
+.player__how {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 7px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--chalk-dim);
+  text-decoration: none;
+}
+
+.player__actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 26px;
+  justify-items: center;
+}
+
+.player__elapsed {
+  font-size: var(--step-4);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.player__log {
+  margin-top: 26px;
+}
+
+.player__label {
+  font-size: var(--step-0);
+  font-weight: 600;
+}
+
+.player__entry {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--steel-1);
+  color: var(--chalk);
+  font: inherit;
+  font-size: var(--step-3);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.player__difficulties {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.difficulty {
+  padding: 14px 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--steel-1);
+  color: var(--chalk);
+  font: inherit;
+  font-size: var(--step--1);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.difficulty--easy {
+  border-color: color-mix(in srgb, var(--done) 45%, var(--line));
+}
+
+.difficulty--very-hard,
+.difficulty--failed {
+  border-color: color-mix(in srgb, var(--missed) 45%, var(--line));
+}
+
+/* ---- rest timer -------------------------------------------------------- */
+
+.rest {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  margin-top: 30px;
+  padding: 26px 20px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--steel-1);
+}
+
+.rest__label {
+  font-size: var(--step--1);
+  color: var(--chalk-faint);
+  font-weight: 600;
+}
+
+.rest__clock {
+  font-size: 3.5rem;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+  color: var(--signal);
+}
+
+/* ---- completion -------------------------------------------------------- */
+
+.complete__title {
+  font-size: var(--step-4);
+  font-weight: 900;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+.complete__subtitle {
+  margin-top: 8px;
+  color: var(--chalk-dim);
+}
+
+.complete__section {
+  margin-top: 32px;
+}
+
+.complete__heading {
+  font-size: var(--step-1);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.complete__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.complete__stats div {
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.complete__stats dt {
+  font-size: var(--step--1);
+  color: var(--chalk-faint);
+}
+
+.complete__stats dd {
+  margin: 3px 0 0;
+  font-size: var(--step-2);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+}
+
+.complete__none {
+  margin-top: 12px;
+  max-width: 48ch;
+  font-size: var(--step--1);
+  color: var(--chalk-faint);
+}
+
+.complete__comparison {
+  margin-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.complete__comparison li {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: baseline;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.complete__compare-name {
+  font-weight: 600;
+}
+
+.complete__compare-numbers {
+  font-size: var(--step--1);
+  color: var(--chalk-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.complete__delta {
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+
+.complete__delta--up {
+  color: var(--done);
+}
+
+.complete__delta--down {
+  color: var(--missed);
+}
+
+.complete__notes {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--steel-1);
+  color: var(--chalk);
+  font: inherit;
+  resize: vertical;
+}
+
+.complete__notes::placeholder {
+  color: var(--chalk-faint);
+}
+
+.complete .button--primary {
+  margin-top: 30px;
+}

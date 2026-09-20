@@ -1,0 +1,143 @@
+import type { Exercise } from '../../domain/exercise';
+
+/** Squat and lunge patterns, all loadable without equipment. */
+export const LEG_EXERCISES: Exercise[] = [
+  {
+    id: 'bodyweight-squat',
+    name: 'Bodyweight Squat',
+    category: 'legs',
+    movementPattern: 'squat',
+    family: 'squat',
+    primaryMuscles: ['quads', 'glutes'],
+    secondaryMuscles: ['hamstrings', 'calves', 'abs'],
+    equipment: ['none'],
+    difficulty: 1,
+    beginnerSuitability: 'ideal',
+    measurement: 'reps',
+    prescription: { sets: { min: 3, max: 4 }, target: { min: 10, max: 20 }, restSeconds: 60 },
+    progressionLevel: 1,
+    regression: null,
+    progression: 'split-squat',
+    summary: 'The foundation of every lower-body movement.',
+    instructions: {
+      setup: [
+        'Stand with your feet a little wider than your hips.',
+        'Turn your toes out slightly and let your arms hang in front for balance.',
+      ],
+      execution: [
+        'Push your hips back and bend your knees at the same time.',
+        'Descend until your thighs are at least parallel to the floor.',
+        'Keep your heels flat and your chest up.',
+        'Drive through your whole foot to stand back up.',
+      ],
+    },
+    breathing: 'Inhale as you descend, exhale as you stand.',
+    cues: [
+      'Spread the floor with your feet to keep your knees tracking out.',
+      'Keep your weight over the middle of your foot.',
+    ],
+    commonMistakes: [
+      { mistake: 'Heels lift off the floor.', fix: 'Work on ankle mobility and sit back more; widen your stance slightly.' },
+      { mistake: 'Knees collapse inward.', fix: 'Push your knees out in line with your toes throughout.' },
+    ],
+    demo: {
+      keyframes: [
+        { id: 'stand', label: 'Standing' },
+        { id: 'bottom', label: 'Bottom' },
+      ],
+      loop: 'ping-pong',
+    },
+    tags: ['staple', 'lower-body'],
+  },
+  {
+    id: 'split-squat',
+    name: 'Split Squat',
+    category: 'legs',
+    movementPattern: 'lunge',
+    family: 'squat',
+    primaryMuscles: ['quads', 'glutes'],
+    secondaryMuscles: ['hamstrings', 'adductors', 'abs'],
+    equipment: ['none'],
+    difficulty: 2,
+    beginnerSuitability: 'ideal',
+    measurement: 'reps-per-side',
+    prescription: { sets: { min: 3, max: 3 }, target: { min: 8, max: 12 }, restSeconds: 75 },
+    progressionLevel: 2,
+    regression: 'bodyweight-squat',
+    progression: 'bulgarian-split-squat',
+    summary: 'A stationary lunge that loads one leg at a time and exposes side-to-side imbalances.',
+    instructions: {
+      setup: [
+        'Step one foot forward into a long stride.',
+        'Keep your front foot flat and rise onto the ball of your back foot.',
+        'Stack your shoulders over your hips.',
+      ],
+      execution: [
+        'Lower straight down until your back knee almost touches the floor.',
+        'Keep your front shin close to vertical.',
+        'Drive through your front heel to stand back up.',
+        'Finish all reps on one side before switching.',
+      ],
+    },
+    breathing: 'Inhale down, exhale up.',
+    cues: ['Move straight down, not forward.', 'Keep 70 percent of your weight on the front leg.'],
+    commonMistakes: [
+      { mistake: 'Stride too short, so the front knee shoots past the toes.', fix: 'Step further forward before starting.' },
+      { mistake: 'Torso leans forward.', fix: 'Brace your abs and keep your ribs stacked over your hips.' },
+    ],
+    demo: {
+      keyframes: [
+        { id: 'top', label: 'Standing split' },
+        { id: 'bottom', label: 'Back knee low' },
+      ],
+      loop: 'ping-pong',
+    },
+    tags: ['unilateral', 'lower-body'],
+  },
+  {
+    id: 'bulgarian-split-squat',
+    name: 'Bulgarian Split Squat',
+    category: 'legs',
+    movementPattern: 'lunge',
+    family: 'squat',
+    primaryMuscles: ['quads', 'glutes'],
+    secondaryMuscles: ['hamstrings', 'adductors', 'abs'],
+    equipment: ['chair'],
+    difficulty: 3,
+    beginnerSuitability: 'suitable',
+    measurement: 'reps-per-side',
+    prescription: { sets: { min: 3, max: 4 }, target: { min: 6, max: 12 }, restSeconds: 90 },
+    progressionLevel: 3,
+    regression: 'split-squat',
+    progression: null,
+    summary: 'A split squat with the back foot raised, loading the front leg far harder.',
+    instructions: {
+      setup: [
+        'Stand about a stride in front of a stable chair, facing away from it.',
+        'Place the top of your back foot on the seat.',
+        'Adjust your front foot until your front shin is vertical at the bottom.',
+      ],
+      execution: [
+        'Lower straight down until your front thigh is roughly parallel to the floor.',
+        'Keep your torso tall and your front heel planted.',
+        'Drive through your front heel back to the start.',
+        'Finish all reps on one side before switching.',
+      ],
+    },
+    breathing: 'Inhale down, exhale up.',
+    cues: ['Your back leg is a kickstand, not an engine.', 'Find your foot position before the first rep, not during it.'],
+    commonMistakes: [
+      { mistake: 'Front foot too close, forcing the knee far past the toes.', fix: 'Move the front foot forward until the shin stays vertical.' },
+      { mistake: 'Losing balance every rep.', fix: 'Drop back to split squats until the pattern is stable.' },
+    ],
+    safetyNotes: ['Use a chair that cannot slide, and hold a wall for balance while you learn the position.'],
+    demo: {
+      keyframes: [
+        { id: 'top', label: 'Standing' },
+        { id: 'bottom', label: 'Thigh parallel' },
+      ],
+      loop: 'ping-pong',
+    },
+    tags: ['unilateral', 'lower-body'],
+  },
+];

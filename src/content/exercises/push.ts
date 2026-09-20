@@ -1,6 +1,9 @@
 import type { Exercise } from '../../domain/exercise';
 
-/** Horizontal pressing, from vertical against a wall down to the floor. */
+/**
+ * Horizontal pressing, from vertical against a wall through to one-sided work
+ * on the floor. Nothing here needs more than a wall, a chair and the ground.
+ */
 export const PUSH_EXERCISES: Exercise[] = [
   {
     id: 'wall-push-up',
@@ -64,33 +67,84 @@ export const PUSH_EXERCISES: Exercise[] = [
     prescription: { sets: { min: 3, max: 3 }, target: { min: 8, max: 15 }, restSeconds: 75 },
     progressionLevel: 2,
     regression: 'wall-push-up',
-    progression: 'push-up',
+    progression: 'knee-push-up',
     summary: 'A push-up with your hands raised, so you press a smaller share of your bodyweight.',
     instructions: {
       setup: [
-        'Place your hands on a stable chair seat, slightly wider than your shoulders.',
+        'Find a stable raised surface: a kitchen counter, a windowsill, a stair, or a chair seat braced against a wall.',
+        'Place your hands on it slightly wider than your shoulders.',
         'Walk your feet back until your body forms a straight line.',
       ],
       execution: [
-        'Lower your chest toward the edge of the chair.',
+        'Lower your chest toward the edge of the surface.',
         'Touch lightly, keeping your elbows tucked at about 45 degrees.',
         'Press back up until your elbows are straight.',
       ],
     },
     breathing: 'Inhale on the way down, exhale as you press up.',
     cues: [
-      'The lower the surface, the harder the exercise.',
-      'Keep your neck long; look at the chair, not at your feet.',
+      'The lower the surface, the harder the exercise. A counter is easy; a stair is hard.',
+      'Keep your neck long; look at your hands, not at your feet.',
     ],
     commonMistakes: [
-      { mistake: 'Using a chair that slides or tips.', fix: 'Brace the chair against a wall before you start.' },
+      { mistake: 'Using a surface that slides or tips.', fix: 'Prefer a counter or stair. If you use a chair, brace it against a wall first.' },
       { mistake: 'Flaring the elbows out to the sides.', fix: 'Aim your elbows back toward your hips.' },
     ],
-    safetyNotes: ['Make sure the chair cannot slide. Test it with your weight before stepping back.'],
+    safetyNotes: [
+      'Load the surface with your full weight before you step back. If it shifts at all, pick something else.',
+    ],
     demo: {
       keyframes: [
         { id: 'top', label: 'Top' },
-        { id: 'bottom', label: 'Chest to chair' },
+        { id: 'bottom', label: 'Chest to surface' },
+      ],
+      loop: 'ping-pong',
+    },
+    tags: ['beginner', 'upper-body', 'furniture'],
+  },
+  {
+    id: 'knee-push-up',
+    name: 'Knee Push-Up',
+    category: 'push',
+    movementPattern: 'horizontal-push',
+    family: 'push',
+    primaryMuscles: ['chest', 'triceps'],
+    secondaryMuscles: ['front-delts', 'abs'],
+    equipment: ['floor'],
+    difficulty: 2,
+    beginnerSuitability: 'ideal',
+    measurement: 'reps',
+    prescription: { sets: { min: 3, max: 3 }, target: { min: 8, max: 15 }, restSeconds: 75 },
+    progressionLevel: 3,
+    regression: 'incline-push-up',
+    progression: 'push-up',
+    summary: 'A floor push-up with the knees down, shortening the lever without shortening the range.',
+    instructions: {
+      setup: [
+        'Kneel on the floor and place your hands under your shoulders, slightly wider than shoulder width.',
+        'Walk your hands forward until your body forms a straight line from knees to head.',
+        'Cross your ankles and lift your feet.',
+      ],
+      execution: [
+        'Lower your chest toward the floor under control.',
+        'Stop when your upper arms are roughly parallel to the floor.',
+        'Press the floor away until your elbows are straight.',
+        'Keep the line from knees to head unbroken.',
+      ],
+    },
+    breathing: 'Inhale on the descent, exhale as you press up.',
+    cues: [
+      'Hips stay forward. If you sit back toward your heels the exercise gets much easier.',
+      'Put something soft under your knees if the floor is hard.',
+    ],
+    commonMistakes: [
+      { mistake: 'Hips pushed back, so the torso barely moves.', fix: 'Walk your hands further forward until your hips are over your knees.' },
+      { mistake: 'Treating it as a lesser exercise and rushing the reps.', fix: 'Use the same tempo and full range you want on a full push-up.' },
+    ],
+    demo: {
+      keyframes: [
+        { id: 'top', label: 'Top' },
+        { id: 'bottom', label: 'Chest to floor' },
       ],
       loop: 'ping-pong',
     },
@@ -109,8 +163,8 @@ export const PUSH_EXERCISES: Exercise[] = [
     beginnerSuitability: 'ideal',
     measurement: 'reps',
     prescription: { sets: { min: 3, max: 4 }, target: { min: 6, max: 12 }, restSeconds: 90 },
-    progressionLevel: 3,
-    regression: 'incline-push-up',
+    progressionLevel: 4,
+    regression: 'knee-push-up',
     progression: 'diamond-push-up',
     summary: 'The benchmark horizontal press and the backbone of upper-body calisthenics.',
     instructions: {
@@ -135,7 +189,7 @@ export const PUSH_EXERCISES: Exercise[] = [
     commonMistakes: [
       { mistake: 'Hips sag toward the floor.', fix: 'Brace your abs and squeeze your glutes before the first rep.' },
       { mistake: 'Head drops forward and leads the movement.', fix: 'Keep your chin tucked and your neck in line with your spine.' },
-      { mistake: 'Only going halfway down.', fix: 'Reduce the reps or move back to incline push-ups until full range is clean.' },
+      { mistake: 'Only going halfway down.', fix: 'Reduce the reps or move back to knee push-ups until full range is clean.' },
     ],
     safetyNotes: ['Stop the set if you feel a pinch at the front of the shoulder.'],
     demo: {
@@ -160,9 +214,9 @@ export const PUSH_EXERCISES: Exercise[] = [
     beginnerSuitability: 'suitable',
     measurement: 'reps',
     prescription: { sets: { min: 3, max: 4 }, target: { min: 5, max: 10 }, restSeconds: 90 },
-    progressionLevel: 4,
+    progressionLevel: 5,
     regression: 'push-up',
-    progression: null,
+    progression: 'decline-push-up',
     summary: 'A narrow-hand push-up that shifts the work onto the triceps.',
     instructions: {
       setup: [
@@ -193,5 +247,107 @@ export const PUSH_EXERCISES: Exercise[] = [
       loop: 'ping-pong',
     },
     tags: ['triceps', 'upper-body'],
+  },
+  {
+    id: 'decline-push-up',
+    name: 'Decline Push-Up',
+    category: 'push',
+    movementPattern: 'horizontal-push',
+    family: 'push',
+    primaryMuscles: ['chest', 'front-delts'],
+    secondaryMuscles: ['triceps', 'abs', 'side-delts'],
+    equipment: ['floor', 'chair'],
+    difficulty: 3,
+    beginnerSuitability: 'suitable',
+    measurement: 'reps',
+    prescription: { sets: { min: 3, max: 4 }, target: { min: 5, max: 10 }, restSeconds: 90 },
+    progressionLevel: 6,
+    regression: 'diamond-push-up',
+    progression: 'archer-push-up',
+    summary: 'A push-up with the feet raised, moving weight onto the hands and the upper chest.',
+    instructions: {
+      setup: [
+        'Set up in a push-up position with your feet on a chair, step or sofa edge.',
+        'Walk your hands out until your body is one straight line, shoulders under your hands.',
+        'Brace your abs so your lower back does not arch.',
+      ],
+      execution: [
+        'Lower your chest toward the floor under control.',
+        'Stop when your upper arms are roughly parallel to the floor.',
+        'Press back up to straight arms.',
+      ],
+    },
+    breathing: 'Inhale down, exhale up.',
+    cues: [
+      'The higher your feet, the harder the press. Start low.',
+      'Ribs stay pulled down; the lower back is where this one goes wrong.',
+    ],
+    commonMistakes: [
+      { mistake: 'Lower back arches as the hips drop.', fix: 'Lower your feet and squeeze your glutes harder.' },
+      { mistake: 'Shoulders creep forward past the hands.', fix: 'Walk your hands forward so your shoulders stack over your wrists.' },
+    ],
+    safetyNotes: [
+      'Use something your feet cannot slide off. Load it before committing your weight.',
+      'More weight sits on your wrists and shoulders here. Warm both up first.',
+    ],
+    demo: {
+      keyframes: [
+        { id: 'top', label: 'Top' },
+        { id: 'bottom', label: 'Chest to floor' },
+      ],
+      loop: 'ping-pong',
+    },
+    tags: ['upper-body', 'furniture'],
+  },
+  {
+    id: 'archer-push-up',
+    name: 'Archer Push-Up',
+    category: 'push',
+    movementPattern: 'horizontal-push',
+    family: 'push',
+    primaryMuscles: ['chest', 'triceps'],
+    secondaryMuscles: ['front-delts', 'abs', 'obliques'],
+    equipment: ['floor'],
+    difficulty: 4,
+    beginnerSuitability: 'with-caution',
+    measurement: 'reps-per-side',
+    prescription: { sets: { min: 3, max: 4 }, target: { min: 3, max: 8 }, restSeconds: 120 },
+    progressionLevel: 7,
+    regression: 'decline-push-up',
+    progression: null,
+    summary: 'A wide push-up that loads one arm at a time, the last step before one-arm work.',
+    instructions: {
+      setup: [
+        'Start in a push-up position with your hands much wider than your shoulders.',
+        'Turn your fingers slightly outward.',
+      ],
+      execution: [
+        'Bend one arm and lower toward that hand, keeping the other arm straight.',
+        'Let the straight arm slide out to the side as a support, not a pressing arm.',
+        'Press back up through the bent arm.',
+        'Finish all reps on one side before switching.',
+      ],
+    },
+    breathing: 'Inhale as you lower toward the working arm, exhale as you press back.',
+    cues: [
+      'The straighter the support arm, the harder the rep.',
+      'Keep your hips square; do not let them rotate toward the working side.',
+    ],
+    commonMistakes: [
+      { mistake: 'Pressing equally with both arms.', fix: 'Keep the support arm locked straight so it cannot contribute.' },
+      { mistake: 'Hips twisting to help.', fix: 'Reduce the reps and hold your hips level throughout.' },
+    ],
+    safetyNotes: [
+      'The wide position stretches the shoulder. Build up gradually and stop at any pinching.',
+    ],
+    demo: {
+      keyframes: [
+        { id: 'top', label: 'Top' },
+        { id: 'left', label: 'Down to left' },
+        { id: 'right', label: 'Down to right' },
+      ],
+      loop: 'cycle',
+    },
+    tags: ['unilateral', 'upper-body', 'advanced'],
   },
 ];

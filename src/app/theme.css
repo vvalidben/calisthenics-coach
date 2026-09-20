@@ -297,6 +297,43 @@ a {
   box-shadow: 0 0 0 1px var(--signal-quiet);
 }
 
+/* Locked content is dimmed, never hidden: the library should look as
+   incomplete as it actually is until a bar exists. */
+.rung--unavailable {
+  background: repeating-linear-gradient(
+    135deg,
+    var(--steel-2) 0 3px,
+    transparent 3px 6px
+  );
+}
+
+.family--locked .family__name,
+.family--locked .family__current {
+  color: var(--chalk-faint);
+}
+
+.family--locked .rung--current {
+  background: var(--chalk-faint);
+  box-shadow: none;
+}
+
+.family__locked {
+  margin-top: 10px;
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--chalk-dim);
+}
+
+.family__caveat {
+  margin-top: 8px;
+  max-width: 56ch;
+  font-size: var(--step--1);
+  line-height: 1.5;
+  color: var(--chalk-faint);
+  border-left: 2px solid var(--line);
+  padding-left: 12px;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .rungs .rung {
     animation: rung-in 320ms cubic-bezier(0.2, 0.7, 0.3, 1) backwards;

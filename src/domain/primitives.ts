@@ -56,6 +56,8 @@ export const MOVEMENT_PATTERNS = [
   'core-anti-extension',
   'core-flexion',
   'core-anti-rotation',
+  'core-anti-lateral-flexion',
+  'spinal-extension',
   'isometric-hold',
   'balance',
   'mobility',
@@ -71,13 +73,19 @@ export type MovementPattern = z.infer<typeof movementPatternSchema>;
 export const FAMILIES = [
   'push',
   'dip',
+  'pull-prep',
   'pull',
   'squat',
+  'hinge',
   'core',
+  'side-core',
+  'hanging-core',
   'handstand',
   'shoulder-mobility',
+  'thoracic-mobility',
   'hip-mobility',
-  'spine-hamstring-mobility',
+  'hamstring-mobility',
+  'ankle-mobility',
 ] as const;
 export const familySchema = z.enum(FAMILIES);
 export type Family = z.infer<typeof familySchema>;

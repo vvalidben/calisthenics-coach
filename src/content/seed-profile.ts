@@ -5,11 +5,17 @@ export const SEED_DATE = '2026-09-20';
 
 /**
  * The athlete's stated starting point, written on first run and editable from
- * Sprint 2 onward.
+ * a later sprint.
+ *
+ * Note what is *not* here: `pullup-bar` and `parallel-bars`. There is no bar,
+ * so every exercise needing one is unavailable. The 7 pull-ups below are still
+ * recorded, because an ability is a fact about the athlete while availability
+ * is a fact about their equipment. Adding `'pullup-bar'` to the list below is
+ * the only change needed to unlock the entire pull ladder.
  *
  * Two fields are assumptions rather than stated facts, flagged so they are easy
  * to correct: which four days of the week are training days, and the preferred
- * training time (which only matters once reminders exist).
+ * training time.
  */
 export const SEED_PROFILE: UserProfile = {
   goals: ['build-muscle', 'get-stronger', 'mobility-flexibility'],
@@ -18,6 +24,7 @@ export const SEED_PROFILE: UserProfile = {
   currentAbilities: [
     { exerciseId: 'push-up', measurement: 'reps', value: 10, assessedAt: SEED_DATE },
     { exerciseId: 'bodyweight-squat', measurement: 'reps', value: 12, assessedAt: SEED_DATE },
+    // Recorded ability, but currently unavailable to train: there is no bar.
     { exerciseId: 'pull-up', measurement: 'reps', value: 7, assessedAt: SEED_DATE },
     // Tested at zero, which is different from untested.
     { exerciseId: 'parallel-bar-dip', measurement: 'reps', value: 0, assessedAt: SEED_DATE },
@@ -26,7 +33,7 @@ export const SEED_PROFILE: UserProfile = {
     { exerciseId: 'handstand-back-to-wall', measurement: 'time', value: null, assessedAt: SEED_DATE },
   ],
 
-  availableEquipment: ['none', 'floor', 'wall', 'chair', 'towel', 'pullup-bar', 'parallel-bars'],
+  availableEquipment: ['none', 'floor', 'wall', 'chair', 'towel'],
 
   // ASSUMPTION: an even Mon/Tue + Thu/Fri split. Change freely.
   trainingDays: ['monday', 'tuesday', 'thursday', 'friday'],

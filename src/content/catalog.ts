@@ -1,18 +1,30 @@
 import type { Exercise } from '../domain/exercise';
 import type { Category, ExerciseId, Family } from '../domain/primitives';
-import { CORE_EXERCISES } from './exercises/core';
+import {
+  CORE_EXERCISES,
+  HANGING_CORE_EXERCISES,
+  SIDE_CORE_EXERCISES,
+} from './exercises/core';
 import { DIP_EXERCISES } from './exercises/dip';
-import { LEG_EXERCISES } from './exercises/legs';
-import { MOBILITY_EXERCISES } from './exercises/mobility';
+import { HINGE_EXERCISES } from './exercises/hinge';
+import {
+  ANKLE_MOBILITY_EXERCISES,
+  HAMSTRING_MOBILITY_EXERCISES,
+  HIP_MOBILITY_EXERCISES,
+  SHOULDER_MOBILITY_EXERCISES,
+  THORACIC_MOBILITY_EXERCISES,
+} from './exercises/mobility';
 import { PULL_EXERCISES } from './exercises/pull';
+import { PULL_PREP_EXERCISES } from './exercises/pull-prep';
 import { PUSH_EXERCISES } from './exercises/push';
 import { SKILL_EXERCISES } from './exercises/skill';
+import { SQUAT_EXERCISES } from './exercises/squat';
 
 /**
- * The seed catalog. Deliberately a representative subset rather than a complete
- * reference: it covers every family, category, movement pattern and measurement
- * type so the data model is exercised end to end. Filling it out is the exercise
- * library sprint's job.
+ * The exercise library. A focused set rather than an exhaustive reference:
+ * every family runs from something the athlete can already do to something
+ * several months away, and nothing is here that has not been written out in
+ * full.
  *
  * `catalog.test.ts` enforces the invariants that keep it coherent — unbroken
  * progression chains, symmetric links, equipment the athlete actually has.
@@ -20,11 +32,19 @@ import { SKILL_EXERCISES } from './exercises/skill';
 export const EXERCISES: readonly Exercise[] = [
   ...PUSH_EXERCISES,
   ...DIP_EXERCISES,
+  ...PULL_PREP_EXERCISES,
   ...PULL_EXERCISES,
-  ...LEG_EXERCISES,
+  ...SQUAT_EXERCISES,
+  ...HINGE_EXERCISES,
   ...CORE_EXERCISES,
+  ...SIDE_CORE_EXERCISES,
+  ...HANGING_CORE_EXERCISES,
   ...SKILL_EXERCISES,
-  ...MOBILITY_EXERCISES,
+  ...SHOULDER_MOBILITY_EXERCISES,
+  ...THORACIC_MOBILITY_EXERCISES,
+  ...HIP_MOBILITY_EXERCISES,
+  ...HAMSTRING_MOBILITY_EXERCISES,
+  ...ANKLE_MOBILITY_EXERCISES,
 ];
 
 const BY_ID = new Map(EXERCISES.map((e) => [e.id, e]));

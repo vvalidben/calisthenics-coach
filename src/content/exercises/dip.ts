@@ -88,6 +88,7 @@ export const DIP_EXERCISES: Exercise[] = [
       { mistake: 'Bouncing out of the bottom.', fix: 'Pause for a beat at the bottom of every rep.' },
     ],
     safetyNotes: [
+      'Brace the chair against a wall and load it with your weight before extending your legs. Straight legs pull the chair toward you.',
       'Bench dips put the shoulder in a stretched, rotated position. Keep the range short and stop at any pinching.',
     ],
     demo: {

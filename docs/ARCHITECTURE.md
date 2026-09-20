@@ -49,6 +49,28 @@ is the check that they agree: `content/catalog.test.ts` asserts every link
 resolves, links are symmetric, each family forms one unbroken chain, levels run
 1..n in chain order, and difficulty never decreases up a chain.
 
+### Families
+
+`content/families.ts` describes each family: its name, what mastering it means,
+the equipment its entry step needs, and an optional `caveat` stating a
+limitation in the data rather than in a comment. The floor-pulling family uses
+`caveat` to say it is not a substitute for pulling; the pull family uses it to
+warn against improvising a bar.
+
+### Availability vs. ability
+
+Two separate ideas, deliberately not merged:
+
+- **Ability** is a fact about the athlete, stored in `profile.currentAbilities`.
+- **Availability** is a fact about their equipment, computed by
+  `domain/availability.ts` from `exercise.equipment` against
+  `profile.availableEquipment`.
+
+The athlete can do 7 pull-ups and own no bar. Both are recorded; neither
+overwrites the other. Bar-based content stays in the catalog in full, tested and
+ready, and adding `'pullup-bar'` to `availableEquipment` is the only change
+needed to unlock it. A test asserts exactly that.
+
 ## Storage
 
 ```
@@ -87,7 +109,8 @@ profile or logged sessions.
 | Workout player | Reads a `Workout`, writes a `WorkoutSession` |
 | Progress tracking and calendar | Reads `repositories.sessions.list()`, already ordered by date |
 | Progression engine | Reads sessions, updates `ProgressionState` against its own criteria, moves along the catalog's family chains |
-| Exercise library and demonstrations | Reads the catalog; `DemoSpec.keyframes` is the contract a renderer fills |
+| Exercise demonstrations | Reads `DemoSpec.keyframes`, which is the contract a renderer fills |
+| Anything that prescribes work | Must filter through `isExerciseAvailable` so it never programs an exercise the athlete has no equipment for |
 | Reminders | Reads `profile.trainingDays` and `profile.preferredTrainingTime` |
 
 ## Commands

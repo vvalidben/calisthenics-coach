@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
+import { isExerciseAvailable, missingEquipmentFor } from '../domain/availability';
 import { exerciseSchema } from '../domain/exercise';
-import { FAMILIES, type Family } from '../domain/primitives';
+import { familyInfoSchema } from '../domain/family';
+import { EQUIPMENT, FAMILIES, type Family } from '../domain/primitives';
 import { EXERCISES, exerciseById, exercisesInFamily, familyChain } from './catalog';
+import { FAMILY_INFO, familyInfo, requireFamilyInfo } from './families';
 import { SEED_PROFILE } from './seed-profile';
 
 describe('exercise catalog', () => {
@@ -16,12 +19,6 @@ describe('exercise catalog', () => {
   it('has no duplicate ids', () => {
     const ids = EXERCISES.map((e) => e.id);
     expect(new Set(ids).size).toBe(ids.length);
-  });
-
-  it('only prescribes equipment the athlete actually has', () => {
-    const available = new Set(SEED_PROFILE.availableEquipment);
-    const offenders = EXERCISES.filter((e) => e.equipment.some((eq) => !available.has(eq)));
-    expect(offenders.map((e) => e.id)).toEqual([]);
   });
 
   it('resolves every regression link to a real exercise', () => {
@@ -91,7 +88,8 @@ describe('exercise catalog', () => {
       (e) =>
         e.cues.length === 0 ||
         e.commonMistakes.length === 0 ||
-        e.instructions.execution.length < 2,
+        e.instructions.execution.length < 2 ||
+        e.instructions.setup.length < 1,
     );
     expect(thin.map((e) => e.id)).toEqual([]);
   });
@@ -107,10 +105,120 @@ describe('exercise catalog', () => {
     expect(missing.map((e) => e.id)).toEqual([]);
   });
 
-  it('measures every mobility exercise in time rather than reps where it holds a position', () => {
+  it('attaches a stability warning to every exercise that stands on furniture', () => {
+    const onFurniture = EXERCISES.filter((e) => e.equipment.includes('chair'));
+    const missing = onFurniture.filter((e) => (e.safetyNotes ?? []).length === 0);
+    expect(missing.map((e) => e.id)).toEqual([]);
+  });
+
+  it('measures every held position in time rather than reps', () => {
     const holds = EXERCISES.filter((e) => e.movementPattern === 'isometric-hold');
     const wrong = holds.filter((e) => e.measurement !== 'time' && e.measurement !== 'time-per-side');
     expect(wrong.map((e) => e.id)).toEqual([]);
+  });
+
+  it('only uses equipment the model knows about', () => {
+    const known = new Set<string>(EQUIPMENT);
+    const unknown = EXERCISES.flatMap((e) => e.equipment.filter((eq) => !known.has(eq)));
+    expect(unknown).toEqual([]);
+  });
+});
+
+describe('equipment gating', () => {
+  it('never leaves an exercise unavailable by accident', () => {
+    // An exercise the athlete cannot perform is fine, but only when its family
+    // declares the equipment as a requirement. Anything else is an oversight.
+    const accidental = EXERCISES.filter((exercise) => {
+      if (isExerciseAvailable(exercise, SEED_PROFILE)) return false;
+      const declared = new Set(requireFamilyInfo(exercise.family).requiresEquipment);
+      return missingEquipmentFor(exercise, SEED_PROFILE).some((eq) => !declared.has(eq));
+    });
+
+    // The top dip step needs parallel bars the dip family does not require, so
+    // it is listed here as a known, deliberate exception.
+    expect(accidental.map((e) => e.id)).toEqual(['parallel-bar-dip']);
+  });
+
+  it('leaves every family with at least one exercise the athlete can do today, except the bar families', () => {
+    const unusable = FAMILIES.filter(
+      (family) => !exercisesInFamily(family).some((e) => isExerciseAvailable(e, SEED_PROFILE)),
+    );
+    expect(unusable).toEqual(['pull', 'hanging-core']);
+  });
+
+  it('unlocks both bar families the moment a bar is added to the profile', () => {
+    const withBar = {
+      ...SEED_PROFILE,
+      availableEquipment: [...SEED_PROFILE.availableEquipment, 'pullup-bar' as const],
+    };
+    const stillLocked = (['pull', 'hanging-core'] as const).filter(
+      (family) => !exercisesInFamily(family).every((e) => isExerciseAvailable(e, withBar)),
+    );
+    expect(stillLocked).toEqual([]);
+  });
+});
+
+describe('family registry', () => {
+  it.each(FAMILY_INFO.map((f) => [f.id, f] as const))('%s matches the family schema', (_id, info) => {
+    expect(() => familyInfoSchema.parse(info)).not.toThrow();
+  });
+
+  it('describes every family exactly once', () => {
+    expect(FAMILY_INFO.map((f) => f.id).sort()).toEqual([...FAMILIES].sort());
+  });
+
+  it('gives every family a category matching its exercises', () => {
+    const mismatched = FAMILY_INFO.filter((info) =>
+      exercisesInFamily(info.id).some((e) => e.category !== info.category),
+    );
+    expect(mismatched.map((f) => f.id)).toEqual([]);
+  });
+
+  it('declares equipment its entry exercise actually needs', () => {
+    const inconsistent = FAMILY_INFO.filter((info) => {
+      const entry = familyChain(info.id)[0];
+      if (!entry) return true;
+      return info.requiresEquipment.some((eq) => !entry.equipment.includes(eq));
+    });
+    expect(inconsistent.map((f) => f.id)).toEqual([]);
+  });
+
+  it('states a caveat on every family the athlete cannot currently train', () => {
+    const lockedWithoutExplanation = FAMILY_INFO.filter(
+      (info) =>
+        info.requiresEquipment.some((eq) => !SEED_PROFILE.availableEquipment.includes(eq)) &&
+        info.caveat === undefined,
+    );
+    expect(lockedWithoutExplanation.map((f) => f.id)).toEqual([]);
+  });
+
+  it('warns in the floor-pulling family that it is not real pulling', () => {
+    expect(familyInfo('pull-prep')?.caveat).toMatch(/not pulling exercises/i);
+  });
+
+  it('warns in the pull family against improvising a bar', () => {
+    expect(familyInfo('pull')?.caveat).toMatch(/chairs|door/i);
+  });
+});
+
+describe('floor-based pulling', () => {
+  it('needs no equipment beyond the floor', () => {
+    const needsMore = exercisesInFamily('pull-prep').filter(
+      (e) => !e.equipment.every((eq) => eq === 'floor' || eq === 'none'),
+    );
+    expect(needsMore.map((e) => e.id)).toEqual([]);
+  });
+
+  it('labels every exercise as not a substitute for pulling', () => {
+    const unlabelled = exercisesInFamily('pull-prep').filter(
+      (e) => !(e.safetyNotes ?? []).some((note) => /not a substitute for pulling/i.test(note)),
+    );
+    expect(unlabelled.map((e) => e.id)).toEqual([]);
+  });
+
+  it('is tagged so it can never be presented as a pull', () => {
+    const untagged = exercisesInFamily('pull-prep').filter((e) => !e.tags.includes('not-a-pull'));
+    expect(untagged.map((e) => e.id)).toEqual([]);
   });
 });
 
@@ -125,10 +233,27 @@ describe('exerciseById', () => {
 });
 
 describe('familyChain', () => {
-  it('orders a family from easiest to hardest', () => {
+  it('orders the push family from wall to archer', () => {
     const chain = familyChain('push').map((e) => e.id);
     expect(chain[0]).toBe('wall-push-up');
-    expect(chain).toContain('push-up');
-    expect(chain.indexOf('push-up')).toBeGreaterThan(chain.indexOf('incline-push-up'));
+    expect(chain.at(-1)).toBe('archer-push-up');
+    expect(chain.indexOf('knee-push-up')).toBeGreaterThan(chain.indexOf('incline-push-up'));
+    expect(chain.indexOf('push-up')).toBeGreaterThan(chain.indexOf('knee-push-up'));
+  });
+
+  it('orders the squat family from assisted to pistol', () => {
+    const chain = familyChain('squat').map((e) => e.id);
+    expect(chain[0]).toBe('assisted-squat');
+    expect(chain.at(-1)).toBe('pistol-squat');
+    expect(chain).toContain('tempo-squat');
+    expect(chain).toContain('reverse-lunge');
+  });
+
+  it('orders the core family from dead bug to hollow rock', () => {
+    const chain = familyChain('core').map((e) => e.id);
+    expect(chain[0]).toBe('dead-bug');
+    expect(chain[1]).toBe('bird-dog');
+    expect(chain).toContain('knee-plank');
+    expect(chain.indexOf('front-plank')).toBeGreaterThan(chain.indexOf('knee-plank'));
   });
 });

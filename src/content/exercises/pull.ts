@@ -110,7 +110,7 @@ export const PULL_EXERCISES: Exercise[] = [
     prescription: { sets: { min: 3, max: 4 }, target: { min: 8, max: 12 }, restSeconds: 75 },
     progressionLevel: 3,
     regression: 'scapular-pull',
-    progression: 'chin-up',
+    progression: 'negative-pull-up',
     summary: 'A horizontal pull under a low bar, balancing all the pressing work.',
     instructions: {
       setup: [
@@ -156,8 +156,8 @@ export const PULL_EXERCISES: Exercise[] = [
     beginnerSuitability: 'suitable',
     measurement: 'reps',
     prescription: { sets: { min: 3, max: 4 }, target: { min: 4, max: 10 }, restSeconds: 120 },
-    progressionLevel: 4,
-    regression: 'australian-row',
+    progressionLevel: 5,
+    regression: 'negative-pull-up',
     progression: 'pull-up',
     summary: 'A vertical pull with palms facing you, giving the biceps more of the work.',
     instructions: {
@@ -200,7 +200,7 @@ export const PULL_EXERCISES: Exercise[] = [
     beginnerSuitability: 'suitable',
     measurement: 'reps',
     prescription: { sets: { min: 3, max: 4 }, target: { min: 4, max: 8 }, restSeconds: 120 },
-    progressionLevel: 5,
+    progressionLevel: 6,
     regression: 'chin-up',
     progression: null,
     summary: 'The benchmark vertical pull, palms facing away.',
@@ -233,5 +233,53 @@ export const PULL_EXERCISES: Exercise[] = [
       loop: 'ping-pong',
     },
     tags: ['staple', 'upper-body'],
+  },
+  {
+    id: 'negative-pull-up',
+    name: 'Negative Pull-Up',
+    category: 'pull',
+    movementPattern: 'vertical-pull',
+    family: 'pull',
+    primaryMuscles: ['lats', 'biceps'],
+    secondaryMuscles: ['rhomboids', 'forearms', 'abs'],
+    equipment: ['pullup-bar'],
+    difficulty: 3,
+    beginnerSuitability: 'suitable',
+    measurement: 'reps',
+    prescription: { sets: { min: 3, max: 4 }, target: { min: 3, max: 6 }, restSeconds: 120 },
+    progressionLevel: 4,
+    regression: 'australian-row',
+    progression: 'chin-up',
+    summary: 'Only the lowering half of a pull-up, which you can control long before you can pull.',
+    instructions: {
+      setup: [
+        'Grip the bar slightly wider than your shoulders with your palms facing away.',
+        'Step, jump or climb up until your chin is over the bar.',
+      ],
+      execution: [
+        'Hold the top position for a second with your shoulder blades pulled down.',
+        'Lower yourself as slowly as you can, aiming for five seconds.',
+        'Finish with your arms completely straight.',
+        'Step back up rather than pulling; only the descent counts.',
+      ],
+    },
+    breathing: 'Inhale at the top, exhale slowly through the descent.',
+    cues: [
+      'Count the descent out loud. When it drops below three seconds, the set is over.',
+      'Fight all the way to straight arms; the last third is where the strength is built.',
+    ],
+    commonMistakes: [
+      { mistake: 'Dropping through the bottom half.', fix: 'Reduce the reps and keep the tempo even the whole way down.' },
+      { mistake: 'Pulling back up between reps, which turns it into a set of pull-ups.', fix: 'Step or climb back to the top each time.' },
+    ],
+    safetyNotes: BAR_SAFETY,
+    demo: {
+      keyframes: [
+        { id: 'top', label: 'Chin over bar' },
+        { id: 'bottom', label: 'Dead hang' },
+      ],
+      loop: 'cycle',
+    },
+    tags: ['technique', 'upper-body'],
   },
 ];

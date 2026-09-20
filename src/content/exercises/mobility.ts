@@ -1,7 +1,7 @@
 import type { Exercise } from '../../domain/exercise';
 
-/** Three short mobility ladders serving the athlete's flexibility goal. */
-export const MOBILITY_EXERCISES: Exercise[] = [
+/** Overhead reach without borrowing range from the lower back. */
+export const SHOULDER_MOBILITY_EXERCISES: Exercise[] = [
   {
     id: 'wall-angel',
     name: 'Wall Angel',
@@ -61,7 +61,7 @@ export const MOBILITY_EXERCISES: Exercise[] = [
     prescription: { sets: { min: 2, max: 3 }, target: { min: 6, max: 10 }, restSeconds: 30 },
     progressionLevel: 2,
     regression: 'wall-angel',
-    progression: null,
+    progression: 'prone-chest-opener',
     summary: 'Takes the shoulder through its full overhead arc, preparing it for hangs and handstands.',
     instructions: {
       setup: [
@@ -81,6 +81,7 @@ export const MOBILITY_EXERCISES: Exercise[] = [
       { mistake: 'Bending the elbows to force more range.', fix: 'Widen your grip instead and keep the arms locked.' },
       { mistake: 'Arching the lower back to get the arms further back.', fix: 'Brace your abs and keep your ribs pulled down.' },
     ],
+    safetyNotes: ['Go slowly at the back of the arc. Forcing this position is how shoulders get injured.'],
     demo: {
       keyframes: [
         { id: 'front', label: 'In front' },
@@ -92,97 +93,62 @@ export const MOBILITY_EXERCISES: Exercise[] = [
     tags: ['mobility', 'shoulders', 'handstand-prep'],
   },
   {
-    id: 'ninety-ninety-hip-switch',
-    name: '90/90 Hip Switch',
+    id: 'prone-chest-opener',
+    name: 'Prone Chest Opener',
     category: 'mobility',
     movementPattern: 'mobility',
-    family: 'hip-mobility',
-    primaryMuscles: ['hip-flexors', 'glutes'],
-    secondaryMuscles: ['adductors', 'lower-back'],
-    equipment: ['floor'],
-    difficulty: 1,
-    beginnerSuitability: 'ideal',
-    measurement: 'reps',
-    prescription: { sets: { min: 2, max: 2 }, target: { min: 6, max: 10 }, restSeconds: 30 },
-    progressionLevel: 1,
-    regression: null,
-    progression: 'deep-squat-hold',
-    summary: 'Rotates the hips through their full inward and outward range.',
-    instructions: {
-      setup: [
-        'Sit on the floor with one leg bent in front at 90 degrees and the other bent out to the side at 90 degrees.',
-        'Sit tall with your hands on the floor behind you for support.',
-      ],
-      execution: [
-        'Keeping your feet planted, rotate both knees across to the other side.',
-        'Lower them until both touch the floor in the mirrored position.',
-        'Pause for a moment, then switch back.',
-      ],
-    },
-    breathing: 'Exhale as you rotate, inhale in the end position.',
-    cues: ['Move slowly; this is a range-of-motion drill, not a rep chase.', 'Keep your chest tall rather than rounding forward.'],
-    commonMistakes: [
-      { mistake: 'Rounding the back to force the knees down.', fix: 'Sit on a cushion and shorten the range until you can stay tall.' },
-      { mistake: 'Rushing the switch with momentum.', fix: 'Pause for two seconds in each end position.' },
-    ],
-    demo: {
-      keyframes: [
-        { id: 'left', label: 'Left 90/90' },
-        { id: 'right', label: 'Right 90/90' },
-      ],
-      loop: 'ping-pong',
-    },
-    tags: ['mobility', 'hips'],
-  },
-  {
-    id: 'deep-squat-hold',
-    name: 'Deep Squat Hold',
-    category: 'mobility',
-    movementPattern: 'isometric-hold',
-    family: 'hip-mobility',
-    primaryMuscles: ['hip-flexors', 'adductors'],
-    secondaryMuscles: ['calves', 'glutes', 'lower-back'],
+    family: 'shoulder-mobility',
+    primaryMuscles: ['chest', 'front-delts'],
+    secondaryMuscles: ['thoracic-spine', 'obliques'],
     equipment: ['floor'],
     difficulty: 2,
     beginnerSuitability: 'ideal',
-    measurement: 'time',
-    prescription: { sets: { min: 2, max: 3 }, target: { min: 30, max: 60 }, restSeconds: 45 },
-    progressionLevel: 2,
-    regression: 'ninety-ninety-hip-switch',
+    measurement: 'time-per-side',
+    prescription: { sets: { min: 2, max: 2 }, target: { min: 30, max: 60 }, restSeconds: 20 },
+    progressionLevel: 3,
+    regression: 'towel-shoulder-dislocate',
     progression: null,
-    summary: 'Resting in the bottom of a squat, which restores ankle, knee and hip range together.',
+    summary: 'A floor stretch that opens one side of the chest at a time, using your own bodyweight as the gentle force.',
     instructions: {
       setup: [
-        'Stand with your feet a little wider than your hips, toes turned slightly out.',
-        'Hold onto a doorframe or the back of a chair if you need support.',
+        'Lie face down with one arm stretched straight out to the side at shoulder height, palm down.',
       ],
       execution: [
-        'Squat all the way down until your hips are below your knees.',
-        'Keep your heels flat and let your elbows rest inside your knees.',
-        'Relax into the position and hold, gently pushing your knees out.',
+        'Roll your body toward the outstretched arm, bringing the opposite knee across.',
+        'Plant that foot on the floor behind you and let it take your weight.',
+        'Relax into the stretch across the chest and front of the shoulder.',
+        'Hold, then roll back and switch sides.',
       ],
     },
-    breathing: 'Breathe deeply into your belly; each exhale lets you settle lower.',
-    cues: ['Hold support until you can balance unaided.', 'Put something thin under your heels if they lift.'],
-    commonMistakes: [
-      { mistake: 'Heels lift, tipping you onto your toes.', fix: 'Raise your heels on a folded towel and widen your stance.' },
-      { mistake: 'Staying tense throughout the hold.', fix: 'Let your back round slightly and relax; this is a rest position.' },
+    breathing: 'Breathe slowly into the stretch; each exhale lets you settle a little further.',
+    cues: [
+      'Let the floor do the work. Relax rather than pushing.',
+      'Adjust the arm height until you feel the chest rather than the shoulder joint.',
     ],
+    commonMistakes: [
+      { mistake: 'Rolling so far that the shoulder takes sharp strain.', fix: 'Back off until it is a broad stretch across the chest, never a pinch.' },
+      { mistake: 'Holding tension through the whole stretch.', fix: 'Relax completely and let your bodyweight settle you in.' },
+    ],
+    safetyNotes: ['Stop at any sharp or pinching sensation in the front of the shoulder joint.'],
     demo: {
       keyframes: [
-        { id: 'stand', label: 'Standing' },
-        { id: 'deep', label: 'Deep squat' },
+        { id: 'flat', label: 'Face down' },
+        { id: 'rolled', label: 'Rolled open' },
       ],
       loop: 'ping-pong',
     },
-    tags: ['mobility', 'hips', 'ankles'],
+    tags: ['mobility', 'shoulders', 'chest'],
   },
+];
+
+/** Moving and rotating the upper back rather than the lower back. */
+export const THORACIC_MOBILITY_EXERCISES: Exercise[] = [
   {
     id: 'cat-cow',
     name: 'Cat-Cow',
     category: 'mobility',
     movementPattern: 'mobility',
-    family: 'spine-hamstring-mobility',
+    family: 'thoracic-mobility',
     primaryMuscles: ['thoracic-spine', 'lower-back'],
     secondaryMuscles: ['abs'],
     equipment: ['floor'],
@@ -192,7 +158,7 @@ export const MOBILITY_EXERCISES: Exercise[] = [
     prescription: { sets: { min: 1, max: 2 }, target: { min: 8, max: 12 }, restSeconds: 20 },
     progressionLevel: 1,
     regression: null,
-    progression: 'worlds-greatest-stretch',
+    progression: 'thread-the-needle',
     summary: 'A gentle spinal warm-up that moves every segment of the back.',
     instructions: {
       setup: [
@@ -221,11 +187,291 @@ export const MOBILITY_EXERCISES: Exercise[] = [
     tags: ['mobility', 'warm-up', 'spine'],
   },
   {
+    id: 'thread-the-needle',
+    name: 'Thread the Needle',
+    category: 'mobility',
+    movementPattern: 'mobility',
+    family: 'thoracic-mobility',
+    primaryMuscles: ['thoracic-spine'],
+    secondaryMuscles: ['rear-delts', 'rhomboids', 'obliques'],
+    equipment: ['floor'],
+    difficulty: 1,
+    beginnerSuitability: 'ideal',
+    measurement: 'reps-per-side',
+    prescription: { sets: { min: 2, max: 2 }, target: { min: 6, max: 10 }, restSeconds: 20 },
+    progressionLevel: 2,
+    regression: 'cat-cow',
+    progression: 'open-book-rotation',
+    summary: 'A rotation drill on all fours that reaches the upper back without loading the lower back.',
+    instructions: {
+      setup: [
+        'Kneel on all fours with your hands under your shoulders and knees under your hips.',
+      ],
+      execution: [
+        'Slide one arm underneath your body and across, palm up.',
+        'Let your shoulder and the side of your head rest on the floor.',
+        'Hold for two seconds, feeling the rotation between the shoulder blades.',
+        'Unwind and reach that arm up toward the ceiling, then repeat.',
+      ],
+    },
+    breathing: 'Exhale as you thread through, inhale as you open upward.',
+    cues: [
+      'Keep your hips square over your knees; the rotation comes from the upper back.',
+      'Follow your reaching hand with your eyes when you open up.',
+    ],
+    commonMistakes: [
+      { mistake: 'Hips swinging sideways to create the rotation.', fix: 'Keep your hips stacked over your knees and reduce the range.' },
+      { mistake: 'Rushing past the end positions.', fix: 'Pause for two seconds at each end.' },
+    ],
+    demo: {
+      keyframes: [
+        { id: 'threaded', label: 'Threaded through' },
+        { id: 'open', label: 'Reaching up' },
+      ],
+      loop: 'ping-pong',
+    },
+    tags: ['mobility', 'spine', 'rotation'],
+  },
+  {
+    id: 'open-book-rotation',
+    name: 'Open Book Rotation',
+    category: 'mobility',
+    movementPattern: 'mobility',
+    family: 'thoracic-mobility',
+    primaryMuscles: ['thoracic-spine'],
+    secondaryMuscles: ['chest', 'obliques', 'front-delts'],
+    equipment: ['floor'],
+    difficulty: 2,
+    beginnerSuitability: 'ideal',
+    measurement: 'reps-per-side',
+    prescription: { sets: { min: 2, max: 2 }, target: { min: 6, max: 10 }, restSeconds: 20 },
+    progressionLevel: 3,
+    regression: 'thread-the-needle',
+    progression: null,
+    summary: 'Side-lying rotation that opens the chest and upper back through the largest range available on the floor.',
+    instructions: {
+      setup: [
+        'Lie on your side with your knees bent to ninety degrees and stacked.',
+        'Stretch both arms straight out in front at shoulder height, palms together.',
+      ],
+      execution: [
+        'Keeping your knees pinned together, sweep your top arm in a wide arc across your body.',
+        'Follow your hand with your eyes and let your chest turn toward the ceiling.',
+        'Stop where your knees start to lift, and hold for three seconds.',
+        'Sweep back and repeat, then switch sides.',
+      ],
+    },
+    breathing: 'Exhale as the arm opens, inhale as it returns.',
+    cues: [
+      'The knees staying down is what forces the upper back to rotate.',
+      'Rest your top knee on a cushion if it lifts immediately.',
+    ],
+    commonMistakes: [
+      { mistake: 'Knees lifting so the rotation comes from the hips.', fix: 'Press the top knee down and rotate only as far as it stays put.' },
+      { mistake: 'Arm travelling above shoulder height.', fix: 'Keep the sweep at shoulder height, where the chest opens best.' },
+    ],
+    demo: {
+      keyframes: [
+        { id: 'closed', label: 'Hands together' },
+        { id: 'open', label: 'Chest open' },
+      ],
+      loop: 'ping-pong',
+    },
+    tags: ['mobility', 'spine', 'rotation', 'chest'],
+  },
+];
+
+/** Rotation and depth at the hip, which every squat depends on. */
+export const HIP_MOBILITY_EXERCISES: Exercise[] = [
+  {
+    id: 'ninety-ninety-hip-switch',
+    name: '90/90 Hip Switch',
+    category: 'mobility',
+    movementPattern: 'mobility',
+    family: 'hip-mobility',
+    primaryMuscles: ['hip-flexors', 'glutes'],
+    secondaryMuscles: ['adductors', 'lower-back'],
+    equipment: ['floor'],
+    difficulty: 1,
+    beginnerSuitability: 'ideal',
+    measurement: 'reps',
+    prescription: { sets: { min: 2, max: 2 }, target: { min: 6, max: 10 }, restSeconds: 30 },
+    progressionLevel: 1,
+    regression: null,
+    progression: 'kneeling-hip-flexor-stretch',
+    summary: 'Rotates the hips through their full inward and outward range.',
+    instructions: {
+      setup: [
+        'Sit on the floor with one leg bent in front at 90 degrees and the other bent out to the side at 90 degrees.',
+        'Sit tall with your hands on the floor behind you for support.',
+      ],
+      execution: [
+        'Keeping your feet planted, rotate both knees across to the other side.',
+        'Lower them until both touch the floor in the mirrored position.',
+        'Pause for a moment, then switch back.',
+      ],
+    },
+    breathing: 'Exhale as you rotate, inhale in the end position.',
+    cues: ['Move slowly; this is a range-of-motion drill, not a rep chase.', 'Keep your chest tall rather than rounding forward.'],
+    commonMistakes: [
+      { mistake: 'Rounding the back to force the knees down.', fix: 'Sit on a cushion and shorten the range until you can stay tall.' },
+      { mistake: 'Rushing the switch with momentum.', fix: 'Pause for two seconds in each end position.' },
+    ],
+    demo: {
+      keyframes: [
+        { id: 'left', label: 'Left 90/90' },
+        { id: 'right', label: 'Right 90/90' },
+      ],
+      loop: 'ping-pong',
+    },
+    tags: ['mobility', 'hips'],
+  },
+  {
+    id: 'kneeling-hip-flexor-stretch',
+    name: 'Kneeling Hip Flexor Stretch',
+    category: 'mobility',
+    movementPattern: 'mobility',
+    family: 'hip-mobility',
+    primaryMuscles: ['hip-flexors'],
+    secondaryMuscles: ['quads', 'glutes'],
+    equipment: ['floor'],
+    difficulty: 1,
+    beginnerSuitability: 'ideal',
+    measurement: 'time-per-side',
+    prescription: { sets: { min: 2, max: 2 }, target: { min: 30, max: 60 }, restSeconds: 20 },
+    progressionLevel: 2,
+    regression: 'ninety-ninety-hip-switch',
+    progression: 'deep-squat-hold',
+    summary: 'Lengthens the front of the hip, which shortens from sitting and quietly limits both squats and posture.',
+    instructions: {
+      setup: [
+        'Kneel on one knee with the other foot flat on the floor in front, both knees at about ninety degrees.',
+        'Put something soft under the down knee.',
+      ],
+      execution: [
+        'Squeeze the glute on the kneeling side and tuck your tailbone under.',
+        'Shift your hips forward a few centimetres, keeping the tuck.',
+        'Hold, feeling the stretch across the front of the kneeling hip.',
+        'Come out of it slowly, then set up on the other side and repeat.',
+      ],
+    },
+    breathing: 'Breathe slowly and deeply; let each exhale soften the hip.',
+    cues: [
+      'The glute squeeze is what makes this work. Without it you just arch your back.',
+      'A small shift with a tucked pelvis beats a big lunge with an arched one.',
+    ],
+    commonMistakes: [
+      { mistake: 'Arching the lower back and calling it a hip stretch.', fix: 'Tuck the tailbone under first, then move forward.' },
+      { mistake: 'Lunging far forward and feeling nothing.', fix: 'Squeeze the glute and shift only a couple of centimetres.' },
+    ],
+    demo: {
+      keyframes: [
+        { id: 'neutral', label: 'Kneeling' },
+        { id: 'stretched', label: 'Hips forward' },
+      ],
+      loop: 'ping-pong',
+    },
+    tags: ['mobility', 'hips', 'posture'],
+  },
+  {
+    id: 'deep-squat-hold',
+    name: 'Deep Squat Hold',
+    category: 'mobility',
+    movementPattern: 'isometric-hold',
+    family: 'hip-mobility',
+    primaryMuscles: ['hip-flexors', 'adductors'],
+    secondaryMuscles: ['calves', 'glutes', 'lower-back'],
+    equipment: ['floor'],
+    difficulty: 2,
+    beginnerSuitability: 'ideal',
+    measurement: 'time',
+    prescription: { sets: { min: 2, max: 3 }, target: { min: 30, max: 60 }, restSeconds: 45 },
+    progressionLevel: 3,
+    regression: 'kneeling-hip-flexor-stretch',
+    progression: null,
+    summary: 'Resting in the bottom of a squat, which restores ankle, knee and hip range together.',
+    instructions: {
+      setup: [
+        'Stand with your feet a little wider than your hips, toes turned slightly out.',
+        'Hold onto a doorframe or a fixed rail if you need support.',
+      ],
+      execution: [
+        'Squat all the way down until your hips are below your knees.',
+        'Keep your heels flat and let your elbows rest inside your knees.',
+        'Relax into the position and hold, gently pushing your knees out.',
+      ],
+    },
+    breathing: 'Breathe deeply into your belly; each exhale lets you settle lower.',
+    cues: ['Hold support until you can balance unaided.', 'Put something thin under your heels if they lift.'],
+    commonMistakes: [
+      { mistake: 'Heels lift, tipping you onto your toes.', fix: 'Raise your heels on a folded towel and widen your stance.' },
+      { mistake: 'Staying tense throughout the hold.', fix: 'Let your back round slightly and relax; this is a rest position.' },
+    ],
+    demo: {
+      keyframes: [
+        { id: 'stand', label: 'Standing' },
+        { id: 'deep', label: 'Deep squat' },
+      ],
+      loop: 'ping-pong',
+    },
+    tags: ['mobility', 'hips', 'ankles'],
+  },
+];
+
+/** Folding at the hip with a long spine. */
+export const HAMSTRING_MOBILITY_EXERCISES: Exercise[] = [
+  {
+    id: 'standing-hamstring-sweep',
+    name: 'Standing Hamstring Sweep',
+    category: 'mobility',
+    movementPattern: 'mobility',
+    family: 'hamstring-mobility',
+    primaryMuscles: ['hamstrings'],
+    secondaryMuscles: ['calves', 'lower-back'],
+    equipment: ['none'],
+    difficulty: 1,
+    beginnerSuitability: 'ideal',
+    measurement: 'reps-per-side',
+    prescription: { sets: { min: 2, max: 2 }, target: { min: 8, max: 12 }, restSeconds: 20 },
+    progressionLevel: 1,
+    regression: null,
+    progression: 'worlds-greatest-stretch',
+    summary: 'A moving hamstring drill that warms the back of the leg without holding a long stretch cold.',
+    instructions: {
+      setup: [
+        'Stand tall and place one heel on the floor a short step in front, toes pulled up.',
+      ],
+      execution: [
+        'Hinge at the hips and reach both hands toward the front foot, keeping your back flat.',
+        'Sweep your hands down past the shin and back up as you stand.',
+        'Stay tall in the spine; the fold comes from the hip.',
+        'Finish all reps before switching sides.',
+      ],
+    },
+    breathing: 'Exhale as you fold forward, inhale as you stand.',
+    cues: [
+      'Flat back throughout. The moment it rounds, you have gone far enough.',
+      'Keep a soft bend in the front knee if your hamstrings are tight.',
+    ],
+    commonMistakes: [
+      { mistake: 'Rounding the back to reach the foot.', fix: 'Reach only as far as your back stays flat; depth comes later.' },
+      { mistake: 'Bouncing at the bottom.', fix: 'Move smoothly in both directions, with no bounce at the end.' },
+    ],
+    demo: {
+      keyframes: [
+        { id: 'stand', label: 'Standing' },
+        { id: 'folded', label: 'Folded' },
+      ],
+      loop: 'ping-pong',
+    },
+    tags: ['mobility', 'hamstrings', 'warm-up'],
+  },
+  {
     id: 'worlds-greatest-stretch',
     name: "World's Greatest Stretch",
     category: 'mobility',
     movementPattern: 'mobility',
-    family: 'spine-hamstring-mobility',
+    family: 'hamstring-mobility',
     primaryMuscles: ['hip-flexors', 'hamstrings'],
     secondaryMuscles: ['thoracic-spine', 'adductors', 'glutes'],
     equipment: ['floor'],
@@ -234,8 +480,8 @@ export const MOBILITY_EXERCISES: Exercise[] = [
     measurement: 'reps-per-side',
     prescription: { sets: { min: 2, max: 2 }, target: { min: 4, max: 6 }, restSeconds: 30 },
     progressionLevel: 2,
-    regression: 'cat-cow',
-    progression: null,
+    regression: 'standing-hamstring-sweep',
+    progression: 'seated-pike-fold',
     summary: 'A lunge, rotation and hamstring stretch in one sequence.',
     instructions: {
       setup: [
@@ -264,5 +510,199 @@ export const MOBILITY_EXERCISES: Exercise[] = [
       loop: 'cycle',
     },
     tags: ['mobility', 'warm-up', 'hips'],
+  },
+  {
+    id: 'seated-pike-fold',
+    name: 'Seated Pike Fold',
+    category: 'mobility',
+    movementPattern: 'mobility',
+    family: 'hamstring-mobility',
+    primaryMuscles: ['hamstrings'],
+    secondaryMuscles: ['lower-back', 'calves'],
+    equipment: ['floor'],
+    difficulty: 2,
+    beginnerSuitability: 'ideal',
+    measurement: 'time',
+    prescription: { sets: { min: 2, max: 3 }, target: { min: 30, max: 60 }, restSeconds: 30 },
+    progressionLevel: 3,
+    regression: 'worlds-greatest-stretch',
+    progression: null,
+    summary: 'A held hamstring fold with the legs straight, building the range that pike and handstand work need.',
+    instructions: {
+      setup: [
+        'Sit on the floor with your legs straight in front and your toes pulled toward you.',
+        'Sit on the edge of a folded towel if your lower back rounds immediately.',
+      ],
+      execution: [
+        'Sit tall and rotate your pelvis forward, as if trying to point your tailbone backward.',
+        'Fold forward from the hip with a flat back and reach toward your feet.',
+        'Stop where your back starts to round, and hold there.',
+        'Relax into the hold and breathe.',
+      ],
+    },
+    breathing: 'Breathe slowly; each exhale lets you fold a little further.',
+    cues: [
+      'Lead with your chest, not your head.',
+      'A shallow fold with a flat back is worth more than a deep one with a rounded one.',
+    ],
+    commonMistakes: [
+      { mistake: 'Rounding the back to get the hands to the feet.', fix: 'Sit on a folded towel and fold only as far as the back stays flat.' },
+      { mistake: 'Bouncing to force more range.', fix: 'Hold still. Bouncing makes the hamstring tighten against you.' },
+    ],
+    demo: {
+      keyframes: [
+        { id: 'tall', label: 'Sitting tall' },
+        { id: 'folded', label: 'Folded' },
+      ],
+      loop: 'ping-pong',
+    },
+    tags: ['mobility', 'hamstrings', 'handstand-prep'],
+  },
+];
+
+/** Letting the knee travel over the toes, which every squat depth depends on. */
+export const ANKLE_MOBILITY_EXERCISES: Exercise[] = [
+  {
+    id: 'ankle-circles',
+    name: 'Ankle Circles',
+    category: 'mobility',
+    movementPattern: 'mobility',
+    family: 'ankle-mobility',
+    primaryMuscles: ['calves'],
+    secondaryMuscles: ['hamstrings'],
+    equipment: ['floor'],
+    difficulty: 1,
+    beginnerSuitability: 'ideal',
+    measurement: 'reps-per-side',
+    prescription: { sets: { min: 1, max: 2 }, target: { min: 8, max: 12 }, restSeconds: 15 },
+    progressionLevel: 1,
+    regression: null,
+    progression: 'knee-to-wall-ankle-rock',
+    summary: 'The warm-up that costs nothing and takes the ankle through every direction it can move.',
+    instructions: {
+      setup: [
+        'Sit on the floor or a chair and cross one ankle over the opposite knee.',
+        'Hold the shin with one hand and the foot with the other.',
+      ],
+      execution: [
+        'Draw the largest circle you can with your toes, slowly.',
+        'Complete the target reps in one direction, then reverse the direction.',
+        'Uncross the leg and repeat the whole set on the other foot.',
+      ],
+    },
+    breathing: 'Breathe normally throughout.',
+    cues: [
+      'Bigger, slower circles beat fast small ones.',
+      'Move the ankle, not the whole leg.',
+    ],
+    commonMistakes: [
+      { mistake: 'Rotating the whole lower leg instead of the ankle.', fix: 'Hold the shin still with your hand so only the foot moves.' },
+      { mistake: 'Small, quick circles.', fix: 'Slow down and reach the end of the range in every direction.' },
+    ],
+    demo: {
+      keyframes: [
+        { id: 'pointed', label: 'Toes pointed' },
+        { id: 'flexed', label: 'Toes pulled up' },
+      ],
+      loop: 'cycle',
+    },
+    tags: ['mobility', 'ankles', 'warm-up'],
+  },
+  {
+    id: 'knee-to-wall-ankle-rock',
+    name: 'Knee-to-Wall Ankle Rock',
+    category: 'mobility',
+    movementPattern: 'mobility',
+    family: 'ankle-mobility',
+    primaryMuscles: ['calves'],
+    secondaryMuscles: ['hamstrings', 'quads'],
+    equipment: ['wall'],
+    difficulty: 2,
+    beginnerSuitability: 'ideal',
+    measurement: 'reps-per-side',
+    prescription: { sets: { min: 2, max: 3 }, target: { min: 8, max: 12 }, restSeconds: 20 },
+    progressionLevel: 2,
+    regression: 'ankle-circles',
+    progression: 'kneeling-toe-stretch',
+    summary: 'The standard ankle test and drill in one: drive the knee past the toes with the heel down.',
+    instructions: {
+      setup: [
+        'Stand facing a wall with one foot about a hand’s width from it.',
+        'Place your hands on the wall for balance.',
+      ],
+      execution: [
+        'Drive your knee straight forward toward the wall, keeping your heel flat.',
+        'Touch the wall with your knee if you can, then return.',
+        'If it touches easily, slide the foot further back and repeat.',
+        'Finish all reps before switching feet.',
+      ],
+    },
+    breathing: 'Exhale as the knee travels forward, inhale as it returns.',
+    cues: [
+      'The heel staying down is the whole exercise. The moment it lifts, move closer.',
+      'Track the knee straight over the middle toes, not inward.',
+    ],
+    commonMistakes: [
+      { mistake: 'Heel lifting as the knee reaches the wall.', fix: 'Move your foot closer until the heel can stay flat.' },
+      { mistake: 'Knee caving inward to reach further.', fix: 'Aim the knee over your second toe and accept less range.' },
+    ],
+    demo: {
+      keyframes: [
+        { id: 'start', label: 'Upright' },
+        { id: 'forward', label: 'Knee to wall' },
+      ],
+      loop: 'ping-pong',
+    },
+    tags: ['mobility', 'ankles', 'squat-prep'],
+  },
+  {
+    id: 'kneeling-toe-stretch',
+    name: 'Kneeling Toe Stretch',
+    category: 'mobility',
+    movementPattern: 'mobility',
+    family: 'ankle-mobility',
+    primaryMuscles: ['calves'],
+    secondaryMuscles: ['quads'],
+    equipment: ['floor'],
+    difficulty: 2,
+    beginnerSuitability: 'suitable',
+    measurement: 'time',
+    prescription: { sets: { min: 2, max: 2 }, target: { min: 30, max: 60 }, restSeconds: 30 },
+    progressionLevel: 3,
+    regression: 'knee-to-wall-ankle-rock',
+    progression: null,
+    summary: 'Kneeling with the toes tucked, which opens the underside of the foot and the front of the ankle.',
+    instructions: {
+      setup: [
+        'Kneel on a soft surface with your toes tucked under.',
+        'Keep your hands on the floor in front to control how much weight you take.',
+      ],
+      execution: [
+        'Slowly sit back toward your heels, letting the weight settle onto your toes.',
+        'Go only as far as is a strong stretch rather than pain.',
+        'Hold, breathing steadily.',
+        'Come forward onto your hands to release.',
+      ],
+    },
+    breathing: 'Breathe slowly and deeply; do not brace against the stretch.',
+    cues: [
+      'Your hands control the intensity. Take more weight on them to ease off.',
+      'This is intense at first. Thirty seconds is plenty.',
+    ],
+    commonMistakes: [
+      { mistake: 'Sitting straight back onto the heels on the first attempt.', fix: 'Keep most of your weight on your hands and add load gradually.' },
+      { mistake: 'Holding through sharp pain in the toe joints.', fix: 'Back off immediately; this should stretch the sole, not hurt the joints.' },
+    ],
+    safetyNotes: [
+      'Skip this if you have a toe or big-toe joint problem. Stop at sharp joint pain as opposed to a stretch.',
+    ],
+    demo: {
+      keyframes: [
+        { id: 'forward', label: 'Weight forward' },
+        { id: 'back', label: 'Sitting back' },
+      ],
+      loop: 'ping-pong',
+    },
+    tags: ['mobility', 'ankles', 'feet'],
   },
 ];

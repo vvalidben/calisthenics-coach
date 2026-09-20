@@ -90,6 +90,7 @@ export const AppShell = ({ adapter, today = localIsoDate() }: AppShellProps) => 
             element={
               <FoundationScreen
                 progression={data.progression}
+                profile={data.profile}
                 schemaVersion={CURRENT_SCHEMA_VERSION}
               />
             }

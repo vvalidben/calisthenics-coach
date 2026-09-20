@@ -3,6 +3,7 @@ import { StorageKeys } from '../storage/adapter';
 import { MemoryAdapter } from '../storage/memory-adapter';
 import { CURRENT_SCHEMA_VERSION } from '../storage/migrations';
 import { SEED_PROFILE } from '../content/seed-profile';
+import { FAMILIES } from '../domain/primitives';
 import { bootstrap } from './bootstrap';
 
 let adapter: MemoryAdapter;
@@ -24,7 +25,7 @@ describe('bootstrap', () => {
 
   it('seeds a progression state for every family on first run', async () => {
     const { progression } = await bootstrap(adapter);
-    expect(progression).toHaveLength(9);
+    expect(progression.map((s) => s.family).sort()).toEqual([...FAMILIES].sort());
   });
 
   it('reports that it seeded on the first run and not on the second', async () => {

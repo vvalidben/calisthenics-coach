@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { userProfileSchema } from '../domain/profile';
 import { progressionStateSchema } from '../domain/progression';
 import { FAMILIES } from '../domain/primitives';
+import { isExerciseAvailable } from '../domain/availability';
 import { exerciseById } from './catalog';
 import { SEED_PROFILE } from './seed-profile';
 import { SEED_PROGRESSION, initialProgressionFor } from './seed-progression';
@@ -68,7 +69,7 @@ describe('initialProgressionFor', () => {
     const state = initialProgressionFor('push-up', '2026-09-20');
     expect(state.family).toBe('push');
     expect(state.currentExerciseId).toBe('push-up');
-    expect(state.currentLevel).toBe(3);
+    expect(state.currentLevel).toBe(4);
   });
 
   it('starts with no recorded performance', () => {
@@ -106,6 +107,16 @@ describe('SEED_PROGRESSION', () => {
     expect(SEED_PROGRESSION.map((s) => s.family).sort()).toEqual([...FAMILIES].sort());
   });
 
+  it('only anchors the athlete on exercises they can actually perform today', () => {
+    const unavailable = SEED_PROGRESSION.filter((s) => {
+      const exercise = exerciseById(s.currentExerciseId);
+      return exercise && !isExerciseAvailable(exercise, SEED_PROFILE);
+    });
+    // The two bar families are the known exceptions: they are seeded ready for
+    // the day a bar arrives, and nothing programs from them meanwhile.
+    expect(unavailable.map((s) => s.family)).toEqual(['pull', 'hanging-core']);
+  });
+
   it('starts the push family at the push-up the athlete can already do', () => {
     const push = SEED_PROGRESSION.find((s) => s.family === 'push');
     expect(push?.currentExerciseId).toBe('push-up');
@@ -116,9 +127,19 @@ describe('SEED_PROGRESSION', () => {
     expect(dip?.currentExerciseId).toBe('bench-dip-bent-knee');
   });
 
-  it('starts the pull family at the pull-up the athlete can already do', () => {
-    const pull = SEED_PROGRESSION.find((s) => s.family === 'pull');
-    expect(pull?.currentExerciseId).toBe('pull-up');
+  it('starts the bar families at their entry step, not at the recorded pull-up ability', () => {
+    // There is no bar, so nothing in these families can be trained. Claiming a
+    // position on a ladder the athlete cannot reach would be a lie the
+    // progression engine would later act on.
+    expect(SEED_PROGRESSION.find((s) => s.family === 'pull')?.currentExerciseId).toBe('dead-hang');
+    expect(SEED_PROGRESSION.find((s) => s.family === 'hanging-core')?.currentExerciseId).toBe(
+      'hanging-knee-raise',
+    );
+  });
+
+  it('starts the floor-pulling family at its easiest step', () => {
+    const prep = SEED_PROGRESSION.find((s) => s.family === 'pull-prep');
+    expect(prep?.currentExerciseId).toBe('prone-scapular-retraction');
   });
 
   it('names only exercises that exist in the catalog', () => {

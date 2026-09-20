@@ -1660,3 +1660,259 @@ a {
   font-variant-numeric: tabular-nums;
   color: var(--chalk-faint);
 }
+
+/* ---- dashboard --------------------------------------------------------- */
+
+.dash__date {
+  font-size: var(--step--1);
+  color: var(--chalk-faint);
+}
+
+.hero {
+  margin-top: 6px;
+}
+
+.hero__eyebrow {
+  font-size: var(--step--1);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--signal);
+}
+
+.hero__title {
+  margin-top: 4px;
+  max-width: 14ch;
+  font-size: var(--step-4);
+  font-weight: 900;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+.hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin-top: 10px;
+  font-size: var(--step-0);
+  color: var(--chalk-dim);
+}
+
+.hero__meta span + span {
+  position: relative;
+  padding-left: 17px;
+}
+
+.hero__meta span + span::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--chalk-faint);
+}
+
+.hero__note {
+  margin-top: 12px;
+  max-width: 44ch;
+  font-size: var(--step--1);
+  line-height: 1.55;
+  color: var(--chalk-faint);
+}
+
+.hero__start {
+  display: block;
+  width: 100%;
+  margin-top: 22px;
+  padding: 18px 22px;
+  border-radius: 12px;
+  background: var(--signal);
+  color: #1a1206;
+  font-size: var(--step-2);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  text-align: center;
+  text-decoration: none;
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 26px;
+}
+
+.tile {
+  padding: 12px 13px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.tile__label {
+  font-size: var(--step--1);
+  color: var(--chalk-faint);
+}
+
+.tile__value {
+  display: flex;
+  flex-direction: column;
+  margin: 3px 0 0;
+  font-size: var(--step-2);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.tile__detail {
+  font-size: var(--step--1);
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--chalk-faint);
+}
+
+.week__head,
+.mobility__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.week__count,
+.mobility__count {
+  font-size: var(--step--1);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--signal);
+}
+
+.week__day--done {
+  border-color: var(--done);
+}
+
+.week__day--done .week__label {
+  color: var(--done);
+}
+
+.next {
+  margin-top: 30px;
+}
+
+.next__heading {
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--chalk-faint);
+}
+
+.next__body {
+  margin-top: 8px;
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-size: var(--step--1);
+  color: var(--chalk-dim);
+}
+
+.next__body strong {
+  display: block;
+  color: var(--chalk);
+  font-size: var(--step-0);
+  font-weight: 700;
+}
+
+.recent {
+  margin-top: 30px;
+}
+
+.recent__heading {
+  font-size: var(--step-1);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.recent__none {
+  margin-top: 8px;
+  max-width: 44ch;
+  font-size: var(--step--1);
+  color: var(--chalk-faint);
+}
+
+.recent__list {
+  margin-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.recent__item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.recent__name {
+  font-weight: 600;
+  font-size: var(--step--1);
+}
+
+.recent__stats {
+  grid-column: 1;
+  font-size: var(--step--1);
+  color: var(--chalk-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.recent__partial {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: var(--step--1);
+  color: var(--missed);
+}
+
+.mobility {
+  margin-top: 34px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.mobility__heading {
+  font-size: var(--step-1);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.mobility__lede {
+  margin-top: 4px;
+  max-width: 48ch;
+  font-size: var(--step--1);
+  color: var(--chalk-faint);
+}
+
+.mobility__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.mobility__item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-size: var(--step--1);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.mobility__time {
+  flex: none;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  color: var(--chalk-faint);
+}

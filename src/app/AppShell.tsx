@@ -5,10 +5,9 @@ import { PathwaysScreen } from '../features/pathways/PathwaysScreen';
 import { ExerciseDetail } from '../features/library/ExerciseDetail';
 import { ExerciseList } from '../features/library/ExerciseList';
 import { WorkoutRoute } from '../features/player/WorkoutRoute';
-import { TodayScreen } from '../features/today/TodayScreen';
+import { DashboardScreen } from '../features/dashboard/DashboardScreen';
 import type { UserProfile } from '../domain/profile';
 import type { StorageAdapter } from '../storage/adapter';
-import { mobilitySessionsInLastWeek } from '../domain/session-log';
 import type { WorkoutSession } from '../domain/session';
 import { bootstrap, type BootstrapResult } from './bootstrap';
 import { localIsoDate } from '../domain/calendar';
@@ -133,11 +132,11 @@ export const AppShell = ({ adapter, today = localIsoDate() }: AppShellProps) => 
           <Route
             path="/"
             element={
-              <TodayScreen
+              <DashboardScreen
                 profile={data.profile}
                 today={today}
                 workouts={data.workouts}
-                mobilityThisWeek={mobilitySessionsInLastWeek(sessions, today)}
+                sessions={sessions}
               />
             }
           />

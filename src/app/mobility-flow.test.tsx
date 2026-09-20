@@ -56,7 +56,7 @@ describe('mobility routines on a rest day', () => {
     openApp();
     await screen.findByRole('heading', { level: 1 });
 
-    const routines = within(screen.getByRole('region', { name: /optional mobility/i }));
+    const routines = within(screen.getByRole('region', { name: /^mobility$/i }));
     expect(routines.getByText(/skipping it costs you nothing/i)).toBeInTheDocument();
   });
 
@@ -64,7 +64,7 @@ describe('mobility routines on a rest day', () => {
     openApp();
     await screen.findByRole('heading', { level: 1 });
 
-    const routines = within(screen.getByRole('region', { name: /optional mobility/i }));
+    const routines = within(screen.getByRole('region', { name: /^mobility$/i }));
     for (const name of ['Shoulders', 'Thoracic Spine', 'Hips', 'Hamstrings', 'Ankles', 'Full Reset']) {
       expect(routines.getByRole('link', { name: new RegExp(name, 'i') })).toBeInTheDocument();
     }
@@ -79,7 +79,7 @@ describe('mobility routines on a rest day', () => {
   it('is also offered on a training day', async () => {
     openApp(MONDAY);
     await screen.findByRole('heading', { level: 1 });
-    expect(screen.getByRole('region', { name: /optional mobility/i })).toBeInTheDocument();
+    expect(screen.getByRole('region', { name: /^mobility$/i })).toBeInTheDocument();
   });
 });
 
@@ -151,6 +151,6 @@ describe('playing a routine', () => {
     await user.click(screen.getByRole('link', { name: /^done$/i }));
 
     const view = openApp();
-    expect(await view.findByText(/1 done in the last seven days/i)).toBeInTheDocument();
+    expect(await view.findByText(/1 in the last seven days/i)).toBeInTheDocument();
   });
 });

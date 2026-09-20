@@ -169,6 +169,21 @@ pulling needs something safe to hang from, names the improvisations that fail
 under load, and says the whole ladder unlocks at once when a real bar exists.
 **Skill** states that the handstand is deliberately absent from the programme.
 
+### The dashboard
+
+`features/dashboard/DashboardScreen.tsx` is the first screen and has one job:
+answer "what do I do today" before anything else is read. The session name is
+the `h1`, and START WORKOUT is the only primary action on the page.
+
+Everything below is context — weekly progress, streak, total, phase, what is
+next, the last three sessions, mobility — and `domain/stats.ts` computes all of
+it. Nothing there is analysis. If a number does not change what the athlete
+does next, it does not belong on this screen.
+
+The streak counts consecutive *scheduled* training days, so a rest day never
+breaks it, and today is forgiven until the day is over: a streak that dies at
+breakfast discourages rather than motivates.
+
 ### Mobility
 
 `content/routines.ts` holds six optional restorative routines: one per mobility

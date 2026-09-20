@@ -201,10 +201,22 @@ describe('progression, through the real app', () => {
     const second = await runOneSession(NEXT_MONDAY);
     second.unmount();
 
+    // The dashboard deliberately does not list every exercise, so check the
+    // target where the athlete actually meets it: in the player.
     openApp('2026-10-05');
     await screen.findByRole('heading', { level: 1 });
-    const pushUp = screen.getByRole('listitem', { name: /push-up/i });
-    expect(pushUp).toHaveTextContent(/7.11 reps/i);
+    await user.click(screen.getByRole('link', { name: /start workout/i }));
+
+    while (!/push-up/i.test(screen.getByRole('heading', { level: 1 }).textContent ?? '')) {
+      const setsText = screen.getByTestId('player-set-count').textContent ?? '';
+      const total = Number(/of (\d+)/.exec(setsText)?.[1] ?? '1');
+      for (let s = 0; s < total; s += 1) {
+        await user.click(screen.getByRole('button', { name: /start set/i }));
+        await logSet();
+      }
+    }
+
+    expect(screen.getByTestId('player-target')).toHaveTextContent(/7.11 reps/i);
   });
 
   it('changes nothing when the workout was missed', async () => {

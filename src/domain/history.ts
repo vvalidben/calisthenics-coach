@@ -1,4 +1,4 @@
-import { localIsoDate, weekdayOf } from './calendar';
+import { shiftDays, weekdayOf } from './calendar';
 import type { Weekday } from './primitives';
 import type { UserProfile } from './profile';
 import type { WorkoutSession } from './session';
@@ -39,12 +39,6 @@ export interface CalendarWeek {
   completed: number;
   planned: number;
 }
-
-const shift = (iso: string, days: number): string => {
-  const date = new Date(`${iso}T12:00:00`);
-  date.setDate(date.getDate() + days);
-  return localIsoDate(date);
-};
 
 const isDone = (session: WorkoutSession) =>
   session.status === 'completed' || session.status === 'partial';
@@ -141,8 +135,8 @@ export const historyWeeks = (args: HistoryArgs): CalendarWeek[] => {
   const thisWeek = weekStart(today);
 
   return Array.from({ length: weeks }, (_, index) => {
-    const start = shift(thisWeek, -7 * index);
-    const days = Array.from({ length: 7 }, (_, offset) => dayFor(shift(start, offset), args));
+    const start = shiftDays(thisWeek, -7 * index);
+    const days = Array.from({ length: 7 }, (_, offset) => dayFor(shiftDays(start, offset), args));
 
     return {
       start,

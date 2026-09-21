@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { PROGRAM } from '../../content/program';
 import { ROUTINES } from '../../content/routines';
 import { SEED_PROFILE } from '../../content/seed-profile';
+import type { Reminder } from '../../domain/reminders';
 import type { WorkoutSession } from '../../domain/session';
 import { aSession } from '../../test/factories';
 import { DashboardScreen } from './DashboardScreen';
@@ -22,7 +23,11 @@ const trained = (date: string, overrides: Partial<WorkoutSession> = {}): Workout
 const stretched = (date: string): WorkoutSession =>
   aSession({ id: `${date}-m`, date, status: 'completed', kind: 'mobility', workoutId: 'mobility-hips' });
 
-const renderDashboard = (today = MON, sessions: WorkoutSession[] = []) =>
+const renderDashboard = (
+  today = MON,
+  sessions: WorkoutSession[] = [],
+  reminder: Reminder | null = null,
+) =>
   render(
     <MemoryRouter>
       <DashboardScreen
@@ -30,12 +35,57 @@ const renderDashboard = (today = MON, sessions: WorkoutSession[] = []) =>
         today={today}
         workouts={[...PROGRAM, ...ROUTINES]}
         sessions={sessions}
+        reminder={reminder}
       />
     </MemoryRouter>,
   );
 
+const aReminder: Reminder = {
+  id: `training:${MON}`,
+  date: MON,
+  kind: 'training',
+  at: '18:00',
+  workoutId: 'foundation-w1-d1',
+  title: "Today's workout is ready",
+  body: "25 minutes of Push and Core. Start when you're ready.",
+};
+
 const region = (name: RegExp) => within(screen.getByRole('region', { name }));
 const stat = (id: string) => screen.getByTestId(`stat-${id}`);
+
+describe('the reminder', () => {
+  it('is not shown before it is due', () => {
+    renderDashboard();
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
+  });
+
+  it('is shown once it is due', () => {
+    renderDashboard(MON, [], aReminder);
+    expect(screen.getByRole('status')).toHaveTextContent(/today's workout is ready/i);
+  });
+
+  it('comes before the rest of the page, because it is the reason to open the app', () => {
+    renderDashboard(MON, [], aReminder);
+    const banner = screen.getByRole('status');
+    const today = screen.getByRole('region', { name: /today/i });
+    expect(banner.compareDocumentPosition(today) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  it('does not replace the session, which is still the point of the screen', () => {
+    renderDashboard(MON, [], aReminder);
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Push and Core');
+  });
+});
+
+describe('getting to settings', () => {
+  it('offers a way to change the schedule', () => {
+    renderDashboard();
+    expect(screen.getByRole('link', { name: /schedule and reminders/i })).toHaveAttribute(
+      'href',
+      '/settings',
+    );
+  });
+});
 
 describe('what do I do today', () => {
   it('leads with the session name', () => {

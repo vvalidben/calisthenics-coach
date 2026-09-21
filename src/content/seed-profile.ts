@@ -1,4 +1,4 @@
-import type { UserProfile } from '../domain/profile';
+import { DEFAULT_REMINDERS, type UserProfile } from '../domain/profile';
 
 /** The date the athlete's baselines were taken. */
 export const SEED_DATE = '2026-09-20';
@@ -38,9 +38,12 @@ export const SEED_PROFILE: UserProfile = {
   // Mon, Tue, rest, Thu, rest, Sat, rest. Never more than two days in a row,
   // and a full rest day before each of the two harder sessions.
   trainingDays: ['monday', 'tuesday', 'thursday', 'saturday'],
-  // ASSUMPTION: evening training. Only used once reminders land.
+  // 18:00: late enough to be warm and fed, early enough that a hard session
+  // is not the last thing before sleep. Editable from Settings.
   preferredTrainingTime: '18:00',
   sessionDuration: { min: 20, max: 30 },
+
+  reminders: DEFAULT_REMINDERS,
 
   progressionRate: 'moderate',
   currentPhase: { name: 'foundation', startedAt: SEED_DATE, plannedWeeks: 4 },

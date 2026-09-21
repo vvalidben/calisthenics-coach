@@ -76,6 +76,35 @@ export const injurySchema = z.object({
 });
 export type Injury = z.infer<typeof injurySchema>;
 
+/**
+ * How the athlete wants to be reminded.
+ *
+ * `minutesBefore` is a lead time, not a schedule of its own: the reminder is
+ * always tied to the training time, so changing the time moves the reminder
+ * with it and there is only ever one clock to keep correct.
+ */
+export const reminderSettingsSchema = z.object({
+  enabled: z.boolean(),
+  /** Minutes before the training time the reminder becomes due. */
+  minutesBefore: z.number().int().min(0).max(180),
+  /** Whether a rest day gets an optional, easy-to-ignore mobility nudge. */
+  mobilityOnRestDays: z.boolean(),
+});
+export type ReminderSettings = z.infer<typeof reminderSettingsSchema>;
+
+/**
+ * On, at the training time, and silent on rest days.
+ *
+ * On by default because a reminder nobody asked for is easier to turn off than
+ * one nobody knows exists. Silent on rest days because a rest day that nags is
+ * a rest day that stops feeling like rest.
+ */
+export const DEFAULT_REMINDERS: ReminderSettings = {
+  enabled: true,
+  minutesBefore: 0,
+  mobilityOnRestDays: false,
+};
+
 const hasNoDuplicates = <T>(items: T[]) => new Set(items).size === items.length;
 
 export const userProfileSchema = z
@@ -89,6 +118,11 @@ export const userProfileSchema = z
     preferredTrainingTime: timeOfDaySchema,
     /** Session length in minutes. */
     sessionDuration: rangeSchema,
+    /**
+     * Defaulted rather than migrated: a profile written before Sprint 11 has
+     * no reminder settings, and the sensible ones are not worth a migration.
+     */
+    reminders: reminderSettingsSchema.default(DEFAULT_REMINDERS),
 
     progressionRate: progressionRateSchema,
     currentPhase: trainingPhaseSchema,

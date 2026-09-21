@@ -14,6 +14,18 @@ export const localIsoDate = (date: Date = new Date()): string => {
   return `${year}-${month}-${day}`;
 };
 
+/**
+ * The same calendar date moved by whole days.
+ *
+ * Built at midday so a daylight-saving jump cannot land the result on the
+ * previous or next date.
+ */
+export const shiftDays = (iso: string, days: number): string => {
+  const date = new Date(`${iso}T12:00:00`);
+  date.setDate(date.getDate() + days);
+  return localIsoDate(date);
+};
+
 const WEEKDAYS = [
   'sunday',
   'monday',

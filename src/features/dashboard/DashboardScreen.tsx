@@ -3,6 +3,8 @@ import { localIsoDate, weekdayOf } from '../../domain/calendar';
 import { estimateWorkoutMinutes } from '../../domain/duration';
 import { WEEKDAYS } from '../../domain/primitives';
 import type { UserProfile } from '../../domain/profile';
+import type { Reminder } from '../../domain/reminders';
+import { ReminderBanner } from '../reminders/ReminderBanner';
 import type { WorkoutSession } from '../../domain/session';
 import { LABELS, mobilitySessionsInLastWeek } from '../../domain/session-log';
 import {
@@ -22,6 +24,8 @@ interface DashboardScreenProps {
   today: string;
   workouts: Workout[];
   sessions: WorkoutSession[];
+  /** Today's reminder, once it is due. Null the rest of the time. */
+  reminder: Reminder | null;
 }
 
 const LONG_DATE = new Intl.DateTimeFormat('en-GB', {
@@ -75,7 +79,13 @@ const Stat = ({
  * interpreting — if a number here does not change what the athlete does next,
  * it does not belong.
  */
-export const DashboardScreen = ({ profile, today, workouts, sessions }: DashboardScreenProps) => {
+export const DashboardScreen = ({
+  profile,
+  today,
+  workouts,
+  sessions,
+  reminder,
+}: DashboardScreenProps) => {
   const weekday = weekdayOf(today);
   const scheduled = workouts.filter((w) => w.kind === 'training');
   const routines = workouts.filter((w) => w.kind === 'mobility');
@@ -104,7 +114,14 @@ export const DashboardScreen = ({ profile, today, workouts, sessions }: Dashboar
 
   return (
     <div className="dash">
-      <p className="dash__date">{formatDate(today)}</p>
+      {reminder !== null && <ReminderBanner reminder={reminder} />}
+
+      <p className="dash__date">
+        {formatDate(today)}
+        <Link className="dash__settings" to="/settings">
+          Schedule and reminders
+        </Link>
+      </p>
 
       <section className="hero" aria-labelledby="today-heading">
         <h2 className="hero__eyebrow" id="today-heading">

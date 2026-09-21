@@ -2165,3 +2165,192 @@ a {
   max-width: 44ch;
   color: var(--chalk-dim);
 }
+
+/* --- Reminders and settings -------------------------------------------- */
+
+/* Five tabs need a little more room for their words than four did. */
+.tabbar__link {
+  font-size: 0.75rem;
+  letter-spacing: -0.01em;
+}
+
+.nudge {
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  border: 1px solid var(--signal-quiet);
+  border-left: 3px solid var(--signal);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--signal) 7%, transparent);
+}
+
+.nudge__title {
+  font-size: var(--step-0);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.nudge__body {
+  margin-top: 3px;
+  max-width: 42ch;
+  font-size: var(--step--1);
+  color: var(--chalk-dim);
+}
+
+.nudge__settings {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--chalk-faint);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+}
+
+.nudge__settings:hover,
+.nudge__settings:focus-visible {
+  color: var(--chalk);
+}
+
+.dash__date {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.dash__settings {
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--chalk-faint);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+}
+
+.dash__settings:hover,
+.dash__settings:focus-visible {
+  color: var(--chalk);
+}
+
+.setting {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.setting__heading {
+  font-size: var(--step-1);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.setting__detail {
+  margin-top: 6px;
+  max-width: 46ch;
+  font-size: var(--step--1);
+  color: var(--chalk-dim);
+}
+
+.setting__problem {
+  margin-top: 12px;
+  max-width: 46ch;
+  font-size: var(--step--1);
+  color: var(--missed);
+}
+
+.setting__next {
+  margin-top: 16px;
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--signal);
+  font-variant-numeric: tabular-nums;
+}
+
+.setting__status {
+  margin-top: 14px;
+  max-width: 46ch;
+  font-size: var(--step--1);
+  color: var(--chalk-faint);
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.days__day {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-size: var(--step--1);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.days__day:has(input:checked) {
+  border-color: var(--signal-quiet);
+  background: color-mix(in srgb, var(--signal) 8%, transparent);
+}
+
+.days__day:has(input:focus-visible),
+.switch:has(input:focus-visible) {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+
+.field {
+  display: block;
+  margin-top: 16px;
+}
+
+.field__label {
+  display: block;
+  font-size: var(--step--1);
+  color: var(--chalk-faint);
+}
+
+.field__input {
+  display: block;
+  margin-top: 6px;
+  padding: 11px 13px;
+  min-width: 11rem;
+  max-width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--steel-1);
+  color: var(--chalk);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+}
+
+.field__input:disabled {
+  color: var(--chalk-faint);
+  cursor: not-allowed;
+}
+
+.switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  font-size: var(--step-0);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.switch:has(input:disabled) {
+  color: var(--chalk-faint);
+  cursor: not-allowed;
+}
+
+.days__day input,
+.switch input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--signal);
+}

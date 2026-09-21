@@ -6,9 +6,10 @@ import reactHooks from 'eslint-plugin-react-hooks';
 /**
  * Layer boundaries (see docs/ARCHITECTURE.md).
  *
- *   app -> features -> (content, storage, domain)
+ *   app -> features -> (content, storage, notifications, domain)
  *   content -> domain
  *   storage -> domain
+ *   notifications -> domain
  *   domain -> nothing
  *
  * Enforced against the import path itself, so it holds however the import is
@@ -55,22 +56,29 @@ export default tseslint.config(
   {
     files: ['src/domain/**/*.ts'],
     rules: forbid(
-      ['storage', 'content', 'features', 'app'],
+      ['storage', 'content', 'notifications', 'features', 'app'],
       'domain is the innermost layer and may not import from any other layer.',
     ),
   },
   {
     files: ['src/storage/**/*.ts'],
     rules: forbid(
-      ['content', 'features', 'app'],
+      ['content', 'notifications', 'features', 'app'],
       'storage may only import from domain.',
     ),
   },
   {
     files: ['src/content/**/*.{ts,tsx}'],
     rules: forbid(
-      ['storage', 'features', 'app'],
+      ['storage', 'notifications', 'features', 'app'],
       'content may only import from domain.',
+    ),
+  },
+  {
+    files: ['src/notifications/**/*.ts'],
+    rules: forbid(
+      ['storage', 'content', 'features', 'app'],
+      'notifications may only import from domain.',
     ),
   },
   {

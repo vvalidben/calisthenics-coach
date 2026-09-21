@@ -6,11 +6,15 @@ import { ExerciseDetail } from '../features/library/ExerciseDetail';
 import { ExerciseList } from '../features/library/ExerciseList';
 import { WorkoutRoute } from '../features/player/WorkoutRoute';
 import { DashboardScreen } from '../features/dashboard/DashboardScreen';
+import { SettingsScreen } from '../features/settings/SettingsScreen';
+import { useReminders } from '../features/reminders/useReminders';
 import { HistoryScreen } from '../features/history/HistoryScreen';
 import { SessionDetail } from '../features/history/SessionDetail';
 import type { UserProfile } from '../domain/profile';
 import type { Workout } from '../domain/workout';
 import type { StorageAdapter } from '../storage/adapter';
+import type { Notifier } from '../notifications/notifier';
+import { BrowserNotifier } from '../notifications/browser-notifier';
 import type { WorkoutSession } from '../domain/session';
 import { bootstrap, type BootstrapResult } from './bootstrap';
 import { localIsoDate } from '../domain/calendar';
@@ -20,7 +24,14 @@ interface AppShellProps {
   adapter?: StorageAdapter;
   /** Injected in tests so screens render deterministically. */
   today?: string;
+  /** Injected in tests; the wall clock reminders are measured against. */
+  now?: () => Date;
+  /** Injected in tests; defaults to the browser's own notifications. */
+  notifier?: Notifier;
 }
+
+/** One instance, so a re-render cannot restart the reminder watch. */
+const defaultNotifier = new BrowserNotifier();
 
 const CalendarGlyph = () => (
   <svg className="tabbar__glyph" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
@@ -58,6 +69,18 @@ const ClockGlyph = () => (
   </svg>
 );
 
+const GearGlyph = () => (
+  <svg className="tabbar__glyph" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
+    <circle cx="10" cy="10" r="2.75" fill="none" stroke="currentColor" />
+    <path
+      d="M10 2.5v2M10 15.5v2M2.5 10h2M15.5 10h2M4.7 4.7l1.4 1.4M13.9 13.9l1.4 1.4M15.3 4.7l-1.4 1.4M6.1 13.9l-1.4 1.4"
+      stroke="currentColor"
+      strokeLinecap="round"
+      fill="none"
+    />
+  </svg>
+);
+
 const TabBar = () => (
   <nav className="tabbar" aria-label="Sections">
     <NavLink to="/" end className="tabbar__link">
@@ -75,6 +98,10 @@ const TabBar = () => (
     <NavLink to="/history" className="tabbar__link">
       <ClockGlyph />
       History
+    </NavLink>
+    <NavLink to="/settings" className="tabbar__link">
+      <GearGlyph />
+      Settings
     </NavLink>
   </nav>
 );
@@ -130,23 +157,131 @@ const SessionRoute = ({
   );
 };
 
+interface ReadyAppProps {
+  data: BootstrapResult;
+  today: string;
+  now: (() => Date) | undefined;
+  notifier: Notifier;
+}
+
+/**
+ * The app once the store is open.
+ *
+ * Its own component so the reminder watch can be a hook: `AppShell` returns
+ * early while loading, and a hook cannot live behind an early return.
+ */
+const ReadyApp = ({ data, today, now, notifier }: ReadyAppProps) => {
+  const [profile, setProfile] = useState(data.profile);
+  const [sessions, setSessions] = useState<WorkoutSession[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    void data.repositories.sessions.list().then((stored) => {
+      if (!cancelled) setSessions(stored);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [data]);
+
+  const reminder = useReminders({
+    profile,
+    workouts: data.workouts,
+    sessions,
+    notifier,
+    ...(now === undefined ? {} : { clock: now }),
+  });
+
+  /** Optimistic: the screen updates now, the store catches up. */
+  const saveProfile = (next: UserProfile) => {
+    setProfile(next);
+    void data.repositories.profile.save(next);
+  };
+
+  return (
+    <div className="shell">
+      <main className="shell__main">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <DashboardScreen
+                profile={profile}
+                today={today}
+                workouts={data.workouts}
+                sessions={sessions}
+                reminder={reminder}
+              />
+            }
+          />
+          <Route
+            path="/workout/:id"
+            element={
+              <WorkoutRoute
+                workouts={data.workouts}
+                progression={data.progression}
+                date={today}
+                repositories={data.repositories}
+              />
+            }
+          />
+          <Route path="/library" element={<ExerciseList profile={profile} />} />
+          <Route path="/library/:id" element={<ExerciseRoute profile={profile} />} />
+          <Route
+            path="/history"
+            element={
+              <HistoryScreen
+                profile={profile}
+                today={today}
+                workouts={data.workouts}
+                sessions={sessions}
+              />
+            }
+          />
+          <Route
+            path="/history/:sessionId"
+            element={<SessionRoute sessions={sessions} workouts={data.workouts} />}
+          />
+          <Route
+            path="/pathways"
+            element={<PathwaysScreen progression={data.progression} profile={profile} />}
+          />
+          <Route
+            path="/settings"
+            element={
+              <SettingsScreen
+                profile={profile}
+                workouts={data.workouts}
+                notifier={notifier}
+                now={now?.() ?? new Date()}
+                onSave={saveProfile}
+              />
+            }
+          />
+        </Routes>
+      </main>
+      <TabBar />
+    </div>
+  );
+};
+
 /**
  * Loads the store, then renders the app. Three states only: loading, failed,
  * ready — no half-rendered screens reading from an empty store.
  */
-export const AppShell = ({ adapter, today = localIsoDate() }: AppShellProps) => {
+export const AppShell = ({
+  adapter,
+  today = localIsoDate(),
+  now,
+  notifier = defaultNotifier,
+}: AppShellProps) => {
   const [data, setData] = useState<BootstrapResult | null>(null);
-  const [sessions, setSessions] = useState<WorkoutSession[]>([]);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     bootstrap(adapter)
-      .then(async (result) => {
-        if (cancelled) return;
-        setData(result);
-        setSessions(await result.repositories.sessions.list());
-      })
+      .then((result) => !cancelled && setData(result))
       .catch((cause: unknown) => !cancelled && setError(cause as Error));
     return () => {
       cancelled = true;
@@ -170,56 +305,5 @@ export const AppShell = ({ adapter, today = localIsoDate() }: AppShellProps) => 
     );
   }
 
-  return (
-    <div className="shell">
-      <main className="shell__main">
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <DashboardScreen
-                profile={data.profile}
-                today={today}
-                workouts={data.workouts}
-                sessions={sessions}
-              />
-            }
-          />
-          <Route
-            path="/workout/:id"
-            element={
-              <WorkoutRoute
-                workouts={data.workouts}
-                progression={data.progression}
-                date={today}
-                repositories={data.repositories}
-              />
-            }
-          />
-          <Route path="/library" element={<ExerciseList profile={data.profile} />} />
-          <Route path="/library/:id" element={<ExerciseRoute profile={data.profile} />} />
-          <Route
-            path="/history"
-            element={
-              <HistoryScreen
-                profile={data.profile}
-                today={today}
-                workouts={data.workouts}
-                sessions={sessions}
-              />
-            }
-          />
-          <Route
-            path="/history/:sessionId"
-            element={<SessionRoute sessions={sessions} workouts={data.workouts} />}
-          />
-          <Route
-            path="/pathways"
-            element={<PathwaysScreen progression={data.progression} profile={data.profile} />}
-          />
-        </Routes>
-      </main>
-      <TabBar />
-    </div>
-  );
+  return <ReadyApp data={data} today={today} now={now} notifier={notifier} />;
 };

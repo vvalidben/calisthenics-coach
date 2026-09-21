@@ -1,6 +1,6 @@
 import type { Exercise } from '../domain/exercise';
 import { PLANK_BOTTOM, PLANK_TOP } from '../content/poses';
-import type { UserProfile } from '../domain/profile';
+import { DEFAULT_REMINDERS, type UserProfile } from '../domain/profile';
 import type { ProgressionState } from '../domain/progression';
 import type { WorkoutSession } from '../domain/session';
 import type { Workout } from '../domain/workout';
@@ -75,6 +75,7 @@ export const aProfile = (overrides: Partial<UserProfile> = {}): UserProfile => (
   trainingDays: ['monday', 'thursday'],
   preferredTrainingTime: '18:30',
   sessionDuration: { min: 20, max: 30 },
+  reminders: DEFAULT_REMINDERS,
   progressionRate: 'moderate',
   currentPhase: { name: 'foundation', startedAt: '2026-09-20', plannedWeeks: 4 },
   injuries: [],

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { trainingDaysPerWeek, userProfileSchema } from './profile';
+import { DEFAULT_REMINDERS, trainingDaysPerWeek, userProfileSchema } from './profile';
 import type { UserProfile } from './profile';
 
 const validProfile: UserProfile = {
@@ -13,6 +13,7 @@ const validProfile: UserProfile = {
   trainingDays: ['monday', 'tuesday', 'thursday', 'friday'],
   preferredTrainingTime: '18:30',
   sessionDuration: { min: 20, max: 30 },
+  reminders: { enabled: true, minutesBefore: 0, mobilityOnRestDays: false },
   progressionRate: 'moderate',
   currentPhase: { name: 'foundation', startedAt: '2026-09-20', plannedWeeks: 4 },
   injuries: [],
@@ -79,6 +80,40 @@ describe('userProfileSchema', () => {
       ],
     });
     expect(result.success).toBe(false);
+  });
+});
+
+describe('reminder settings', () => {
+  it('fills them in for a profile written before reminders existed', () => {
+    const { reminders: _dropped, ...older } = validProfile;
+    expect(userProfileSchema.parse(older).reminders).toEqual(DEFAULT_REMINDERS);
+  });
+
+  it('is on by default, because a reminder nobody asked for is easier to turn off than to discover', () => {
+    expect(DEFAULT_REMINDERS.enabled).toBe(true);
+  });
+
+  it('fires at the training time by default', () => {
+    expect(DEFAULT_REMINDERS.minutesBefore).toBe(0);
+  });
+
+  it('leaves rest days quiet by default', () => {
+    expect(DEFAULT_REMINDERS.mobilityOnRestDays).toBe(false);
+  });
+
+  it('accepts a lead time', () => {
+    const early = { ...validProfile, reminders: { ...DEFAULT_REMINDERS, minutesBefore: 30 } };
+    expect(userProfileSchema.parse(early).reminders.minutesBefore).toBe(30);
+  });
+
+  it('refuses a negative lead time', () => {
+    const wrong = { ...validProfile, reminders: { ...DEFAULT_REMINDERS, minutesBefore: -5 } };
+    expect(userProfileSchema.safeParse(wrong).success).toBe(false);
+  });
+
+  it('refuses a lead time longer than three hours, which is not a reminder', () => {
+    const wrong = { ...validProfile, reminders: { ...DEFAULT_REMINDERS, minutesBefore: 240 } };
+    expect(userProfileSchema.safeParse(wrong).success).toBe(false);
   });
 });
 

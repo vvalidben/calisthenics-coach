@@ -6,14 +6,16 @@ device.
 
 ## Layers
 
-Four layers with strict one-way dependencies. `eslint.config.js` enforces this;
+Five layers with strict one-way dependencies. `eslint.config.js` enforces this;
 a violation fails `npm run lint`.
 
 ```
 src/app/        Shell, routing, bootstrap, theme. May import anything below.
-src/features/   Screens, grouped by feature. May import content, storage, domain.
+src/features/   Screens, grouped by feature. May import content, storage,
+                notifications, domain.
 src/content/    The exercise catalog and seed data. May import domain only.
 src/storage/    Adapters, migrations, repositories. May import domain only.
+src/notifications/  Notification delivery. May import domain only.
 src/domain/     Types, Zod schemas, pure helpers. Imports nothing.
 ```
 
@@ -184,6 +186,88 @@ The streak counts consecutive *scheduled* training days, so a rest day never
 breaks it, and today is forgiven until the day is over: a streak that dies at
 breakfast discourages rather than motivates.
 
+### Reminders
+
+Three pieces, deliberately separate:
+
+- `domain/reminders.ts` decides **when** a reminder is due and **what** it says.
+  Pure functions of the profile, the program and a clock reading, so every case
+  is testable at any date and time without a browser.
+- `notifications/` delivers one. `BrowserNotifier` wraps the browser's own
+  Notification API; `MemoryNotifier` records instead, for tests. `unsupported`
+  is a state of its own, distinct from `denied`: a browser without
+  notifications is not the same as an athlete who said no.
+- `features/reminders/useReminders.ts` joins them, polling once a minute.
+
+There is one clock in the system, `profile.preferredTrainingTime`, defaulting to
+18:00 — late enough to be warm and fed, early enough that a hard session is not
+the last thing before sleep. A reminder preference is a *lead time* off that
+clock rather than a schedule of its own, so moving training moves the reminder
+with it and the two cannot drift apart.
+
+A reminder stays due for the rest of the day once its time passes, because a
+late start beats none, and goes quiet the moment work is logged. It only ever
+looks at today: raising yesterday's missed session the next morning would be
+rescheduling it by another name, which the athlete has ruled out.
+
+The notification is sent **only while the app is in the background**. If they
+are looking at the screen, the banner *is* the reminder, and interrupting
+someone who is already reading it is noise.
+
+#### These are not push notifications
+
+Worth being exact, because the difference matters:
+
+| | What this app does | What push would do |
+|---|---|---|
+| Reaches a closed app | No | Yes |
+| Needs a server | No | Yes |
+| Works offline, no account | Yes | Needs a subscription endpoint |
+
+Everything here runs inside the page. `setInterval` stops when the tab is
+discarded, and browsers throttle or kill background timers aggressively, so if
+the app is closed at 18:00 **nothing arrives**. The app says so in Settings
+rather than letting the athlete find out by missing a week.
+
+True push would require, at minimum:
+
+1. **A server**, plus a VAPID key pair — the one part this project does not
+   have and has deliberately not needed.
+2. **A `PushManager` subscription** from the service worker, and that endpoint
+   stored server-side per device.
+3. **A scheduler on the server** that knows each athlete's training days,
+   training time and timezone and posts an encrypted payload to the push
+   service at the right moment.
+4. **`self.addEventListener('push', ...)`** in the service worker calling
+   `registration.showNotification`, which is the only path that works with the
+   app closed.
+5. **iOS**: the app must be installed to the home screen. Safari grants
+   notification permission to installed PWAs only.
+
+Steps 3 and 4 are where the athlete's data would have to leave the device,
+which is the real cost. Nothing about the current architecture blocks it: the
+`Notifier` interface is the seam, and a `PushNotifier` implementing the same
+three methods would slot in beside `BrowserNotifier` without the domain or the
+screens changing at all.
+
+### Settings
+
+`features/settings/SettingsScreen.tsx` edits the three things the athlete owns:
+training days, training time, and reminder preferences. It saves on every
+change — there is no server to round-trip to, and a settings screen that can be
+left in an unsaved state is one that silently loses changes.
+
+Two guards. The last training day cannot be removed, because a program with no
+days is not a program. And a chosen day the program has no session for is
+called out by name rather than quietly promising a workout that does not exist:
+the program covers four particular weekdays, and the schedule is still the
+athlete's to set.
+
+`reminders` was added to the profile as a **defaulted field rather than a
+migration**. A profile written before Sprint 11 simply parses with sensible
+settings filled in, which is less machinery than a migration for the same
+result.
+
 ### The calendar
 
 `domain/history.ts` builds the training calendar, and its one structural
@@ -296,7 +380,7 @@ profile or logged sessions.
 | Progress tracking and calendar | Built: `domain/history.ts` + `features/history/`. Reads `repositories.sessions.list()` and derives missed days from the schedule |
 | Exercise demonstrations | Already built: `features/demo/FigureDemo.tsx`. `videoUrl` is left empty on every exercise because external links could not be verified from the build environment |
 | Anything that prescribes work | Must filter through `isExerciseAvailable` so it never programs an exercise the athlete has no equipment for |
-| Reminders | Reads `profile.trainingDays` and `profile.preferredTrainingTime` |
+| Reminders | Built: `domain/reminders.ts` + `notifications/` + `features/reminders/`. Local only — see **These are not push notifications** |
 
 ## Commands
 

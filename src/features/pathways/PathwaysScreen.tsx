@@ -108,7 +108,7 @@ export const PathwaysScreen = ({
 
   return (
     <div className="pathways">
-      <h1 className="page__title">Pathways</h1>
+      <h1 className="page__title">Progress</h1>
       <p className="page__lede">
         Every movement in the app, from where you are to where it goes. {EXERCISES.length}{' '}
         exercises, {usable} of them usable with what you have today.

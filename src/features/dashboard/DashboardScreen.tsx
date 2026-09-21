@@ -149,7 +149,7 @@ export const DashboardScreen = ({
               <span>{LEVEL_LABELS[profile.fitnessLevel] ?? profile.fitnessLevel}</span>
             </p>
             {workout.notes && <p className="hero__note">{workout.notes}</p>}
-            <Link className="hero__start" to={`/workout/${workout.id}`}>
+            <Link className="button button--primary hero__start" to={`/workout/${workout.id}`}>
               Start workout
             </Link>
           </>
@@ -237,7 +237,7 @@ export const DashboardScreen = ({
 
       <p className="dash__phase">
         <strong>{spec.title}.</strong> {spec.focus}{' '}
-        <Link to="/pathways">What it takes to move on</Link>
+        <Link to="/progress">What it takes to move on</Link>
       </p>
 
       {recovering && (

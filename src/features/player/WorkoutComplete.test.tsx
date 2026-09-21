@@ -109,6 +109,21 @@ describe('the coach after two hard sessions', () => {
   });
 });
 
+describe('where the workflow ends', () => {
+  it('offers the way back to today as the primary action', () => {
+    show([logged(clean)], [decision('add-reps')]);
+    expect(screen.getByRole('link', { name: /^done$/i })).toHaveAttribute('href', '/');
+  });
+
+  it('offers to show what it all adds up to', () => {
+    show([logged(clean)], [decision('add-reps')]);
+    expect(screen.getByRole('link', { name: /see your progress/i })).toHaveAttribute(
+      'href',
+      '/progress',
+    );
+  });
+});
+
 describe('the coach with nothing to go on', () => {
   it('says so rather than inventing a verdict', () => {
     show([], []);

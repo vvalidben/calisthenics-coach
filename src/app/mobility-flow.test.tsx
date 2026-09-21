@@ -97,7 +97,7 @@ describe('playing a routine', () => {
 
   it('still links each position to its full instructions', async () => {
     await start(/ankles/i);
-    expect(screen.getByRole('link', { name: /how to do it/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /full instructions/i })).toHaveAttribute(
       'href',
       '/library/ankle-circles',
     );

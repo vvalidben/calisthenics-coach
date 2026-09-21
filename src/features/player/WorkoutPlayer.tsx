@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 import type { Decision } from '../../domain/progression-engine';
 import type { WorkoutSession } from '../../domain/session';
 import {
@@ -18,6 +17,7 @@ import {
 } from '../../domain/workout';
 import { exerciseById } from '../../content/catalog';
 import { FigureDemo } from '../demo/FigureDemo';
+import { QuickInstructions } from './QuickInstructions';
 import { WorkoutComplete } from './WorkoutComplete';
 
 interface WorkoutPlayerProps {
@@ -229,9 +229,7 @@ export const WorkoutPlayer = ({
 
       <p className="player__cue">{item.cue}</p>
 
-      <Link className="player__how" to={`/library/${item.exerciseId}`}>
-        How to do it
-      </Link>
+      {exercise && <QuickInstructions exercise={exercise} />}
 
       {phase === 'ready' && (
         <div className="player__actions">

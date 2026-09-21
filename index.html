@@ -8,10 +8,25 @@
     <link rel="apple-touch-icon" href="/icon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!--
+      Loaded without blocking the first paint. A stylesheet link on a
+      third-party origin holds the whole document back until that request
+      finishes, which on a phone on a bad connection is seconds of blank
+      screen. The body font stack falls back to the system face until Chivo
+      arrives, and the app works offline without it.
+    -->
     <link
       href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;600;900&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      as="style"
+      onload="this.rel='stylesheet'"
     />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;600;900&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
     <title>Calisthenics Coach</title>
   </head>
   <body>

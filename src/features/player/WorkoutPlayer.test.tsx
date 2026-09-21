@@ -66,7 +66,7 @@ describe('starting a workout', () => {
 
   it('shows the coaching cue', () => {
     renderPlayer();
-    expect(screen.getByText('Start from the tailbone.')).toBeInTheDocument();
+    expect(screen.getAllByText('Start from the tailbone.').length).toBeGreaterThan(0);
   });
 
   it('shows the demonstration', () => {
@@ -76,7 +76,7 @@ describe('starting a workout', () => {
 
   it('links to the full instructions', () => {
     renderPlayer();
-    expect(screen.getByRole('link', { name: /how to do it/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /full instructions/i })).toHaveAttribute(
       'href',
       '/library/cat-cow',
     );
@@ -207,6 +207,65 @@ describe('the rest timer', () => {
     await reachAnExerciseWithRest();
     await user.click(screen.getByRole('button', { name: /skip rest/i }));
     expect(screen.queryByRole('timer')).not.toBeInTheDocument();
+  });
+});
+
+describe('reading the instructions without leaving the workout', () => {
+  it('offers them on the exercise itself', () => {
+    renderPlayer();
+    expect(screen.getByText(/how to do it/i)).toBeInTheDocument();
+  });
+
+  it('starts closed, so the buttons stay where the thumb expects them', () => {
+    renderPlayer();
+    expect(screen.getByTestId('brief')).not.toHaveAttribute('open');
+  });
+
+  it('opens on a tap', async () => {
+    renderPlayer();
+    await user.click(screen.getByText(/how to do it/i));
+    expect(screen.getByTestId('brief')).toHaveAttribute('open');
+  });
+
+  it('shows the numbered steps when opened', async () => {
+    renderPlayer();
+    await user.click(screen.getByText(/how to do it/i));
+
+    const brief = within(screen.getByTestId('brief'));
+    expect(brief.getByRole('list', { name: /the movement/i })).toBeInTheDocument();
+  });
+
+  it('shows the coaching cues', async () => {
+    renderPlayer();
+    await user.click(screen.getByText(/how to do it/i));
+
+    const brief = within(screen.getByTestId('brief'));
+    expect(brief.getByRole('list', { name: /think about/i })).toBeInTheDocument();
+  });
+
+  it('says what to stop for, which is the part that matters mid-set', async () => {
+    renderPlayer();
+    await user.click(screen.getByText(/how to do it/i));
+
+    const brief = within(screen.getByTestId('brief'));
+    expect(brief.getByText(/stop if/i)).toBeInTheDocument();
+  });
+
+  it('still offers the full page for everything it leaves out', async () => {
+    renderPlayer();
+    await user.click(screen.getByText(/how to do it/i));
+
+    const brief = within(screen.getByTestId('brief'));
+    expect(brief.getByRole('link', { name: /full instructions/i })).toHaveAttribute(
+      'href',
+      '/library/cat-cow',
+    );
+  });
+
+  it('keeps the workout running underneath it', async () => {
+    renderPlayer();
+    await user.click(screen.getByText(/how to do it/i));
+    expect(screen.getByRole('button', { name: /start set/i })).toBeInTheDocument();
   });
 });
 

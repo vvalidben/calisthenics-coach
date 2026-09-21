@@ -268,6 +268,57 @@ migration**. A profile written before Sprint 11 simply parses with sensible
 settings filled in, which is less machinery than a migration for the same
 result.
 
+### The interface contract
+
+Three test files hold the parts of the interface that are easy to erode and
+hard to notice: `app/theme.test.ts`, `app/document.test.ts` and
+`app/accessibility.test.tsx`.
+
+**What they can and cannot prove.** Tests run with `css: false` and jsdom has
+no layout engine, so nothing here measures a rendered pixel. `theme.test.ts`
+parses `theme.css` as text and asserts the *contract* it promises: every tap
+target declares at least 44px of height, body text never drops below 16px, the
+instruction steps are set a size up, a wide-screen layout exists, motion stays
+inside a `prefers-reduced-motion` guard, and exactly one element removes its
+focus outline. It cannot prove a button looks right, and does not claim to.
+
+`theme.test.ts` also computes WCAG contrast from the palette tokens, which
+*is* exact. Sprint 14 found three inks failing AA for normal text against the
+lighter surfaces — `--chalk-faint` at 3.4:1 carries most of the small print —
+and lifted `--chalk-faint`, `--chalk-dim`, `--done` and `--missed` until every
+ink passes 4.5:1 on every surface.
+
+`accessibility.test.tsx` walks all seven screens and asserts one `h1` each, a
+`main` landmark, an accessible name on every control, a label on every field,
+no positive `tabindex`, and no skipped heading level.
+
+**Navigation.** A skip link is the first thing a keyboard reaches, and `main`
+takes focus on every navigation so a screen-reader user lands on the screen
+they asked for rather than back at the tab bar. `main` is the one element in
+the app whose focus outline is removed: it is not tab-reachable, so nobody can
+arrive there and lose their place.
+
+**Layout.** Mobile first, one column, with the navigation as a bottom bar
+because that is where a thumb reaches. Above 900px the *same markup* becomes a
+left sidebar — CSS only, so every test that finds a tab keeps finding it — and
+the content column keeps its measure in the middle. The bar is hidden entirely
+during a workout: a fixed control under the thumb that ends the session is a
+mis-tap waiting to happen, and the player has its own way out.
+
+**The primary workflow** has its own end-to-end test, `app/workflow.test.tsx`,
+which walks dashboard → start → demonstration → perform → record → rest → next
+→ finish → progress and asserts each step is one obvious action. On the
+dashboard and in the player it asserts there is exactly *one* element styled as
+the primary action, which is what keeps "what do I do now" answerable without
+reading.
+
+**Instructions while training.** `features/player/QuickInstructions.tsx` puts
+the steps, breathing, cues and the stop-conditions inside the player as a
+closed-by-default disclosure. Navigating to the full instruction screen
+mid-session used to be the only way to read them, and it lost the athlete's
+place. The full screen is still one link away for everything the brief leaves
+out.
+
 ### Training phases
 
 Four phases — Foundation, Strength Development, Intermediate Calisthenics,

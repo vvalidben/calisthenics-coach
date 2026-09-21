@@ -187,9 +187,14 @@ export const WorkoutComplete = ({
         />
       </section>
 
-      <Link className="button button--primary" to="/">
-        Done
-      </Link>
+      <div className="complete__actions">
+        <Link className="button button--primary" to="/">
+          Done
+        </Link>
+        <Link className="complete__progress" to="/progress">
+          See your progress
+        </Link>
+      </div>
     </div>
   );
 };

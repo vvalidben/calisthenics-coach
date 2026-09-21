@@ -12,13 +12,14 @@
   --line: #2f3b47;
 
   --chalk: #e9e5dd;
-  --chalk-dim: #97a3b0;
-  --chalk-faint: #63707d;
+  --chalk-dim: #a9b4bf;
+  /* 4.5:1 against the lightest surface in the app, not just the darkest. */
+  --chalk-faint: #909daa;
 
   --signal: #e5a13a;
   --signal-quiet: #7a5a22;
-  --done: #7aa98f;
-  --missed: #b86a72;
+  --done: #86b59b;
+  --missed: #cc848c;
 
   --gutter: 20px;
   --measure: 34rem;
@@ -1722,18 +1723,12 @@ a {
 }
 
 .hero__start {
-  display: block;
-  width: 100%;
+  /* The shared primary button, with the extra weight the one action on the
+     first screen has earned. */
   margin-top: 22px;
-  padding: 18px 22px;
+  min-height: 64px;
   border-radius: 12px;
-  background: var(--signal);
-  color: #1a1206;
   font-size: var(--step-2);
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  text-align: center;
-  text-decoration: none;
 }
 
 .tiles {
@@ -2531,4 +2526,297 @@ a {
 .phase__progress {
   flex: none;
   font-variant-numeric: tabular-nums;
+}
+
+/* --- Sprint 14: reach, readability, and a screen wider than a phone ----- */
+
+/*
+ * Tap targets.
+ *
+ * 44px is the floor a thumb can hit reliably; the primary action gets more,
+ * because on every screen there is exactly one thing the athlete came to do.
+ */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+}
+
+.button--primary {
+  min-height: 56px;
+}
+
+.button--quiet {
+  min-height: 44px;
+  padding-inline: 14px;
+}
+
+.tabbar__link {
+  min-height: 56px;
+}
+
+.days__day,
+.field__input {
+  min-height: 48px;
+}
+
+.switch {
+  min-height: 44px;
+}
+
+.difficulty {
+  min-height: 56px;
+}
+
+/* A whole calendar row is the target, not the words inside it. */
+.day__link {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding-block: 4px;
+}
+
+.day {
+  padding-block: 4px;
+}
+
+/* Getting past the navigation with a keyboard. */
+.skip {
+  position: absolute;
+  z-index: 3;
+  top: 8px;
+  left: var(--gutter);
+  padding: 12px 18px;
+  border-radius: 10px;
+  background: var(--signal);
+  color: #1a1206;
+  font-weight: 700;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+
+.skip:focus {
+  transform: translateY(0);
+}
+
+/*
+ * The one place an outline is removed.
+ *
+ * `main` is focused programmatically after a navigation so a screen reader
+ * lands on the new screen. It is not tab-reachable, so no keyboard user can
+ * arrive here and lose their place — and a ring around the entire page would
+ * be noise rather than information.
+ */
+.shell__main:focus {
+  outline: none;
+}
+
+/* Instructions, read from the floor at arm's length. */
+.brief {
+  margin-top: 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--steel-1);
+}
+
+.brief__summary {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 16px;
+  font-size: var(--step-0);
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+
+.brief__summary::-webkit-details-marker {
+  display: none;
+}
+
+.brief__summary::after {
+  content: '';
+  width: 9px;
+  height: 9px;
+  margin-left: auto;
+  border-right: 2px solid var(--chalk-faint);
+  border-bottom: 2px solid var(--chalk-faint);
+  transform: rotate(45deg) translate(-2px, -2px);
+}
+
+.brief[open] .brief__summary::after {
+  transform: rotate(-135deg) translate(-2px, -2px);
+}
+
+.brief__body {
+  padding: 4px 16px 18px;
+}
+
+.brief__heading {
+  margin-top: 16px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--chalk-faint);
+}
+
+.brief__start,
+.brief__line {
+  margin-top: 6px;
+  font-size: var(--step-0);
+  line-height: 1.6;
+}
+
+.brief__steps {
+  margin-top: 8px;
+  padding-left: 1.4em;
+  list-style: decimal;
+  font-size: var(--step-1);
+  line-height: 1.6;
+}
+
+.brief__steps li + li {
+  margin-top: 10px;
+}
+
+.brief__cues {
+  margin-top: 8px;
+  padding-left: 1.2em;
+  list-style: disc;
+  font-size: var(--step-0);
+  line-height: 1.6;
+  color: var(--signal);
+}
+
+.brief__stop {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--missed) 14%, transparent);
+  font-size: var(--step-0);
+  line-height: 1.5;
+}
+
+.brief__full {
+  display: inline-block;
+  margin-top: 16px;
+  min-height: 44px;
+  padding: 11px 0;
+  font-weight: 600;
+  color: var(--chalk-dim);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+}
+
+.complete__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.complete__actions .button--primary {
+  width: 100%;
+}
+
+.complete__progress {
+  min-height: 44px;
+  padding: 11px 0;
+  font-weight: 600;
+  color: var(--chalk-dim);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+}
+
+/*
+ * A screen wider than a phone.
+ *
+ * The bottom bar exists because a thumb reaches the bottom of a phone. A mouse
+ * never goes there, so above 900px the same markup becomes a sidebar and the
+ * content keeps its measure in the middle.
+ */
+@media (min-width: 900px) {
+  .shell {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .tabbar {
+    position: sticky;
+    top: 0;
+    bottom: auto;
+    inset-inline: auto;
+    order: -1;
+    flex: none;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 4px;
+    width: 216px;
+    height: 100vh;
+    padding: 28px 14px;
+    border-top: none;
+    border-right: 1px solid var(--line);
+  }
+
+  .tabbar__link {
+    flex: none;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 14px;
+    padding: 0 14px;
+    border-radius: 10px;
+    font-size: var(--step-0);
+    font-weight: 600;
+  }
+
+  .tabbar__link[aria-current='page'] {
+    background: var(--steel-2);
+  }
+
+  .shell__main {
+    padding-top: 40px;
+    padding-bottom: 64px;
+  }
+
+  /* Two columns of statistics read better than three narrow ones here. */
+  .tiles {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .tiles--pairs {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/*
+ * The instruction screen, read from the floor.
+ *
+ * This is the one screen someone looks at mid-set, propped against a wall at
+ * arm's length. The steps and the safety lines get the size that needs.
+ */
+.detail__steps li {
+  font-size: var(--step-1);
+  line-height: 1.6;
+}
+
+.detail__steps li::before {
+  font-size: var(--step--1);
+}
+
+.detail__position-row,
+.detail__range {
+  font-size: var(--step-0);
+  line-height: 1.6;
+}
+
+.detail__how {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
 }

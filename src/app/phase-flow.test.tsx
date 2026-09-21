@@ -160,7 +160,7 @@ describe('where the athlete starts', () => {
   it('shows what is left to do, on the Pathways screen', async () => {
     openApp();
     await screen.findByRole('heading', { level: 1 });
-    await user.click(screen.getByRole('link', { name: /^pathways$/i }));
+    await user.click(screen.getByRole('link', { name: /^progress$/i }));
 
     const phase = within(await screen.findByRole('region', { name: /training phase/i }));
     expect(phase.getByRole('listitem', { name: /12 sessions/i })).toHaveTextContent('0 of 12');
@@ -248,7 +248,7 @@ describe('the phase, once earned', () => {
 
     openApp();
     await screen.findByRole('heading', { level: 1 });
-    await user.click(screen.getByRole('link', { name: /^pathways$/i }));
+    await user.click(screen.getByRole('link', { name: /^progress$/i }));
 
     const phase = within(await screen.findByRole('region', { name: /training phase/i }));
     expect(phase.getByRole('heading', { level: 2 })).toHaveTextContent(/strength development/i);
@@ -262,7 +262,7 @@ describe('the phase, once earned', () => {
 
     openApp();
     await screen.findByRole('heading', { level: 1 });
-    await user.click(screen.getByRole('link', { name: /^pathways$/i }));
+    await user.click(screen.getByRole('link', { name: /^progress$/i }));
 
     const phase = within(await screen.findByRole('region', { name: /training phase/i }));
     // The session that earned the phase was trained on its first day, so it

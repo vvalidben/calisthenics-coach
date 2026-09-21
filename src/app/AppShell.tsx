@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { NavLink, Route, Routes, useParams } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { NavLink, Route, Routes, useLocation, useParams } from 'react-router-dom';
 import { exerciseById } from '../content/catalog';
 import { PathwaysScreen } from '../features/pathways/PathwaysScreen';
 import { ExerciseDetail } from '../features/library/ExerciseDetail';
@@ -81,30 +81,61 @@ const GearGlyph = () => (
   </svg>
 );
 
-const TabBar = () => (
-  <nav className="tabbar" aria-label="Sections">
-    <NavLink to="/" end className="tabbar__link">
-      <CalendarGlyph />
-      Today
-    </NavLink>
-    <NavLink to="/library" className="tabbar__link">
-      <BookGlyph />
-      Exercises
-    </NavLink>
-    <NavLink to="/pathways" className="tabbar__link">
-      <LadderGlyph />
-      Pathways
-    </NavLink>
-    <NavLink to="/history" className="tabbar__link">
-      <ClockGlyph />
-      History
-    </NavLink>
-    <NavLink to="/settings" className="tabbar__link">
-      <GearGlyph />
-      Settings
-    </NavLink>
-  </nav>
-);
+/**
+ * The five sections.
+ *
+ * Hidden during a workout: a fixed bar under the thumb that ends the session
+ * is a mis-tap waiting to happen, and the player has its own way out.
+ */
+const TabBar = () => {
+  const { pathname } = useLocation();
+  if (pathname.startsWith('/workout/')) return null;
+
+  return (
+    <nav className="tabbar" aria-label="Sections">
+      <NavLink to="/" end className="tabbar__link">
+        <CalendarGlyph />
+        Today
+      </NavLink>
+      <NavLink to="/library" className="tabbar__link">
+        <BookGlyph />
+        Exercises
+      </NavLink>
+      <NavLink to="/progress" className="tabbar__link">
+        <LadderGlyph />
+        Progress
+      </NavLink>
+      <NavLink to="/history" className="tabbar__link">
+        <ClockGlyph />
+        History
+      </NavLink>
+      <NavLink to="/settings" className="tabbar__link">
+        <GearGlyph />
+        Settings
+      </NavLink>
+    </nav>
+  );
+};
+
+/**
+ * Moves focus to the screen that just opened.
+ *
+ * Without this a keyboard or screen-reader user stays parked in the tab bar
+ * after every navigation and has to walk back through it to reach the page
+ * they asked for. The first render is left alone: nothing was navigated to.
+ */
+const useFocusOnNavigate = (main: React.RefObject<HTMLElement | null>) => {
+  const { pathname } = useLocation();
+  const first = useRef(true);
+
+  useEffect(() => {
+    if (first.current) {
+      first.current = false;
+      return;
+    }
+    main.current?.focus();
+  }, [pathname, main]);
+};
 
 /** Resolves the :id in the URL to an exercise, or says it does not exist. */
 const ExerciseRoute = ({ profile }: { profile: UserProfile }) => {
@@ -198,9 +229,15 @@ const ReadyApp = ({ data, today, now, notifier }: ReadyAppProps) => {
     void data.repositories.profile.save(next);
   };
 
+  const main = useRef<HTMLElement>(null);
+  useFocusOnNavigate(main);
+
   return (
     <div className="shell">
-      <main className="shell__main">
+      <a className="skip" href="#main">
+        Skip to content
+      </a>
+      <main className="shell__main" id="main" ref={main} tabIndex={-1}>
         <Routes>
           <Route
             path="/"
@@ -246,7 +283,7 @@ const ReadyApp = ({ data, today, now, notifier }: ReadyAppProps) => {
             element={<SessionRoute sessions={sessions} workouts={data.workouts} />}
           />
           <Route
-            path="/pathways"
+            path="/progress"
             element={
               <PathwaysScreen
                 progression={data.progression}

@@ -33,22 +33,22 @@ describe('AppShell', () => {
     renderApp();
     await screen.findByRole('heading', { level: 1 });
     expect(screen.getByRole('link', { name: /today/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /pathways/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /^progress$/i })).toBeInTheDocument();
   });
 
-  it('switches to the pathways tab', async () => {
+  it('switches to the progress tab', async () => {
     renderApp();
     await screen.findByRole('heading', { level: 1 });
 
-    await userEvent.click(screen.getByRole('link', { name: /pathways/i }));
+    await userEvent.click(screen.getByRole('link', { name: /^progress$/i }));
 
-    expect(await screen.findByRole('heading', { level: 1, name: /pathways/i })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { level: 1, name: /progress/i })).toBeInTheDocument();
   });
 
   it('reaches an exercise from the pathway map', async () => {
     renderApp();
     await screen.findByRole('heading', { level: 1 });
-    await userEvent.click(screen.getByRole('link', { name: /pathways/i }));
+    await userEvent.click(screen.getByRole('link', { name: /^progress$/i }));
     await userEvent.click(await screen.findByRole('link', { name: 'Tempo Push-Up' }));
 
     expect(await screen.findByRole('heading', { level: 1 })).toHaveTextContent('Tempo Push-Up');

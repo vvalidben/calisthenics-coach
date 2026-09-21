@@ -2415,3 +2415,120 @@ a {
   font-size: var(--step--1);
   color: var(--chalk-dim);
 }
+
+/* --- Training phases --------------------------------------------------- */
+
+.dash__phase {
+  margin-top: 26px;
+  max-width: 48ch;
+  font-size: var(--step--1);
+  color: var(--chalk-dim);
+}
+
+.dash__phase a {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+}
+
+.dash__phase a:hover,
+.dash__phase a:focus-visible {
+  color: var(--chalk);
+}
+
+.phase {
+  margin-top: 26px;
+  padding: 18px 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--steel-1);
+}
+
+.phase__ordinal {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--chalk-faint);
+}
+
+.phase__name {
+  margin-top: 4px;
+  font-size: var(--step-2);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.phase__focus {
+  margin-top: 4px;
+  font-weight: 600;
+  color: var(--signal);
+}
+
+.phase__summary,
+.phase__note {
+  margin-top: 10px;
+  max-width: 52ch;
+  font-size: var(--step--1);
+  color: var(--chalk-dim);
+}
+
+.phase__count {
+  margin-top: 16px;
+  font-size: var(--step--1);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.phase__group {
+  margin-top: 16px;
+}
+
+.phase__dimension {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--chalk-faint);
+}
+
+.phase__requirements {
+  margin-top: 6px;
+}
+
+.phase__requirement {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 55%, transparent);
+  font-size: var(--step--1);
+  color: var(--chalk-faint);
+}
+
+.phase__requirement--met {
+  color: var(--chalk);
+}
+
+.phase__mark {
+  flex: none;
+  width: 1rem;
+  text-align: center;
+  color: var(--chalk-faint);
+}
+
+.phase__requirement--met .phase__mark {
+  color: var(--done);
+}
+
+.phase__label {
+  flex: 1;
+  min-width: 0;
+}
+
+.phase__progress {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+}

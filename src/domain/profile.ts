@@ -35,13 +35,20 @@ export const progressionRateSchema = z.enum(PROGRESSION_RATES);
 export type ProgressionRate = z.infer<typeof progressionRateSchema>;
 
 /**
- * Training phases run for a planned number of weeks and change how the program
- * engine dose-loads work. `foundation` favours technique and volume tolerance;
- * `deload` deliberately reduces both.
+ * The long-term ladder, in order. What each phase is for, and what it takes to
+ * leave one, is content: see `content/phases.ts`.
+ *
+ * Phases are earned, never waited out. `plannedWeeks` below is a note to the
+ * athlete about the likely shape of things and is read by nothing that decides
+ * anything.
+ *
+ * `deload` predates the ladder and is not part of it. It is kept so profiles
+ * written before Sprint 13 still parse.
  */
 export const PHASE_NAMES = [
   'foundation',
   'strength-building',
+  'intermediate',
   'skill-development',
   'deload',
 ] as const;
@@ -51,6 +58,7 @@ export type PhaseName = z.infer<typeof phaseNameSchema>;
 export const trainingPhaseSchema = z.object({
   name: phaseNameSchema,
   startedAt: isoDateSchema,
+  /** Indicative only. Nothing advances a phase because weeks went by. */
   plannedWeeks: z.number().int().positive(),
 });
 export type TrainingPhase = z.infer<typeof trainingPhaseSchema>;

@@ -3,13 +3,20 @@ import { isExerciseAvailable, missingEquipmentFor } from '../../domain/availabil
 import type { FamilyInfo } from '../../domain/family';
 import type { Equipment } from '../../domain/primitives';
 import type { UserProfile } from '../../domain/profile';
+import { assessPhase } from '../../domain/phase';
 import type { ProgressionState } from '../../domain/progression';
+import type { WorkoutSession } from '../../domain/session';
 import { EXERCISES, familyChain } from '../../content/catalog';
 import { familiesByPathway } from '../../content/families';
+import { requirePhaseSpec } from '../../content/phases';
+import { PhasePanel } from './PhasePanel';
 
 interface PathwaysScreenProps {
   progression: ProgressionState[];
   profile: UserProfile;
+  sessions: WorkoutSession[];
+  /** ISO date; injected so the screen renders deterministically in tests. */
+  today: string;
 }
 
 const EQUIPMENT_NAMES: Record<Equipment, string> = {
@@ -90,7 +97,12 @@ const Ladder = ({
  * different qualities — merging them would mean abandoning the front plank the
  * day you start side planks.
  */
-export const PathwaysScreen = ({ progression, profile }: PathwaysScreenProps) => {
+export const PathwaysScreen = ({
+  progression,
+  profile,
+  sessions,
+  today,
+}: PathwaysScreenProps) => {
   const currentByFamily = new Map(progression.map((s) => [s.family, s.currentExerciseId]));
   const usable = EXERCISES.filter((e) => isExerciseAvailable(e, profile)).length;
 
@@ -101,6 +113,16 @@ export const PathwaysScreen = ({ progression, profile }: PathwaysScreenProps) =>
         Every movement in the app, from where you are to where it goes. {EXERCISES.length}{' '}
         exercises, {usable} of them usable with what you have today.
       </p>
+
+      <PhasePanel
+        assessment={assessPhase({
+          spec: requirePhaseSpec(profile.currentPhase.name),
+          profile,
+          sessions,
+          progression,
+          today,
+        })}
+      />
 
       {familiesByPathway().map(({ pathway, families }) => (
         <section

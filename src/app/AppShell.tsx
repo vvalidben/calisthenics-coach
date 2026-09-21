@@ -210,6 +210,7 @@ const ReadyApp = ({ data, today, now, notifier }: ReadyAppProps) => {
                 today={today}
                 workouts={data.workouts}
                 sessions={sessions}
+                progression={data.progression}
                 reminder={reminder}
               />
             }
@@ -220,6 +221,8 @@ const ReadyApp = ({ data, today, now, notifier }: ReadyAppProps) => {
               <WorkoutRoute
                 workouts={data.workouts}
                 progression={data.progression}
+                profile={profile}
+                onProfileChange={saveProfile}
                 date={today}
                 repositories={data.repositories}
               />
@@ -244,7 +247,14 @@ const ReadyApp = ({ data, today, now, notifier }: ReadyAppProps) => {
           />
           <Route
             path="/pathways"
-            element={<PathwaysScreen progression={data.progression} profile={profile} />}
+            element={
+              <PathwaysScreen
+                progression={data.progression}
+                profile={profile}
+                sessions={sessions}
+                today={today}
+              />
+            }
           />
           <Route
             path="/settings"

@@ -91,24 +91,6 @@ export const currentStreak = (
 export const totalWorkouts = (sessions: WorkoutSession[]): number =>
   trainingSessions(sessions).length;
 
-export interface PhaseProgress {
-  name: string;
-  week: number;
-  plannedWeeks: number;
-}
-
-export const phaseProgress = (profile: UserProfile, today: string): PhaseProgress => {
-  const started = asDate(profile.currentPhase.startedAt).getTime();
-  const now = asDate(today).getTime();
-  const days = Math.max(0, Math.floor((now - started) / (24 * 60 * 60 * 1000)));
-
-  return {
-    name: profile.currentPhase.name.replace(/-/g, ' '),
-    week: Math.floor(days / 7) + 1,
-    plannedWeeks: profile.currentPhase.plannedWeeks,
-  };
-};
-
 export interface RecentSession {
   id: string;
   workoutId: string | null;

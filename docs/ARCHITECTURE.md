@@ -268,6 +268,48 @@ migration**. A profile written before Sprint 11 simply parses with sensible
 settings filled in, which is less machinery than a migration for the same
 result.
 
+### Training phases
+
+Four phases — Foundation, Strength Development, Intermediate Calisthenics,
+Skill Development — and **not one of them ends because time passed.** A phase
+ends when the athlete has demonstrably earned the next one. `plannedWeeks` on
+the profile is indicative only and is read by nothing that decides anything;
+there is deliberately nowhere in a phase spec to put a duration, and
+`phases.test.ts` asserts that the field list stays that way.
+
+The split follows the same shape as everything else here. `domain/phase.ts`
+knows *how* to measure five dimensions; `content/phases.ts` decides *how much*
+of each a phase asks for:
+
+| Dimension | Measured by |
+|---|---|
+| Consistency | Sessions inside the phase, and sessions kept against sessions scheduled over four weeks |
+| Technique | The coach's proxy: the share of recent exercises finishing clean |
+| Strength | Named benchmarks — `3 sets of 10 push-ups` — at the *n*th best set, so one good set cannot claim three |
+| Exercise performance | How far each family has climbed its own ladder |
+| Recovery | Not arriving at a harder phase already run down |
+
+Every criterion has to be true at once, and each is shown with its own number
+rather than a single percentage: "four more sessions and three more push-ups"
+is something an athlete can act on this week; "62% through Foundation" is not.
+
+Two constraints on the content, both enforced by tests:
+
+- **Nothing may need equipment the athlete does not have.** A criterion resting
+  on a pull-up bar would lock the ladder shut for good, so `parallel-bar-dip`
+  and the whole pull ladder stay out of the criteria until a bar exists.
+- **Nothing may rest on time**, as above.
+
+Phases advance from `WorkoutRoute`'s `onFinish`, which is the only moment
+performance changes, and the new phase starts that day. A phase begins on a
+day and work done on that day counts toward it, so the session that earns a
+phase is also its first — one session out of sixteen, and better than an
+off-by-one that drops the first day an athlete ever trains.
+
+`stats.ts` no longer has `phaseProgress`. It measured a phase in weeks served,
+which is precisely what must not drive anything, and the dashboard now takes
+the phase's name from the content and its progress from the criteria.
+
 ### The coach
 
 `domain/coach.ts` reads a finished session back and says one sensible thing

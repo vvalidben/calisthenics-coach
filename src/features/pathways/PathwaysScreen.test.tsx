@@ -10,7 +10,7 @@ import { PathwaysScreen } from './PathwaysScreen';
 const renderScreen = (progression = SEED_PROGRESSION, profile = SEED_PROFILE) =>
   render(
     <MemoryRouter>
-      <PathwaysScreen progression={progression} profile={profile} />
+      <PathwaysScreen sessions={[]} today={'2026-09-28'} progression={progression} profile={profile} />
     </MemoryRouter>,
   );
 

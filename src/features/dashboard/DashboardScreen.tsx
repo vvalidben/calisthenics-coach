@@ -3,6 +3,8 @@ import { localIsoDate, weekdayOf } from '../../domain/calendar';
 import { estimateWorkoutMinutes } from '../../domain/duration';
 import { WEEKDAYS } from '../../domain/primitives';
 import { needsRecovery } from '../../domain/coach';
+import { assessPhase } from '../../domain/phase';
+import type { ProgressionState } from '../../domain/progression';
 import type { UserProfile } from '../../domain/profile';
 import type { Reminder } from '../../domain/reminders';
 import { ReminderBanner } from '../reminders/ReminderBanner';
@@ -10,7 +12,6 @@ import type { WorkoutSession } from '../../domain/session';
 import { LABELS, mobilitySessionsInLastWeek } from '../../domain/session-log';
 import {
   currentStreak,
-  phaseProgress,
   recentPerformance,
   totalWorkouts,
   weekStart,
@@ -18,6 +19,7 @@ import {
 } from '../../domain/stats';
 import type { Workout } from '../../domain/workout';
 import { exerciseById } from '../../content/catalog';
+import { requirePhaseSpec } from '../../content/phases';
 
 interface DashboardScreenProps {
   profile: UserProfile;
@@ -25,6 +27,7 @@ interface DashboardScreenProps {
   today: string;
   workouts: Workout[];
   sessions: WorkoutSession[];
+  progression: ProgressionState[];
   /** Today's reminder, once it is due. Null the rest of the time. */
   reminder: Reminder | null;
 }
@@ -85,6 +88,7 @@ export const DashboardScreen = ({
   today,
   workouts,
   sessions,
+  progression,
   reminder,
 }: DashboardScreenProps) => {
   const weekday = weekdayOf(today);
@@ -95,7 +99,10 @@ export const DashboardScreen = ({
   const week = weeklyProgress(sessions, profile, today);
   const streak = currentStreak(sessions, profile, today);
   const total = totalWorkouts(sessions);
-  const phase = phaseProgress(profile, today);
+  // Phases are earned, not waited out, so the tile counts criteria rather than
+  // weeks, and takes its name from the phase content rather than the enum.
+  const spec = requirePhaseSpec(profile.currentPhase.name);
+  const assessment = assessPhase({ spec, profile, sessions, progression, today });
   const recent = recentPerformance(sessions, 3);
   const mobility = mobilitySessionsInLastWeek(sessions, today);
 
@@ -174,8 +181,8 @@ export const DashboardScreen = ({
           <Stat
             id="phase"
             label="Phase"
-            value={titleCase(phase.name)}
-            detail={`Week ${phase.week} of ${phase.plannedWeeks}`}
+            value={spec.title}
+            detail={`${assessment.metCount} of ${assessment.requirements.length} met`}
           />
         </dl>
       </section>
@@ -227,6 +234,11 @@ export const DashboardScreen = ({
           </p>
         </section>
       )}
+
+      <p className="dash__phase">
+        <strong>{spec.title}.</strong> {spec.focus}{' '}
+        <Link to="/pathways">What it takes to move on</Link>
+      </p>
 
       {recovering && (
         <p className="coach-note" data-testid="coach-note">

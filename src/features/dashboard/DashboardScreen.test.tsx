@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { PROGRAM } from '../../content/program';
 import { ROUTINES } from '../../content/routines';
 import { SEED_PROFILE } from '../../content/seed-profile';
+import { SEED_PROGRESSION } from '../../content/seed-progression';
 import type { Reminder } from '../../domain/reminders';
 import type { WorkoutSession } from '../../domain/session';
 import { aSession } from '../../test/factories';
@@ -35,6 +36,7 @@ const renderDashboard = (
         today={today}
         workouts={[...PROGRAM, ...ROUTINES]}
         sessions={sessions}
+        progression={SEED_PROGRESSION}
         reminder={reminder}
       />
     </MemoryRouter>,
@@ -222,10 +224,26 @@ describe('the numbers', () => {
     expect(stat('total')).toHaveTextContent(/total\s*3/i);
   });
 
-  it('shows the training phase and how far into it you are', () => {
+  it('shows the training phase', () => {
     renderDashboard(WED);
     expect(stat('phase')).toHaveTextContent(/foundation/i);
-    expect(stat('phase')).toHaveTextContent(/week 1 of 4/i);
+  });
+
+  it('measures the phase in criteria met, not in weeks served', () => {
+    renderDashboard(WED);
+    expect(stat('phase')).toHaveTextContent(/1 of 7 met/i);
+    expect(stat('phase')).not.toHaveTextContent(/week/i);
+  });
+
+  it('counts a criterion once it has been earned', () => {
+    // Three sets of ten push-ups is one of Foundation's benchmarks.
+    renderDashboard(WED, [clean(MON, 'a')]);
+    expect(stat('phase')).toHaveTextContent(/2 of 7 met/i);
+  });
+
+  it('says what the phase is for', () => {
+    renderDashboard(WED);
+    expect(screen.getByText(/technique and consistency/i)).toBeInTheDocument();
   });
 
   it('starts everything at zero before the first session', () => {

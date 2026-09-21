@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
   currentStreak,
-  phaseProgress,
   recentPerformance,
   totalWorkouts,
   weekStart,
@@ -123,30 +122,6 @@ describe('totalWorkouts', () => {
 
   it('is zero before anything has been done', () => {
     expect(totalWorkouts([])).toBe(0);
-  });
-});
-
-describe('phaseProgress', () => {
-  it('names the phase in plain words', () => {
-    expect(phaseProgress(profile, MON).name).toBe('foundation');
-  });
-
-  it('starts at week one', () => {
-    const fresh = aProfile({
-      currentPhase: { name: 'foundation', startedAt: MON, plannedWeeks: 4 },
-    });
-    expect(phaseProgress(fresh, MON).week).toBe(1);
-  });
-
-  it('counts a week after seven days', () => {
-    const fresh = aProfile({
-      currentPhase: { name: 'foundation', startedAt: MON, plannedWeeks: 4 },
-    });
-    expect(phaseProgress(fresh, '2026-09-28').week).toBe(2);
-  });
-
-  it('reports how long the phase is planned to run', () => {
-    expect(phaseProgress(profile, MON).plannedWeeks).toBe(4);
   });
 });
 

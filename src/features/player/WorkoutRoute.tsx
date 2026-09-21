@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { exerciseById } from '../../content/catalog';
+import { assessPhase, advanceTo } from '../../domain/phase';
+import { requirePhaseSpec } from '../../content/phases';
+import type { UserProfile } from '../../domain/profile';
 import { progressWorkout, type Decision } from '../../domain/progression-engine';
 import type { ProgressionState } from '../../domain/progression';
 import type { WorkoutSession } from '../../domain/session';
@@ -11,6 +14,9 @@ import { WorkoutPlayer } from './WorkoutPlayer';
 interface WorkoutRouteProps {
   workouts: Workout[];
   progression: ProgressionState[];
+  profile: UserProfile;
+  /** Saves and re-renders with the new profile, e.g. after a phase is earned. */
+  onProfileChange: (profile: UserProfile) => void;
   date: string;
   repositories: Repositories;
 }
@@ -26,6 +32,8 @@ interface WorkoutRouteProps {
 export const WorkoutRoute = ({
   workouts,
   progression,
+  profile,
+  onProfileChange,
   date,
   repositories,
 }: WorkoutRouteProps) => {
@@ -99,6 +107,19 @@ export const WorkoutRoute = ({
         setDecisions(result.decisions);
         void repositories.workouts.save(result.workout);
         for (const state of result.states) void repositories.progression.save(state);
+
+        // A phase is earned by performance, and performance only changes when
+        // a session is logged — so this is the one moment worth asking.
+        const assessment = assessPhase({
+          spec: requirePhaseSpec(profile.currentPhase.name),
+          profile,
+          sessions: [...history, session],
+          progression: result.states,
+          today: date,
+        });
+        if (assessment.ready && assessment.next !== null) {
+          onProfileChange(advanceTo(profile, assessment.next, date));
+        }
       }}
     />
   );

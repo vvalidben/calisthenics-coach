@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { localIsoDate, weekdayOf } from '../../domain/calendar';
 import { estimateWorkoutMinutes } from '../../domain/duration';
 import { WEEKDAYS } from '../../domain/primitives';
+import { needsRecovery } from '../../domain/coach';
 import type { UserProfile } from '../../domain/profile';
 import type { Reminder } from '../../domain/reminders';
 import { ReminderBanner } from '../reminders/ReminderBanner';
@@ -97,6 +98,11 @@ export const DashboardScreen = ({
   const phase = phaseProgress(profile, today);
   const recent = recentPerformance(sessions, 3);
   const mobility = mobilitySessionsInLastWeek(sessions, today);
+
+  // The coach's one word before a session rather than after it. Read from the
+  // sessions alone, so it does not depend on a progression decision that was
+  // only ever held in memory.
+  const recovering = needsRecovery(sessions);
 
   const startIndex = WEEKDAYS.indexOf(weekday);
   const next = WEEKDAYS.map((_, offset) => WEEKDAYS[(startIndex + offset + 1) % 7]!)
@@ -220,6 +226,13 @@ export const DashboardScreen = ({
             {next.name}, about {next.estimatedMinutes} minutes
           </p>
         </section>
+      )}
+
+      {recovering && (
+        <p className="coach-note" data-testid="coach-note">
+          Your last two sessions were hard. Take this one steady: full rest between sets, and stop
+          each set with something left.
+        </p>
       )}
 
       <section className="recent" aria-labelledby="recent-heading">

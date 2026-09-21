@@ -33,6 +33,7 @@ export const WorkoutRoute = ({
   const workout = workouts.find((w) => w.id === id);
 
   const [previous, setPrevious] = useState<WorkoutSession | undefined>();
+  const [history, setHistory] = useState<WorkoutSession[]>([]);
   const [decisions, setDecisions] = useState<Decision[]>([]);
   const [ready, setReady] = useState(false);
 
@@ -46,6 +47,9 @@ export const WorkoutRoute = ({
           .filter((s) => s.workoutId === id && s.date !== date && s.status !== 'missed')
           .at(-1);
         setPrevious(earlier);
+        // Everything before today, so the coach can see two hard sessions in a
+        // row even when they were different workouts.
+        setHistory(sessions.filter((s) => s.date !== date));
         setReady(true);
       })
       .catch(() => !cancelled && setReady(true));
@@ -83,6 +87,7 @@ export const WorkoutRoute = ({
         void repositories.sessions.save(session);
       }}
       decisions={decisions}
+      history={history}
       onFinish={(session) => {
         const result = progressWorkout(
           session,

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import type { WorkoutSession } from '../../domain/session';
 import { LABELS, compareToPrevious, sessionSummary } from '../../domain/session-log';
+import { coachReport, type SessionFocus } from '../../domain/coach';
 import type { Decision } from '../../domain/progression-engine';
 import type { Workout } from '../../domain/workout';
 import { exerciseById } from '../../content/catalog';
@@ -13,7 +14,16 @@ interface WorkoutCompleteProps {
   onNotesChange: (notes: string) => void;
   /** What the progression engine decided, if it has run yet. */
   decisions: Decision[];
+  /** Earlier sessions, so the coach can see two hard ones in a row. */
+  history: WorkoutSession[];
 }
+
+/** What each reading of a session is called on the screen. */
+const FOCUS_LABELS: Record<SessionFocus, string> = {
+  progress: 'Progressing',
+  steady: 'Holding steady',
+  recovery: 'Recovery',
+};
 
 /** What each decision is called, in the athlete's terms rather than the code's. */
 const ACTION_LABELS: Record<Decision['action'], string> = {
@@ -36,9 +46,11 @@ export const WorkoutComplete = ({
   notes,
   onNotesChange,
   decisions,
+  history,
 }: WorkoutCompleteProps) => {
   const summary = sessionSummary(session);
   const comparison = compareToPrevious(session, previousSession);
+  const coach = coachReport({ session, decisions, history });
 
   return (
     <div className="complete">
@@ -124,6 +136,19 @@ export const WorkoutComplete = ({
         <h2 className="complete__heading" id="next-heading">
           Next time
         </h2>
+
+        <div className={`coach coach--${coach.focus}`}>
+          <p className="coach__focus" data-testid="coach-focus">
+            {FOCUS_LABELS[coach.focus]}
+          </p>
+          <p className="coach__headline" data-testid="coach-headline">
+            {coach.headline}
+          </p>
+          <p className="coach__advice" data-testid="coach-advice">
+            {coach.advice}
+          </p>
+        </div>
+
         {decisions.length === 0 ? (
           <p className="complete__none">
             Nothing logged, so nothing changes. The same session will be waiting.

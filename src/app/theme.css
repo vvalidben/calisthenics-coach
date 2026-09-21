@@ -2354,3 +2354,64 @@ a {
   height: 18px;
   accent-color: var(--signal);
 }
+
+/* --- The coach --------------------------------------------------------- */
+
+.coach {
+  margin-top: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--chalk-faint);
+  border-radius: 10px;
+}
+
+.coach--progress {
+  border-left-color: var(--done);
+}
+
+/* Amber means "where you currently stand", and a recovery week is exactly
+   that: the one thing on the screen worth reading twice. */
+.coach--recovery {
+  border-left-color: var(--signal);
+  background: color-mix(in srgb, var(--signal) 7%, transparent);
+}
+
+.coach__focus {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--chalk-faint);
+}
+
+.coach--progress .coach__focus {
+  color: var(--done);
+}
+
+.coach--recovery .coach__focus {
+  color: var(--signal);
+}
+
+.coach__headline {
+  margin-top: 6px;
+  max-width: 46ch;
+  font-size: var(--step-0);
+  font-weight: 600;
+}
+
+.coach__advice {
+  margin-top: 6px;
+  max-width: 46ch;
+  font-size: var(--step--1);
+  color: var(--chalk-dim);
+}
+
+.coach-note {
+  margin-top: 30px;
+  max-width: 46ch;
+  padding: 12px 14px;
+  border: 1px solid var(--signal-quiet);
+  border-radius: 10px;
+  font-size: var(--step--1);
+  color: var(--chalk-dim);
+}

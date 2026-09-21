@@ -48,5 +48,9 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
     css: false,
+    // The app-level flows click through whole workouts — a hundred-odd
+    // interactions each. Five seconds is fine alone and marginal when the
+    // whole suite runs at once.
+    testTimeout: 20_000,
   },
 });

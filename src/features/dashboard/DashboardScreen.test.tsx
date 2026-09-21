@@ -53,6 +53,66 @@ const aReminder: Reminder = {
 const region = (name: RegExp) => within(screen.getByRole('region', { name }));
 const stat = (id: string) => screen.getByTestId(`stat-${id}`);
 
+/** A fully logged session: three sets of each, at the given effort. */
+const fullyLogged = (
+  date: string,
+  id: string,
+  { reps, rpe }: { reps: (set: number) => number; rpe: 6 | 9 },
+): WorkoutSession => {
+  const exercise = {
+    block: 'main' as const,
+    prescribed: { sets: 3, measurement: 'reps' as const, target: { min: 6, max: 10 } },
+    sets: [1, 2, 3].map((setNumber) => ({
+      setNumber,
+      reps: reps(setNumber),
+      seconds: null,
+      rpe,
+      completed: true,
+    })),
+    rpe,
+  };
+  return aSession({
+    id,
+    date,
+    status: 'completed',
+    kind: 'training',
+    exercises: [
+      { ...exercise, exerciseId: 'push-up' },
+      { ...exercise, exerciseId: 'bodyweight-squat' },
+    ],
+  });
+};
+
+/** Every set completed, comfortably. */
+const clean = (date: string, id: string) => fullyLogged(date, id, { reps: () => 9, rpe: 6 });
+
+/** Very hard throughout, with the reps fading away across the sets. */
+const strained = (date: string, id: string) =>
+  fullyLogged(date, id, { reps: (set) => 11 - set * 2, rpe: 9 });
+
+describe('coaching, before the session rather than after it', () => {
+  it('says nothing when training is going normally', () => {
+    renderDashboard(THU, [clean(MON, 'a'), clean(TUE, 'b')]);
+    expect(screen.queryByTestId('coach-note')).not.toBeInTheDocument();
+  });
+
+  it('says nothing after a single hard session', () => {
+    renderDashboard(THU, [clean(MON, 'a'), strained(TUE, 'b')]);
+    expect(screen.queryByTestId('coach-note')).not.toBeInTheDocument();
+  });
+
+  it('flags two hard sessions in a row', () => {
+    renderDashboard(THU, [strained(MON, 'a'), strained(TUE, 'b')]);
+    expect(screen.getByTestId('coach-note')).toHaveTextContent(/last two sessions were hard/i);
+  });
+
+  it('asks for a steadier session rather than cancelling it', () => {
+    renderDashboard(THU, [strained(MON, 'a'), strained(TUE, 'b')]);
+    expect(screen.getByTestId('coach-note')).toHaveTextContent(/something left/i);
+    expect(screen.getByRole('link', { name: /start workout/i })).toBeInTheDocument();
+  });
+});
+
 describe('the reminder', () => {
   it('is not shown before it is due', () => {
     renderDashboard();

@@ -268,6 +268,46 @@ migration**. A profile written before Sprint 11 simply parses with sensible
 settings filled in, which is less machinery than a migration for the same
 result.
 
+### The coach
+
+`domain/coach.ts` reads a finished session back and says one sensible thing
+about it. The split from the progression engine is the point: **the engine
+decides what the numbers do, the coach decides what to say** — and adds the one
+judgement a single session cannot support.
+
+`analyseSession` produces, per main-work exercise: sets prescribed and
+completed, failed sets, total reps or seconds, average difficulty as a word,
+whether every set reached the top of the range, how far the reps fell away
+first set to last, and a quality of `clean`, `strained` or `broke-down`. It
+reads `SessionExercise.prescribed`, which records what was asked for at the
+time, so a session from months ago prescribed differently still analyses
+correctly without the workout it came from.
+
+Two definitions worth stating, because both could reasonably go the other way:
+
+- **A failed set** is one that was abandoned, or one rated *Failed* that also
+  came up short of the target minimum. Hitting the top of the range with
+  nothing left is a grind, not a failure, and the coach does not treat it as
+  one.
+- **A strained session** is one where half the exercises or more did not hold
+  up. One hard lift in a session of four is a hard lift; calling that a hard
+  session would have the coach flinching at ordinary training.
+
+`coachReport` returns a focus of `progress`, `steady` or `recovery`, a headline
+and one line of advice. Recovery is the only thing that looks beyond today, and
+it needs a pattern: `needsRecovery` is true when the **last two** training
+sessions were both strained.
+
+**Recovery is advice, not a reduction.** The engine has already decided whether
+the numbers move; cutting them as well would be two changes at once, which is
+the thing the whole system exists to avoid. The targets stay exactly where they
+are and the athlete is asked to take the next session easy.
+
+`needsRecovery` reads the stored sessions alone, so the dashboard can ask it
+**before** a workout — which is when it is actually useful. The full report
+needs the engine's decisions, which only exist in memory just after a session,
+so it appears on the completion screen and nowhere else.
+
 ### The calendar
 
 `domain/history.ts` builds the training calendar, and its one structural
@@ -375,7 +415,7 @@ profile or logged sessions.
 
 | Capability | Attaches to |
 |---|---|
-| Progression engine | Built: `domain/progression-engine.ts`, run from the player's `onFinish` |
+| Progression engine | Built: `domain/progression-engine.ts`, run from the player's `onFinish`; `domain/coach.ts` explains its decisions |
 | Workout player | Built: `features/player/`. Reads a `Workout`, writes a `WorkoutSession` after every set |
 | Progress tracking and calendar | Built: `domain/history.ts` + `features/history/`. Reads `repositories.sessions.list()` and derives missed days from the schedule |
 | Exercise demonstrations | Already built: `features/demo/FigureDemo.tsx`. `videoUrl` is left empty on every exercise because external links could not be verified from the build environment |

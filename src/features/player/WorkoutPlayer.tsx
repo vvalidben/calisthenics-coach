@@ -31,6 +31,8 @@ interface WorkoutPlayerProps {
   onFinish?: ((session: WorkoutSession) => void) | undefined;
   /** What the progression engine decided about this session. */
   decisions?: Decision[] | undefined;
+  /** Earlier sessions, for the coach's reading of this one. */
+  history?: WorkoutSession[] | undefined;
 }
 
 type Phase = 'ready' | 'working' | 'logging' | 'resting' | 'complete';
@@ -64,6 +66,7 @@ export const WorkoutPlayer = ({
   onSessionChange,
   onFinish,
   decisions = [],
+  history = [],
 }: WorkoutPlayerProps) => {
   const items = workoutBlocks(workout);
 
@@ -156,6 +159,7 @@ export const WorkoutPlayer = ({
         previousSession={previousSession}
         notes={notes}
         decisions={decisions}
+        history={history}
         onNotesChange={(value) => {
           setNotes(value);
           save({ ...session, notes: value });

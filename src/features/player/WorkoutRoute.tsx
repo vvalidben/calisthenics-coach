@@ -42,6 +42,8 @@ export const WorkoutRoute = ({
 
   const [previous, setPrevious] = useState<WorkoutSession | undefined>();
   const [history, setHistory] = useState<WorkoutSession[]>([]);
+  const [resume, setResume] = useState<WorkoutSession | undefined>();
+  const [alreadyDone, setAlreadyDone] = useState<WorkoutSession | undefined>();
   const [decisions, setDecisions] = useState<Decision[]>([]);
   const [ready, setReady] = useState(false);
 
@@ -55,6 +57,19 @@ export const WorkoutRoute = ({
           .filter((s) => s.workoutId === id && s.date !== date && s.status !== 'missed')
           .at(-1);
         setPrevious(earlier);
+
+        // Today's session for this workout, if one was started and never
+        // finished. Without this, reopening the workout would write a fresh
+        // session over the top of it and the logged sets would be gone.
+        const today = sessions.filter((s) => s.date === date && s.workoutId === id);
+        setResume(today.find((s) => s.status === 'in-progress'));
+
+        // One session per workout per day is all the store can hold, because
+        // the id is the date and the workout. Opening the player again would
+        // write over what was logged rather than add to it.
+        setAlreadyDone(
+          today.find((s) => s.status === 'completed' || s.status === 'partial'),
+        );
         // Everything before today, so the coach can see two hard sessions in a
         // row even when they were different workouts.
         setHistory(sessions.filter((s) => s.date !== date));
@@ -86,6 +101,25 @@ export const WorkoutRoute = ({
     );
   }
 
+  if (alreadyDone) {
+    return (
+      <div className="state">
+        <h1 className="state__title">Already done today</h1>
+        <p className="state__body">
+          {workout.name} is logged for today. Starting it again would write over what you did
+          rather than add to it, so it stays as it is &mdash; the next session is the one that
+          counts.
+        </p>
+        <Link className="button button--primary" to={`/history/${alreadyDone.id}`}>
+          See what you did
+        </Link>
+        <Link className="state__back" to="/">
+          Back to today
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <WorkoutPlayer
       workout={workout}
@@ -96,6 +130,7 @@ export const WorkoutRoute = ({
       }}
       decisions={decisions}
       history={history}
+      resume={resume}
       onFinish={(session) => {
         const result = progressWorkout(
           session,

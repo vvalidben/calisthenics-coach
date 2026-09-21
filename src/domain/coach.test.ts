@@ -121,6 +121,27 @@ describe('failed sets', () => {
   });
 });
 
+describe('falling short of the target', () => {
+  it('counts the sets that did not reach the bottom of the range', () => {
+    expect(analysisOf([pushUps([set(1, 10, 6), set(2, 5, 8), set(3, 4, 8)])]).shortSets).toBe(2);
+  });
+
+  it('counts none when every set was inside the range', () => {
+    expect(analysisOf([pushUps([set(1, 6, 6), set(2, 7, 7)])]).shortSets).toBe(0);
+  });
+
+  it('is what the athlete is told about, rather than how hard it felt', () => {
+    // Three reps against a target of six: short on every set, however it felt.
+    const short = [pushUps([set(1, 3, 9), set(2, 3, 9), set(3, 3, 9)])];
+    expect(report(short, [decision('hold', 'failed')]).headline).toMatch(/came up short/i);
+  });
+
+  it('agrees with the engine, which calls the same session a failure', () => {
+    const short = [pushUps([set(1, 3, 9), set(2, 3, 9), set(3, 3, 9)])];
+    expect(analysisOf(short).quality).toBe('broke-down');
+  });
+});
+
 describe('exercise quality', () => {
   it('is clean when every set was completed and none of it was maximal', () => {
     expect(analysisOf([pushUps(cleanSets)]).quality).toBe('clean');

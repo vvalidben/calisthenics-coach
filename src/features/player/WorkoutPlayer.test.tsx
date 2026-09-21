@@ -5,6 +5,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { PROGRAM } from '../../content/program';
 import { finishSession, recordSet, startSession } from '../../domain/session-log';
 import type { WorkoutSession } from '../../domain/session';
+import { workoutBlocks } from '../../domain/workout';
 import { WorkoutPlayer } from './WorkoutPlayer';
 
 const MONDAY = PROGRAM[0]!;
@@ -266,6 +267,74 @@ describe('reading the instructions without leaving the workout', () => {
     renderPlayer();
     await user.click(screen.getByText(/how to do it/i));
     expect(screen.getByRole('button', { name: /start set/i })).toBeInTheDocument();
+  });
+});
+
+describe('coming back to an unfinished workout', () => {
+  /** The whole warm-up done, plus `logged` sets of the first main exercise. */
+  const halfDone = (logged: number): WorkoutSession => {
+    let session = startSession(MONDAY, DATE, NOW.toISOString());
+
+    for (const item of MONDAY.warmUp) {
+      for (let i = 0; i < item.sets; i += 1) {
+        session = recordSet(session, item.exerciseId, { reps: 9, difficulty: 'moderate' });
+      }
+    }
+    for (let i = 0; i < logged; i += 1) {
+      session = recordSet(session, MONDAY.mainWork[0]!.exerciseId, {
+        reps: 9,
+        difficulty: 'moderate',
+      });
+    }
+
+    return session;
+  };
+
+  const firstMainIndex = MONDAY.warmUp.length;
+  const items = workoutBlocks(MONDAY);
+
+  const resumeFrom = (session: WorkoutSession) =>
+    render(
+      <MemoryRouter>
+        <WorkoutPlayer
+          workout={MONDAY}
+          date={DATE}
+          resume={session}
+          onSessionChange={(next) => saved.push(next)}
+        />
+      </MemoryRouter>,
+    );
+
+  it('keeps the sets that were already logged', () => {
+    resumeFrom(halfDone(1));
+    expect(screen.getByTestId('player-set-count')).toHaveTextContent('Set 2 of');
+  });
+
+  it('moves on past the exercises that were finished', () => {
+    resumeFrom(halfDone(0));
+    expect(screen.getByText(`Exercise ${firstMainIndex + 1} of ${items.length}`)).toBeInTheDocument();
+  });
+
+  it('does not lose the earlier sets when the next one is logged', async () => {
+    resumeFrom(halfDone(1));
+    await user.click(screen.getByRole('button', { name: /start set/i }));
+    await logSet();
+
+    const mainWork = saved.at(-1)!.exercises[firstMainIndex]!;
+    expect(mainWork.sets).toHaveLength(2);
+  });
+
+  it('starts from the beginning when there is nothing to come back to', () => {
+    renderPlayer();
+    expect(screen.getByTestId('player-set-count')).toHaveTextContent('Set 1 of');
+    expect(screen.getByText(/exercise 1 of/i)).toBeInTheDocument();
+  });
+
+  it('brings back the notes that were typed', () => {
+    const session = { ...halfDone(1), notes: 'Left wrist a bit sore.' };
+    resumeFrom(session);
+    expect(saved).toEqual([]);
+    expect(session.notes).toBe('Left wrist a bit sore.');
   });
 });
 

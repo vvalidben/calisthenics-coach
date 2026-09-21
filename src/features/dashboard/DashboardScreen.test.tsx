@@ -115,6 +115,60 @@ describe('coaching, before the session rather than after it', () => {
   });
 });
 
+describe('once today is already done', () => {
+  const doneToday = (): WorkoutSession =>
+    aSession({
+      id: `${MON}-foundation-w1-d1`,
+      workoutId: 'foundation-w1-d1',
+      date: MON,
+      kind: 'training',
+      status: 'completed',
+    });
+
+  it('says so instead of asking for it again', () => {
+    renderDashboard(MON, [doneToday()]);
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/done/i);
+  });
+
+  it('still names the session that was done', () => {
+    renderDashboard(MON, [doneToday()]);
+    expect(screen.getByRole('region', { name: /today/i })).toHaveTextContent(/push and core/i);
+  });
+
+  it('offers to show it rather than to repeat it', () => {
+    renderDashboard(MON, [doneToday()]);
+    expect(screen.getByRole('link', { name: /see what you did/i })).toHaveAttribute(
+      'href',
+      `/history/${MON}-foundation-w1-d1`,
+    );
+  });
+
+  it('takes the start button away, so the day cannot be overwritten', () => {
+    renderDashboard(MON, [doneToday()]);
+    expect(screen.queryByRole('link', { name: /start workout/i })).not.toBeInTheDocument();
+  });
+
+  it('counts a partly finished session as done for the day', () => {
+    renderDashboard(MON, [aSession({ ...doneToday(), status: 'partial' })]);
+    expect(screen.queryByRole('link', { name: /start workout/i })).not.toBeInTheDocument();
+  });
+
+  it('is not fooled by yesterday’s session', () => {
+    renderDashboard(MON, [aSession({ ...doneToday(), id: 'old', date: '2026-09-20' })]);
+    expect(screen.getByRole('link', { name: /start workout/i })).toBeInTheDocument();
+  });
+
+  it('is not fooled by a mobility routine', () => {
+    renderDashboard(MON, [stretched(MON)]);
+    expect(screen.getByRole('link', { name: /start workout/i })).toBeInTheDocument();
+  });
+
+  it('still points at the mobility routines, which are always optional', () => {
+    renderDashboard(MON, [doneToday()]);
+    expect(screen.getByRole('region', { name: /^mobility$/i })).toBeInTheDocument();
+  });
+});
+
 describe('the reminder', () => {
   it('is not shown before it is due', () => {
     renderDashboard();

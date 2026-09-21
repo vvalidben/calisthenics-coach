@@ -33,7 +33,28 @@ interface WorkoutPlayerProps {
   decisions?: Decision[] | undefined;
   /** Earlier sessions, for the coach's reading of this one. */
   history?: WorkoutSession[] | undefined;
+  /** An unfinished session from earlier today, to pick up where it stopped. */
+  resume?: WorkoutSession | undefined;
 }
+
+/**
+ * The first exercise with sets still owed.
+ *
+ * Session exercises are built in the same order as the player walks them, so
+ * the index lines up; the id is checked anyway rather than trusted.
+ */
+const positionIn = (session: WorkoutSession, items: WorkoutItem[]): number => {
+  const next = items.findIndex((item, i) => {
+    const performed = session.exercises[i];
+    return (
+      performed === undefined ||
+      performed.exerciseId !== item.exerciseId ||
+      performed.sets.length < item.sets
+    );
+  });
+
+  return next === -1 ? Math.max(0, items.length - 1) : next;
+};
 
 type Phase = 'ready' | 'working' | 'logging' | 'resting' | 'complete';
 
@@ -67,18 +88,21 @@ export const WorkoutPlayer = ({
   onFinish,
   decisions = [],
   history = [],
+  resume,
 }: WorkoutPlayerProps) => {
   const items = workoutBlocks(workout);
 
-  const [session, setSession] = useState<WorkoutSession>(() =>
-    startSession(workout, date, new Date().toISOString()),
+  const [session, setSession] = useState<WorkoutSession>(
+    () => resume ?? startSession(workout, date, new Date().toISOString()),
   );
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(() =>
+    resume === undefined ? 0 : positionIn(resume, items),
+  );
   const [phase, setPhase] = useState<Phase>('ready');
   const [restLeft, setRestLeft] = useState(0);
   const [elapsed, setElapsed] = useState(0);
   const [entry, setEntry] = useState('');
-  const [notes, setNotes] = useState('');
+  const [notes, setNotes] = useState(resume?.notes ?? '');
 
   const save = (next: WorkoutSession) => {
     setSession(next);

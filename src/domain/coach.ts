@@ -46,6 +46,8 @@ export interface ExerciseAnalysis {
   difficulty: PerceivedDifficulty | null;
   /** Every completed set reached the top of what was asked for. */
   atTopOfRange: boolean;
+  /** Completed sets that did not reach the bottom of what was asked for. */
+  shortSets: number;
   /** How far the last set fell below the first. Zero when it held up. */
   dropOff: number;
   quality: ExerciseQuality;
@@ -77,8 +79,14 @@ const analyse = (performed: SessionExercise): ExerciseAnalysis => {
   const shortOfSets = done.length < performed.prescribed.sets;
   const faded = dropOff >= (timed ? SECONDS_FADE : REP_FADE);
 
+  // Below the bottom of the prescribed range. The progression engine calls
+  // this a failure, and the coach has to agree with it: telling someone the
+  // last set was hard, when every set was short, describes a different session
+  // from the one they just did.
+  const shortSets = values.filter((v) => v < performed.prescribed.target.min).length;
+
   const quality: ExerciseQuality =
-    failedSets > 0 || shortOfSets
+    failedSets > 0 || shortOfSets || shortSets > 0
       ? 'broke-down'
       : (rpe !== null && rpe >= TOO_HARD_RPE) || faded
         ? 'strained'
@@ -94,6 +102,7 @@ const analyse = (performed: SessionExercise): ExerciseAnalysis => {
     averageRpe: rpe,
     difficulty: rpe === null ? null : difficultyForRpe(rpe),
     atTopOfRange: values.length > 0 && values.every((v) => v >= performed.prescribed.target.max),
+    shortSets,
     dropOff,
     quality,
   };
@@ -226,9 +235,10 @@ export const coachReport = ({ session, decisions, history }: CoachArgs): CoachRe
 
   if (broken.length > 0) {
     const worst = broken[0]!;
+    const missed = worst.failedSets + worst.shortSets;
     return {
       focus: 'steady',
-      headline: `You came up short on ${plural(worst.failedSets, 'set')}. Same variation, same targets next time.`,
+      headline: `You came up short on ${plural(missed, 'set')}. Same variation, same targets next time.`,
       advice:
         'One session is not a trend, so nothing changes yet. Take the full rest between sets and stop each one while the reps still look like reps.',
       analyses,

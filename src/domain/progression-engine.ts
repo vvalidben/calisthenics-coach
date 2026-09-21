@@ -311,6 +311,12 @@ export const progressWorkout = (
     const state = exercise ? nextStates.get(exercise.family) : undefined;
     if (!performed || !exercise || !state) return item;
 
+    // Nothing logged at all: the athlete never got to this one. Running out of
+    // time is not the same as trying and falling short, and must not push them
+    // down a level. A set that was *skipped* still counts — that is a recorded
+    // outcome, an absent set is not.
+    if (performed.sets.length === 0) return item;
+
     const decision = decide({
       item,
       performed,

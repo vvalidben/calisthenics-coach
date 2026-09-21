@@ -9,7 +9,7 @@ import {
 import type { Exercise } from './exercise';
 import type { SessionExercise } from './session';
 import type { WorkoutItem } from './workout';
-import { aProgressionState, aWorkout, anExercise } from '../test/factories';
+import { aProgressionState, aSession, aWorkout, anExercise } from '../test/factories';
 import { finishSession, recordSet, startSession } from './session-log';
 
 const TODAY = '2026-09-28';
@@ -435,6 +435,74 @@ describe('every decision explains itself', () => {
     for (const decision of samples) {
       expect(decision.reason).not.toMatch(/\bRPE\b|consecutiveQualifying|verdict/i);
     }
+  });
+});
+
+describe('an exercise that was never attempted', () => {
+  const untouched = (exerciseId: string): SessionExercise => ({
+    exerciseId,
+    block: 'main',
+    prescribed: { sets: 3, measurement: 'reps', target: { min: 6, max: 10 } },
+    sets: [],
+    rpe: null,
+  });
+
+  it('is left out of the decisions entirely', () => {
+    const workout = aWorkout({
+      mainWork: [
+        {
+          exerciseId: 'push-up',
+          sets: 3,
+          measurement: 'reps',
+          target: { min: 6, max: 10 },
+          restSeconds: 90,
+          cue: 'Push the floor away.',
+        },
+      ],
+    });
+    const session = aSession({ exercises: [untouched('push-up')], status: 'partial' });
+
+    const result = progressWorkout(session, workout, [aProgressionState()], lookup, TODAY);
+    expect(result.decisions).toEqual([]);
+  });
+
+  it('does not count as a failure the athlete has to recover from', () => {
+    const workout = aWorkout({
+      mainWork: [
+        {
+          exerciseId: 'push-up',
+          sets: 3,
+          measurement: 'reps',
+          target: { min: 6, max: 10 },
+          restSeconds: 90,
+          cue: 'Push the floor away.',
+        },
+      ],
+    });
+    const session = aSession({ exercises: [untouched('push-up')], status: 'partial' });
+    const state = aProgressionState({ consecutiveStrugglingSessions: 1 });
+
+    const result = progressWorkout(session, workout, [state], lookup, TODAY);
+    expect(result.states[0]!.consecutiveStrugglingSessions).toBe(1);
+  });
+
+  it('leaves the prescription exactly as it was', () => {
+    const workout = aWorkout({
+      mainWork: [
+        {
+          exerciseId: 'push-up',
+          sets: 3,
+          measurement: 'reps',
+          target: { min: 6, max: 10 },
+          restSeconds: 90,
+          cue: 'Push the floor away.',
+        },
+      ],
+    });
+    const session = aSession({ exercises: [untouched('push-up')], status: 'partial' });
+
+    const result = progressWorkout(session, workout, [aProgressionState()], lookup, TODAY);
+    expect(result.workout.mainWork[0]!.target).toEqual({ min: 6, max: 10 });
   });
 });
 

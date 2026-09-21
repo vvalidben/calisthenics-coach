@@ -268,6 +268,45 @@ migration**. A profile written before Sprint 11 simply parses with sensible
 settings filled in, which is less machinery than a migration for the same
 result.
 
+### One session per workout per day
+
+The stored session id is the date plus the workout id, so the store can hold
+exactly one session per workout per day. Sprint 15's QA pass found the UI did
+not respect that, in two directions:
+
+- An **interrupted** workout was lost. The player wrote after every set, but
+  reopening the workout started a *new* session at the same id and wrote over
+  it. `WorkoutRoute` now loads today's `in-progress` session and hands it to
+  the player as `resume`; the player picks up at the first exercise with sets
+  still owed.
+- A **finished** workout could be silently overwritten. Starting it again the
+  same day replaced a completed session with a fresh, emptier one. The
+  dashboard now shows what was done instead of offering START, and the route
+  refuses to open the player at all — so the address bar cannot do it either.
+
+The cost is that ending a session early ends it for that day. That is the
+right trade against losing a record that was actually earned, and it is stated
+in the README rather than left to be discovered.
+
+### The coach agrees with the engine
+
+The same QA pass found the coach could describe a session the engine had
+already judged differently: three reps against a target of six read as "you
+struggled with the final set" because the analysis only knew about the *top* of
+the range. `ExerciseAnalysis` now carries `shortSets` — completed sets below
+the prescribed minimum — and any of them makes the exercise `broke-down`, which
+is the same line the engine draws. Two components reading the same session must
+not tell the athlete two different stories about it.
+
+### An exercise never attempted is not a failure
+
+`progressWorkout` judged every prescribed exercise, including ones with no
+logged sets at all, because `startSession` pre-populates them. Ending a session
+early therefore counted as a failure for everything untouched, and two short
+sessions would step those families down a level. It now skips exercises with no
+sets. A *skipped* set still counts — that is a recorded outcome — but an absent
+one is not.
+
 ### The interface contract
 
 Three test files hold the parts of the interface that are easy to erode and

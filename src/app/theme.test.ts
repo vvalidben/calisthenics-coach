@@ -95,6 +95,26 @@ describe('type', () => {
   });
 });
 
+describe('a narrow phone', () => {
+  it('sets no fixed width that would overflow a 320px screen', () => {
+    const wide = rules()
+      .filter(([, selectors]) => !/@media/.test(selectors ?? ''))
+      .flatMap(([, selectors, body]) =>
+        [...(body ?? '').matchAll(/(?:^|;)\s*width:\s*(\d+)px/g)]
+          .filter((m) => Number(m[1]) > 320)
+          .map(() => (selectors ?? '').trim()),
+      );
+
+    // Nothing in the sheet is pinned wider than the narrowest phone. The only
+    // fixed width of any size is the desktop sidebar, at 216px.
+    expect(wide).toEqual([]);
+  });
+
+  it('leaves a gutter on both sides', () => {
+    expect(declarationsFor('.shell__main')['padding']).toMatch(/var\(--gutter\)/);
+  });
+});
+
 describe('a wide screen', () => {
   it('has a layout of its own', () => {
     expect(CSS).toMatch(/@media \(min-width: \d+px\)/);

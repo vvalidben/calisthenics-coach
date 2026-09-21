@@ -8,7 +8,7 @@ import type { ProgressionState } from '../../domain/progression';
 import type { UserProfile } from '../../domain/profile';
 import type { Reminder } from '../../domain/reminders';
 import { ReminderBanner } from '../reminders/ReminderBanner';
-import type { WorkoutSession } from '../../domain/session';
+import { completedSetCount, type WorkoutSession } from '../../domain/session';
 import { LABELS, mobilitySessionsInLastWeek } from '../../domain/session-log';
 import {
   currentStreak,
@@ -111,6 +111,18 @@ export const DashboardScreen = ({
   // only ever held in memory.
   const recovering = needsRecovery(sessions);
 
+  // Today's session, if it has already been trained. One session per workout
+  // per day is what the store can hold — the id is the date and the workout —
+  // so offering START again would overwrite what was logged rather than add
+  // to it.
+  const doneToday = sessions.find(
+    (s) =>
+      s.date === today &&
+      s.kind === 'training' &&
+      s.workoutId === workout?.id &&
+      (s.status === 'completed' || s.status === 'partial'),
+  );
+
   const startIndex = WEEKDAYS.indexOf(weekday);
   const next = WEEKDAYS.map((_, offset) => WEEKDAYS[(startIndex + offset + 1) % 7]!)
     .map((day) => scheduled.find((w) => w.day === day))
@@ -141,7 +153,27 @@ export const DashboardScreen = ({
           Today
         </h2>
 
-        {workout ? (
+        {workout && doneToday ? (
+          <>
+            <h1 className="hero__title">
+              {doneToday.status === 'completed' ? 'Done today' : 'Partly done today'}
+            </h1>
+            <p className="hero__meta">
+              <span>{workout.name}</span>
+              <span>
+                {completedSetCount(doneToday)}{' '}
+                {completedSetCount(doneToday) === 1 ? 'set' : 'sets'}
+              </span>
+            </p>
+            <p className="hero__note">
+              That is today handled. Anything else is optional &mdash; the next session is the
+              one that counts.
+            </p>
+            <Link className="button button--primary hero__start" to={`/history/${doneToday.id}`}>
+              See what you did
+            </Link>
+          </>
+        ) : workout ? (
           <>
             <h1 className="hero__title">{workout.name}</h1>
             <p className="hero__meta">

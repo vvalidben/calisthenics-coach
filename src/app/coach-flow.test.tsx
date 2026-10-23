@@ -67,7 +67,7 @@ const play = async ({
 const runSession = async (today: string, options?: Parameters<typeof play>[0]) => {
   const view = openApp(today);
   await screen.findByRole('heading', { level: 1 });
-  await user.click(screen.getByRole('link', { name: /start workout/i }));
+  await user.click(screen.getByRole('link', { name: /begin the session/i }));
   await play(options);
   return view;
 };

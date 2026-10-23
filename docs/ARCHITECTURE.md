@@ -307,6 +307,36 @@ sessions would step those families down a level. It now skips exercises with no
 sets. A *skipped* set still counts — that is a recorded outcome — but an absent
 one is not.
 
+### The Classical look
+
+The interface implements the Claude Design project *Calisthenics Coach*
+(`Coach App v2`): paper, ink and gold, set in Cormorant Garamond over Lora,
+with roman numerals, drop caps, justified columns, dotted leaders and hollow
+display numerals bled off the corner.
+
+**One palette, two modes.** `theme.css` defines nine-step neutral and accent
+ramps; `:root[data-theme='dark']` reflects each ramp about its middle, so the
+accent stays gold and the relationships hold. The mode is stored per device in
+`localStorage` and applied in `main.tsx` *before* React mounts, so night never
+flashes paper. Switching runs through the View Transitions API with the click
+point as the origin, which is the circular reveal the design specifies; without
+a pointer, or with reduced motion asked for, it simply changes.
+
+**Legacy token names are aliases.** The first design's `--chalk`, `--steel`,
+`--signal` and friends now point at the Classical palette. Every screen built
+against them took the new look without being rewritten, which is what made it
+possible to port the screens one at a time instead of in one unreviewable
+change.
+
+**Two places the implementation departs from the design, deliberately.** The
+design sets small print in `--color-neutral-600` (3.9:1 on paper) and some of
+it in `--color-accent` (3.0:1). Both fail AA for normal text. The palette keeps
+those values for rules, ticks and fills, and `--ink-soft` / `--ink-accent` name
+the step below for anything carrying words; `theme.test.ts` checks every text
+role in both modes and asserts no `--ink-*` role points at the stroke accent.
+The second: the animated headline keeps real spaces between its words rather
+than a flex gap, because a gap reads as "PushandCore" to a screen reader.
+
 ### The interface contract
 
 Three test files hold the parts of the interface that are easy to erode and

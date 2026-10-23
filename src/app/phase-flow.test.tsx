@@ -137,7 +137,7 @@ const playEverything = async () => {
 const runSession = async () => {
   const view = openApp();
   await screen.findByRole('heading', { level: 1 });
-  await user.click(screen.getByRole('link', { name: /start workout/i }));
+  await user.click(screen.getByRole('link', { name: /begin the session/i }));
   await playEverything();
   return view;
 };

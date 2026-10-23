@@ -42,7 +42,7 @@ describe('a training reminder', () => {
 
   it('leaves starting the workout to the session below it, rather than repeating the button', () => {
     show(training);
-    expect(screen.queryByRole('link', { name: /start workout/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /begin the session/i })).not.toBeInTheDocument();
   });
 
   it('announces itself to a screen reader when it appears', () => {

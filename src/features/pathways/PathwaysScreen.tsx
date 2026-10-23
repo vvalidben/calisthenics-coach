@@ -9,6 +9,7 @@ import type { WorkoutSession } from '../../domain/session';
 import { EXERCISES, familyChain } from '../../content/catalog';
 import { familiesByPathway } from '../../content/families';
 import { requirePhaseSpec } from '../../content/phases';
+import { PageHeader } from '../shell/PageHeader';
 import { PhasePanel } from './PhasePanel';
 
 interface PathwaysScreenProps {
@@ -108,11 +109,12 @@ export const PathwaysScreen = ({
 
   return (
     <div className="pathways">
-      <h1 className="page__title">Progress</h1>
-      <p className="page__lede">
-        Every movement in the app, from where you are to where it goes. {EXERCISES.length}{' '}
+      <PageHeader kicker="Every movement, where it goes" title="Progress" watermark={`${EXERCISES.length}`}>
+        <p className="page__lede">
+          Every movement in the app, from where you are to where it goes. {EXERCISES.length}{' '}
         exercises, {usable} of them usable with what you have today.
-      </p>
+        </p>
+      </PageHeader>
 
       <PhasePanel
         assessment={assessPhase({

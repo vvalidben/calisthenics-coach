@@ -6,6 +6,7 @@ import type { Equipment } from '../../domain/primitives';
 import type { UserProfile } from '../../domain/profile';
 import { EXERCISES, familyChain } from '../../content/catalog';
 import { FAMILY_INFO } from '../../content/families';
+import { PageHeader } from '../shell/PageHeader';
 
 interface ExerciseListProps {
   profile: UserProfile;
@@ -52,11 +53,12 @@ export const ExerciseList = ({ profile }: ExerciseListProps) => {
 
   return (
     <div className="library">
-      <h1 className="page__title">Exercises</h1>
-      <p className="page__lede">
-        Every movement, with full instructions. {usable} of {EXERCISES.length} need nothing you do
+      <PageHeader kicker="The library" title="Exercises" watermark={`${EXERCISES.length}`}>
+        <p className="page__lede">
+          Every movement, with full instructions. {usable} of {EXERCISES.length} need nothing you do
         not already have.
-      </p>
+        </p>
+      </PageHeader>
 
       <input
         type="search"

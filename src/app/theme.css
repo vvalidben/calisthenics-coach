@@ -1,38 +1,156 @@
 /*
- * Chalk on steel.
+ * Classical — paper, ink and gold.
  *
- * Surfaces are cool slate, type is warm chalk-white, and amber is reserved for
- * exactly one meaning: where you currently stand. Nothing else may use it.
+ * Implements the Claude Design project "Calisthenics Coach" (Coach App v2).
+ * Two modes: paper by default, a warm near-black at night. Dark is derived
+ * the way the design derives it, by reflecting each tonal ramp about its
+ * middle, so one palette defines both.
+ *
+ * The legacy token names from the first design (--chalk, --steel, --signal)
+ * are kept as aliases onto this palette. Every screen built against them
+ * takes the new look without being rewritten, and each can then be ported to
+ * the design's own layout one at a time.
  */
 
 :root {
-  --steel-0: #151b23;
-  --steel-1: #1d252f;
-  --steel-2: #253039;
-  --line: #2f3b47;
+  /* — the ramps, from the design system — */
+  --color-neutral-100: #f8f4f4;
+  --color-neutral-200: #eae7e7;
+  --color-neutral-300: #d7d3d3;
+  --color-neutral-400: #bab6b6;
+  --color-neutral-500: #9b9797;
+  --color-neutral-600: #7d7979;
+  --color-neutral-700: #605d5d;
+  --color-neutral-800: #444141;
+  --color-neutral-900: #2d2b2b;
 
-  --chalk: #e9e5dd;
-  --chalk-dim: #a9b4bf;
-  /* 4.5:1 against the lightest surface in the app, not just the darkest. */
-  --chalk-faint: #909daa;
+  --color-accent-100: #fff3e4;
+  --color-accent-200: #ffe3bf;
+  --color-accent-300: #facb8d;
+  --color-accent-400: #e1ad66;
+  --color-accent-500: #c28d41;
+  --color-accent-600: #a06f24;
+  --color-accent-700: #7d5411;
+  --color-accent-800: #5a3b0a;
+  --color-accent-900: #3a270d;
 
-  --signal: #e5a13a;
-  --signal-quiet: #7a5a22;
-  --done: #86b59b;
-  --missed: #cc848c;
+  --color-bg: #f3f2f2;
+  --color-surface: #eae9e9;
+  --color-text: #201f1d;
+  --color-accent: #b68235;
+  --color-divider: color-mix(in srgb, #201f1d 16%, transparent);
 
-  --gutter: 20px;
-  --measure: 34rem;
-  --nav-height: 60px;
+  /*
+   * Text roles, kept separate from the stroke accent on purpose.
+   *
+   * --color-accent is 3.0:1 on paper and --color-neutral-600 is 3.9:1: fine
+   * for a rule, a tick or a fill, and below AA for the small print the design
+   * sets in them. Anything that carries words uses the step below.
+   */
+  --ink: var(--color-text);
+  --ink-soft: var(--color-neutral-700);
+  --ink-quiet: var(--color-neutral-700);
+  --ink-accent: var(--color-accent-700);
 
+  --font-heading: 'Cormorant Garamond', 'Iowan Old Style', Georgia, serif;
+  --font-body: Lora, Georgia, 'Times New Roman', serif;
+
+  --gutter: 26px;
+  --measure: 48rem;
+  --nav-height: 82px;
+
+  /* A serif scale: smaller steps than the old sans, because Lora runs large. */
   --step--1: 0.8125rem;
-  --step-0: 1rem;
-  --step-1: 1.1875rem;
+  --step-0: 0.9375rem;
+  --step-1: 1.125rem;
   --step-2: 1.5rem;
   --step-3: 2.125rem;
-  --step-4: 2.875rem;
+  --step-4: 3.375rem;
+
+  /* — legacy aliases: the first design's names, re-pointed — */
+  --steel-0: var(--color-bg);
+  --steel-1: var(--color-surface);
+  --steel-2: var(--color-neutral-200);
+  --line: var(--color-divider);
+  --chalk: var(--color-text);
+  --chalk-dim: var(--color-neutral-700);
+  --chalk-faint: var(--color-neutral-700);
+  --signal: var(--color-accent);
+  --signal-quiet: var(--color-accent-300);
+  --done: var(--color-accent-700);
+  --missed: #a3402f;
+
+  color-scheme: light;
+}
+
+/*
+ * Night.
+ *
+ * Each ramp is reflected about its middle — step 100 takes step 900's value —
+ * so the accent stays gold and the neutrals keep their relationships. The
+ * paper colour becomes the ink.
+ */
+:root[data-theme='dark'] {
+  --color-neutral-100: #2d2b2b;
+  --color-neutral-200: #444141;
+  --color-neutral-300: #605d5d;
+  --color-neutral-400: #7d7979;
+  --color-neutral-500: #9b9797;
+  --color-neutral-600: #bab6b6;
+  --color-neutral-700: #d7d3d3;
+  --color-neutral-800: #eae7e7;
+  --color-neutral-900: #f8f4f4;
+
+  --color-accent-100: #3a270d;
+  --color-accent-200: #5a3b0a;
+  --color-accent-300: #7d5411;
+  --color-accent-400: #a06f24;
+  --color-accent-500: #c28d41;
+  --color-accent-600: #e1ad66;
+  --color-accent-700: #facb8d;
+  --color-accent-800: #ffe3bf;
+  --color-accent-900: #fff3e4;
+
+  --color-bg: #211f1f;
+  --color-surface: #2d2b2b;
+  --color-text: #f3f2f2;
+  --color-divider: color-mix(in srgb, #f3f2f2 17%, transparent);
+
+  --ink-soft: var(--color-neutral-700);
+  --ink-quiet: var(--color-neutral-600);
+  --ink-accent: var(--color-accent-700);
+
+  --signal: var(--color-accent-600);
+  --signal-quiet: var(--color-accent-300);
+  --done: var(--color-accent-700);
+  --missed: #e89b90;
 
   color-scheme: dark;
+}
+
+/*
+ * The mode change spreads from the point that asked for it.
+ * Pointerless switches (keyboard, Settings) fall back to a plain cross-fade.
+ */
+@keyframes vtReveal {
+  from {
+    clip-path: circle(0 at var(--vt-x, 50%) var(--vt-y, 50%));
+  }
+  to {
+    clip-path: circle(150% at var(--vt-x, 50%) var(--vt-y, 50%));
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  ::view-transition-new(root) {
+    animation: vtReveal 0.8s cubic-bezier(0.6, 0, 0.2, 1);
+  }
 }
 
 *,
@@ -49,13 +167,24 @@ body,
 
 body {
   margin: 0;
-  background: var(--steel-0);
-  color: var(--chalk);
-  font-family: Chivo, 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
   font-size: var(--step-0);
-  line-height: 1.55;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  transition: background 0.7s ease, color 0.7s ease;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.12;
 }
 
 h1,
@@ -2819,4 +2948,580 @@ a {
   align-items: center;
   justify-content: center;
   min-height: 56px;
+}
+
+/* ══ Classical: Today, and the chrome around it ═════════════════════════ */
+
+@keyframes wordUp {
+  from { opacity: 0; transform: translateY(60%); filter: blur(3px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+
+@keyframes ghostIn {
+  from { opacity: 0; transform: translateY(30px) scale(0.96); }
+  to { opacity: 0.3; transform: none; }
+}
+
+@keyframes growX {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* A numeral the size of the page, bled off the corner. It is the date, and
+   it is decoration: never read aloud, never in the way. */
+.ghost {
+  position: absolute;
+  right: -14px;
+  top: -44px;
+  font-family: var(--font-heading);
+  /* Scaled to the column. At a fixed 240px it runs across the body copy on a
+     phone instead of sitting in the header band. */
+  font-size: clamp(150px, 46vw, 240px);
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--color-accent);
+  opacity: 0.3;
+  pointer-events: none;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+  /* Behind the words. An absolutely positioned element otherwise paints over
+     static text no matter where it sits in the markup. */
+  z-index: -1;
+}
+
+.dash {
+  position: relative;
+  overflow: hidden;
+}
+
+.dash__head {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.dash__headline {
+  min-width: 0;
+}
+
+.dash__kicker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-accent);
+}
+
+/*
+ * The ring is 30px as drawn; the tappable square around it is 44, which is
+ * the floor a thumb can hit.
+ */
+.mode-toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  margin: -7px 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink-accent);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.mode-toggle::after {
+  content: '';
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--color-divider);
+  transition: border-color 0.3s;
+}
+
+.mode-toggle:hover::after {
+  border-color: var(--color-accent);
+}
+
+.mode-toggle:active {
+  transform: scale(0.88);
+}
+
+.display {
+  margin: 10px 0 0;
+  font-family: var(--font-heading);
+  font-size: var(--step-4);
+  font-weight: 400;
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+  /* Normal flow, so the spaces between the words are the words' own. */
+  word-spacing: 0.04em;
+}
+
+.display span {
+  display: inline-block;
+}
+
+.dash__sub {
+  margin-top: 12px;
+  font-size: var(--step--1);
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.dial-wrap {
+  position: relative;
+  flex: none;
+  width: 104px;
+  height: 104px;
+}
+
+.dial__value {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.dial__num {
+  font-family: var(--font-heading);
+  font-size: 36px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.dial__unit {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* The session's opening paragraph, set like a page of a book. */
+.dropcap {
+  text-align: justify;
+  hyphens: auto;
+}
+
+.dropcap::first-letter {
+  float: left;
+  font-family: var(--font-heading);
+  font-size: 3.6em;
+  line-height: 0.8;
+  padding: 0.1em 0.12em 0 0;
+  color: var(--ink-accent);
+}
+
+.blocks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 18px 30px;
+  margin-top: 24px;
+}
+
+.block__head {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding-bottom: 6px;
+}
+
+.block__head::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--color-text);
+  transform-origin: left;
+}
+
+.block__roman {
+  font-family: var(--font-heading);
+  font-size: var(--step-0);
+  color: var(--ink-accent);
+}
+
+.block__name {
+  flex: 1;
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.block__mins {
+  font-size: 11px;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+/* An entry in the contents: number, name, leader, target. */
+.entry {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-divider);
+  font-size: 14px;
+}
+
+.entry__n {
+  width: 20px;
+  flex: none;
+  font-size: 11px;
+  color: var(--ink-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.entry__name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.entry__leader {
+  flex: 1;
+  min-width: 10px;
+  border-bottom: 1px dotted var(--color-neutral-400);
+  transform: translateY(-4px);
+}
+
+.entry__target {
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+/* — the primary action, as the design draws it: outlined, not filled — */
+.button--primary {
+  min-height: 58px;
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-md, 4px);
+  background: transparent;
+  color: var(--ink-accent);
+  font-family: var(--font-heading);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.button--primary:hover {
+  background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+}
+
+.button--primary:active {
+  background: color-mix(in srgb, var(--color-accent) 22%, transparent);
+}
+
+.hero {
+  position: relative;
+  z-index: 1;
+}
+
+.hero__start {
+  margin-top: 26px;
+  min-height: 58px;
+  font-size: 17px;
+}
+
+/* — chrome — */
+.tabbar {
+  background: var(--color-bg);
+  border-top: 1px solid var(--color-divider);
+  backdrop-filter: none;
+}
+
+.tabbar__link {
+  color: var(--ink-soft);
+  font-family: var(--font-body);
+  font-size: 10.5px;
+}
+
+.tabbar__link[aria-current='page'] {
+  color: var(--ink-accent);
+}
+
+.page__title {
+  font-family: var(--font-heading);
+  font-size: var(--step-4);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+}
+
+.page__lede {
+  max-width: 44ch;
+  color: var(--ink-soft);
+}
+
+@media (min-width: 900px) {
+  .tabbar {
+    border-right: 1px solid var(--color-divider);
+  }
+
+  .tabbar__link {
+    font-size: var(--step-0);
+    font-weight: 400;
+  }
+
+  .tabbar__link[aria-current='page'] {
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ghost {
+    animation: ghostIn 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .display span {
+    animation: wordUp 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .dash__sub,
+  .hero__note,
+  .hero__start {
+    animation: fadeUp 0.7s 0.35s both;
+  }
+
+  .block__head::after {
+    animation: growX 0.8s 0.5s cubic-bezier(0.6, 0, 0.2, 1) both;
+  }
+}
+
+/* ══ Classical: the other screens ═══════════════════════════════════════ */
+
+.page-head {
+  position: relative;
+  margin-bottom: 22px;
+}
+
+.page-head__kicker {
+  position: relative;
+  z-index: 1;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.page-head .page__title {
+  position: relative;
+  z-index: 1;
+  margin-top: 10px;
+  line-height: 1;
+}
+
+.page-head .page__lede {
+  position: relative;
+  z-index: 1;
+  margin-top: 12px;
+  max-width: 46ch;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.library,
+.pathways,
+.history,
+.settings,
+.detail {
+  position: relative;
+  overflow: hidden;
+}
+
+/* — section headings, set in the display face — */
+.library__family,
+.setting__heading,
+.detail__heading,
+.phase__name,
+.cal__week,
+.week__title,
+.mobility__heading,
+.recent__heading,
+.complete__heading,
+.ladder__name {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.library__family,
+.setting__heading,
+.detail__heading {
+  font-size: 24px;
+}
+
+/* — a rule under a heading, the way the design sets its blocks — */
+.setting {
+  border-top: 1px solid var(--color-divider);
+}
+
+/* — numerals, everywhere a figure is read — */
+.tile__value,
+.stat__value,
+.phase__count,
+.week__count,
+.entry__target,
+.day__date,
+.set__amount {
+  font-family: var(--font-heading);
+  font-variant-numeric: tabular-nums;
+}
+
+.tile {
+  border: 0;
+  border-top: 1px solid var(--color-divider);
+  border-radius: 0;
+  padding: 14px 0;
+}
+
+.tile__label {
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.tile__value {
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.tile__detail {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  font-weight: 400;
+  color: var(--ink-soft);
+}
+
+/* — the player, in the design's hand — */
+.player__title,
+.complete__title {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+}
+
+.player__setcount {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--ink-soft);
+}
+
+.player__progress {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-accent);
+}
+
+.player__prescription dt {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.player__prescription dd {
+  font-family: var(--font-heading);
+  font-size: 25px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The cue is the one line to carry out of the screen and into the set. */
+.player__cue {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: 24px;
+  line-height: 1.22;
+  color: var(--color-text);
+}
+
+.player__elapsed,
+.player__rest-clock {
+  font-family: var(--font-heading);
+  font-variant-numeric: tabular-nums;
+}
+
+.difficulty {
+  border-radius: var(--radius-md, 4px);
+  font-family: var(--font-body);
+}
+
+/* — figures, mounted as plates — */
+.demo,
+.brief {
+  border: 1px solid var(--color-divider);
+  border-radius: 0;
+  background: var(--color-bg);
+}
+
+.demo figure,
+.demo__stage {
+  filter: sepia(0.22) saturate(0.82) contrast(1.05);
+}
+
+.brief__summary,
+.detail__how {
+  font-family: var(--font-heading);
+  font-weight: 600;
+}
+
+.detail__how {
+  border-radius: var(--radius-md, 4px);
+  border: 1px solid var(--color-accent);
+  background: transparent;
+  color: var(--ink-accent);
+}
+
+/* — justified body copy, the way a page is set — */
+.detail__lead,
+.library__group > p,
+.phase__summary,
+.coach__headline,
+.coach__advice {
+  text-align: justify;
+  hyphens: auto;
+}
+
+.coach__headline {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  line-height: 1.1;
+  font-weight: 600;
+  text-align: left;
+}
+
+.coach__focus {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-accent);
 }

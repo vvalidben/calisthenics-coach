@@ -8,7 +8,7 @@ import { AppShell } from './AppShell';
 /**
  * The one path the app exists to serve:
  *
- *   Dashboard → Start workout → demonstration → perform → record → rest →
+ *   Dashboard → Begin the session → demonstration → perform → record → rest →
  *   next exercise → finish → progress
  *
  * Every step here is asserted to be reachable by a single obvious action, with
@@ -54,31 +54,35 @@ describe('step 1: the dashboard', () => {
 
   it('offers exactly one primary action', async () => {
     await start();
-    expect(primaryActions()).toEqual(['Start workout']);
+    expect(primaryActions()).toEqual(['Begin the session']);
   });
 
   it('says how long it will take before asking for a commitment', async () => {
     await start();
-    expect(within(screen.getByRole('region', { name: /today/i })).getByText(/minutes/)).toBeInTheDocument();
+    expect(
+      within(screen.getByRole('region', { name: /today/i })).getByRole('img', {
+        name: /minutes/i,
+      }),
+    ).toBeInTheDocument();
   });
 });
 
 describe('step 2: starting the workout', () => {
   it('takes one tap', async () => {
     await start();
-    await user.click(screen.getByRole('link', { name: /start workout/i }));
+    await user.click(screen.getByRole('link', { name: /begin the session/i }));
     expect(screen.getByTestId('player-set-count')).toBeInTheDocument();
   });
 
   it('says where you are in the session', async () => {
     await start();
-    await user.click(screen.getByRole('link', { name: /start workout/i }));
+    await user.click(screen.getByRole('link', { name: /begin the session/i }));
     expect(screen.getByText(/exercise 1 of \d+/i)).toBeInTheDocument();
   });
 
   it('gets the navigation out of the way', async () => {
     await start();
-    await user.click(screen.getByRole('link', { name: /start workout/i }));
+    await user.click(screen.getByRole('link', { name: /begin the session/i }));
     expect(screen.queryByRole('navigation', { name: /sections/i })).not.toBeInTheDocument();
   });
 });
@@ -86,7 +90,7 @@ describe('step 2: starting the workout', () => {
 describe('step 3: the demonstration', () => {
   const openPlayer = async () => {
     await start();
-    await user.click(screen.getByRole('link', { name: /start workout/i }));
+    await user.click(screen.getByRole('link', { name: /begin the session/i }));
   };
 
   it('is shown before anything is asked of you', async () => {
@@ -111,7 +115,7 @@ describe('step 3: the demonstration', () => {
 describe('step 4: performing the set', () => {
   const readyToWork = async () => {
     await start();
-    await user.click(screen.getByRole('link', { name: /start workout/i }));
+    await user.click(screen.getByRole('link', { name: /begin the session/i }));
   };
 
   it('offers one thing to do', async () => {
@@ -135,7 +139,7 @@ describe('step 4: performing the set', () => {
 describe('step 5: recording the result', () => {
   const finishASet = async () => {
     await start();
-    await user.click(screen.getByRole('link', { name: /start workout/i }));
+    await user.click(screen.getByRole('link', { name: /begin the session/i }));
     await user.click(screen.getByRole('button', { name: /start set/i }));
     await user.click(screen.getByRole('button', { name: /^finish set$/i }));
   };
@@ -163,7 +167,7 @@ describe('step 6: resting', () => {
   /** Warm-ups prescribe no rest, so this walks on to the first main-work set. */
   const logASetWithRest = async () => {
     await start();
-    await user.click(screen.getByRole('link', { name: /start workout/i }));
+    await user.click(screen.getByRole('link', { name: /begin the session/i }));
 
     for (let guard = 0; guard < 12; guard += 1) {
       await user.click(screen.getByRole('button', { name: /start set/i }));
@@ -205,7 +209,7 @@ describe('step 7 and 8: the rest of the session, and the end of it', () => {
 
   it('moves on by itself and ends with a summary', async () => {
     await start();
-    await user.click(screen.getByRole('link', { name: /start workout/i }));
+    await user.click(screen.getByRole('link', { name: /begin the session/i }));
     await playEverything();
 
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/workout complete/i);
@@ -214,14 +218,14 @@ describe('step 7 and 8: the rest of the session, and the end of it', () => {
 
   it('says what it means for next time', async () => {
     await start();
-    await user.click(screen.getByRole('link', { name: /start workout/i }));
+    await user.click(screen.getByRole('link', { name: /begin the session/i }));
     await playEverything();
     expect(screen.getByTestId('coach-headline')).toBeInTheDocument();
   });
 
   it('ends at progress, which is the last step of the loop', async () => {
     await start();
-    await user.click(screen.getByRole('link', { name: /start workout/i }));
+    await user.click(screen.getByRole('link', { name: /begin the session/i }));
     await playEverything();
 
     await user.click(screen.getByRole('link', { name: /see your progress/i }));
@@ -230,7 +234,7 @@ describe('step 7 and 8: the rest of the session, and the end of it', () => {
 
   it('or back to today, which is where it started', async () => {
     await start();
-    await user.click(screen.getByRole('link', { name: /start workout/i }));
+    await user.click(screen.getByRole('link', { name: /begin the session/i }));
     await playEverything();
 
     await user.click(screen.getByRole('link', { name: /^done$/i }));

@@ -65,7 +65,7 @@ describe('the reminder on the Today screen', () => {
     await waitForApp();
     await screen.findByRole('status');
 
-    await user.click(screen.getByRole('link', { name: /start workout/i }));
+    await user.click(screen.getByRole('link', { name: /begin the session/i }));
     expect(await screen.findByTestId('player-set-count')).toBeInTheDocument();
   });
 

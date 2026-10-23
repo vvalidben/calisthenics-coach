@@ -49,7 +49,7 @@ const logSet = async () => {
 const startWorkout = async () => {
   openApp();
   await screen.findByRole('heading', { level: 1 });
-  await user.click(screen.getByRole('link', { name: /start workout/i }));
+  await user.click(screen.getByRole('link', { name: /begin the session/i }));
 };
 
 const setsLogged = async () => {
@@ -111,8 +111,8 @@ describe('a workout that is already finished for the day', () => {
 
     openApp();
     // The stored sessions arrive a tick after the first paint.
-    await screen.findByRole('heading', { level: 1, name: /partly done today/i });
-    expect(screen.queryByRole('link', { name: /start workout/i })).not.toBeInTheDocument();
+    await screen.findByRole('heading', { level: 1, name: /partly done/i });
+    expect(screen.queryByRole('link', { name: /begin the session/i })).not.toBeInTheDocument();
   });
 
   it('refuses to reopen the player, even from the address bar', async () => {
@@ -165,7 +165,7 @@ describe('a workout that is already finished for the day', () => {
 async function startWorkoutAndLog(count: number) {
   const view = openApp();
   await screen.findByRole('heading', { level: 1 });
-  await user.click(screen.getByRole('link', { name: /start workout/i }));
+  await user.click(screen.getByRole('link', { name: /begin the session/i }));
   for (let i = 0; i < count; i += 1) await logSet();
   return view;
 }

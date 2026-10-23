@@ -38,6 +38,7 @@ const renderDashboard = (
         sessions={sessions}
         progression={SEED_PROGRESSION}
         reminder={reminder}
+        theme={{ theme: 'light', setTheme: () => {}, toggle: () => {} }}
       />
     </MemoryRouter>,
   );
@@ -111,7 +112,7 @@ describe('coaching, before the session rather than after it', () => {
   it('asks for a steadier session rather than cancelling it', () => {
     renderDashboard(THU, [strained(MON, 'a'), strained(TUE, 'b')]);
     expect(screen.getByTestId('coach-note')).toHaveTextContent(/something left/i);
-    expect(screen.getByRole('link', { name: /start workout/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /begin the session/i })).toBeInTheDocument();
   });
 });
 
@@ -145,22 +146,22 @@ describe('once today is already done', () => {
 
   it('takes the start button away, so the day cannot be overwritten', () => {
     renderDashboard(MON, [doneToday()]);
-    expect(screen.queryByRole('link', { name: /start workout/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /begin the session/i })).not.toBeInTheDocument();
   });
 
   it('counts a partly finished session as done for the day', () => {
     renderDashboard(MON, [aSession({ ...doneToday(), status: 'partial' })]);
-    expect(screen.queryByRole('link', { name: /start workout/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /begin the session/i })).not.toBeInTheDocument();
   });
 
   it('is not fooled by yesterday’s session', () => {
     renderDashboard(MON, [aSession({ ...doneToday(), id: 'old', date: '2026-09-20' })]);
-    expect(screen.getByRole('link', { name: /start workout/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /begin the session/i })).toBeInTheDocument();
   });
 
   it('is not fooled by a mobility routine', () => {
     renderDashboard(MON, [stretched(MON)]);
-    expect(screen.getByRole('link', { name: /start workout/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /begin the session/i })).toBeInTheDocument();
   });
 
   it('still points at the mobility routines, which are always optional', () => {
@@ -193,15 +194,6 @@ describe('the reminder', () => {
   });
 });
 
-describe('getting to settings', () => {
-  it('offers a way to change the schedule', () => {
-    renderDashboard();
-    expect(screen.getByRole('link', { name: /schedule and reminders/i })).toHaveAttribute(
-      'href',
-      '/settings',
-    );
-  });
-});
 
 describe('what do I do today', () => {
   it('leads with the session name', () => {
@@ -209,19 +201,15 @@ describe('what do I do today', () => {
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Push and Core');
   });
 
-  it('says how long it takes', () => {
+  it('says how long it takes, on the session dial', () => {
     renderDashboard();
-    expect(region(/today/i).getByText(/2[0-9] minutes/)).toBeInTheDocument();
+    expect(region(/today/i).getByRole('img', { name: /2[0-9] minutes/i })).toBeInTheDocument();
   });
 
-  it('says what level it is pitched at', () => {
-    renderDashboard();
-    expect(region(/today/i).getByText(/beginner/i)).toBeInTheDocument();
-  });
 
-  it('offers START WORKOUT as the primary action', () => {
+  it('offers BEGIN THE SESSION as the primary action', () => {
     renderDashboard();
-    const start = screen.getByRole('link', { name: /start workout/i });
+    const start = screen.getByRole('link', { name: /begin the session/i });
     expect(start).toHaveAttribute('href', '/workout/foundation-w1-d1');
   });
 
@@ -239,7 +227,7 @@ describe('on a rest day', () => {
 
   it('offers no start button', () => {
     renderDashboard(WED);
-    expect(screen.queryByRole('link', { name: /start workout/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /begin the session/i })).not.toBeInTheDocument();
   });
 
   it('names the next session instead', () => {

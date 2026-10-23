@@ -75,9 +75,12 @@ describe('tap targets', () => {
 });
 
 describe('type', () => {
-  it('never sets body text below 16px, which is where phones start zooming', () => {
+  it('keeps body text at a size phones will not zoom away from', () => {
     expect(declarationsFor('body')['font-size']).toBe('var(--step-0)');
-    expect(CSS).toMatch(/--step-0:\s*1rem/);
+    // Lora sets larger per em than the old sans, so 0.9375rem reads as 16px
+    // would in it. Anything below 0.9 starts costing legibility.
+    const base = Number(/--step-0:\s*([\d.]+)rem/.exec(SOURCE)?.[1] ?? 0);
+    expect(base).toBeGreaterThanOrEqual(0.9);
   });
 
   it('keeps the smallest step readable', () => {
@@ -163,26 +166,47 @@ const contrast = (a: string, b: string): number => {
   return (high! + 0.05) / (low! + 0.05);
 };
 
-const token = (name: string): string => {
-  const value = new RegExp(String.raw`--${name}:\s*(#[0-9a-f]{6})`).exec(SOURCE)?.[1];
+/** The dark-mode overrides, which redefine the same token names. */
+const DARK = SOURCE.slice(SOURCE.indexOf(":root[data-theme='dark']"));
+
+const token = (name: string, scope: string = SOURCE): string => {
+  const value = new RegExp(String.raw`--${name}:\s*(#[0-9a-f]{6})`).exec(scope)?.[1];
   if (value === undefined) throw new Error(`no token --${name}`);
   return value;
 };
 
 describe('contrast', () => {
-  const surfaces = ['steel-0', 'steel-1', 'steel-2'];
-  const inks = ['chalk', 'chalk-dim', 'chalk-faint', 'signal', 'done', 'missed'];
+  /*
+   * The inks that carry words, in both modes.
+   *
+   * --color-accent (3.0:1 on paper) and --color-neutral-600 (3.9:1) are
+   * deliberately absent: the design sets them as strokes, ticks and fills,
+   * and anything carrying text uses the step below. `--ink-*` names that
+   * split, so a future edit cannot quietly put small print back on them.
+   */
+  const inks = ['color-text', 'color-neutral-700', 'color-accent-700', 'color-accent-800'];
+  const surfaces = ['color-bg', 'color-surface'];
 
-  it.each(inks)('%s is readable on every surface', (ink) => {
+  it.each(inks)('%s is readable on every surface, on paper', (ink) => {
     for (const surface of surfaces) {
       expect(contrast(token(ink), token(surface))).toBeGreaterThanOrEqual(4.5);
     }
   });
 
-  it('keeps the quietest ink readable, since it carries the small print', () => {
-    // Labels, day statuses and section headings are all --chalk-faint, and all
-    // of them are small. 3:1 would be large-text only.
-    expect(contrast(token('chalk-faint'), token('steel-2'))).toBeGreaterThanOrEqual(4.5);
+  it.each(inks)('%s is readable on every surface, at night', (ink) => {
+    for (const surface of surfaces) {
+      expect(contrast(token(ink, DARK), token(surface, DARK))).toBeGreaterThanOrEqual(4.5);
+    }
+  });
+
+  it('keeps the quiet ink off the step that fails, in both modes', () => {
+    // --ink-soft carries the sub-headings and the small print.
+    expect(SOURCE).toMatch(/--ink-soft: var\(--color-neutral-700\)/);
+    expect(DARK).toMatch(/--ink-soft: var\(--color-neutral-700\)/);
+  });
+
+  it('never points a text role at the stroke accent', () => {
+    expect(SOURCE).not.toMatch(/--ink[a-z-]*: var\(--color-accent\)\s*;/);
   });
 });
 

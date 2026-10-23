@@ -40,6 +40,6 @@ describe('the first paint', () => {
   });
 
   it('colours the browser chrome to match the app', () => {
-    expect(HTML).toMatch(/name="theme-color" content="#151b23"/);
+    expect(HTML).toMatch(/name="theme-color" content="#f3f2f2"/);
   });
 });

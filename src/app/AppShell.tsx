@@ -8,6 +8,7 @@ import { WorkoutRoute } from '../features/player/WorkoutRoute';
 import { DashboardScreen } from '../features/dashboard/DashboardScreen';
 import { SettingsScreen } from '../features/settings/SettingsScreen';
 import { useReminders } from '../features/reminders/useReminders';
+import { useTheme } from '../features/settings/useTheme';
 import { HistoryScreen } from '../features/history/HistoryScreen';
 import { SessionDetail } from '../features/history/SessionDetail';
 import type { UserProfile } from '../domain/profile';
@@ -215,6 +216,8 @@ const ReadyApp = ({ data, today, now, notifier }: ReadyAppProps) => {
     };
   }, [data]);
 
+  const theme = useTheme();
+
   const reminder = useReminders({
     profile,
     workouts: data.workouts,
@@ -249,6 +252,7 @@ const ReadyApp = ({ data, today, now, notifier }: ReadyAppProps) => {
                 sessions={sessions}
                 progression={data.progression}
                 reminder={reminder}
+                theme={theme}
               />
             }
           />

@@ -5,6 +5,7 @@ import type { ReminderSettings, UserProfile } from '../../domain/profile';
 import { nextReminder } from '../../domain/reminders';
 import type { Workout } from '../../domain/workout';
 import type { Notifier } from '../../notifications/notifier';
+import { PageHeader } from '../shell/PageHeader';
 
 interface SettingsScreenProps {
   profile: UserProfile;
@@ -85,10 +86,11 @@ export const SettingsScreen = ({
 
   return (
     <div className="settings">
-      <h1 className="page__title">Settings</h1>
-      <p className="page__lede">
-        When you train, and when the app should say something about it.
-      </p>
+      <PageHeader kicker="Your schedule" title="Settings">
+        <p className="page__lede">
+          When you train, and when the app should say something about it.
+        </p>
+      </PageHeader>
 
       <section className="setting" aria-labelledby="days-heading">
         <h2 className="setting__heading" id="days-heading">

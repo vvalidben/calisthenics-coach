@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { localIsoDate, weekdayOf } from '../../domain/calendar';
 import { estimateWorkoutMinutes } from '../../domain/duration';
@@ -17,9 +18,14 @@ import {
   weekStart,
   weeklyProgress,
 } from '../../domain/stats';
-import type { Workout } from '../../domain/workout';
+import type { Workout, WorkoutItem } from '../../domain/workout';
 import { exerciseById } from '../../content/catalog';
 import { requirePhaseSpec } from '../../content/phases';
+import { describeTarget, workoutBlocks } from '../../domain/workout';
+import { blockSeconds } from '../../domain/duration';
+import { SessionDial } from './SessionDial';
+import { ThemeToggle } from '../settings/ThemeToggle';
+import type { ThemeControl } from '../settings/useTheme';
 
 interface DashboardScreenProps {
   profile: UserProfile;
@@ -30,6 +36,7 @@ interface DashboardScreenProps {
   progression: ProgressionState[];
   /** Today's reminder, once it is due. Null the rest of the time. */
   reminder: Reminder | null;
+  theme: ThemeControl;
 }
 
 const LONG_DATE = new Intl.DateTimeFormat('en-GB', {
@@ -42,12 +49,23 @@ const formatDate = (iso: string) => LONG_DATE.format(new Date(`${iso}T12:00:00`)
 
 const titleCase = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
 
-const LEVEL_LABELS: Record<string, string> = {
-  'complete-beginner': 'Beginner',
-  beginner: 'Beginner',
-  intermediate: 'Intermediate',
-  advanced: 'Advanced',
-};
+const ROMAN = ['I', 'II', 'III', 'IV', 'V'];
+
+/**
+ * A headline, one word at a time.
+ *
+ * Each word rises on its own delay, so the title reads as it arrives rather
+ * than appearing all at once. The spaces between them are real text rather
+ * than a flex gap: a gap looks identical and leaves the heading reading
+ * "PushandCore" to a screen reader.
+ */
+const words = (text: string) =>
+  text.split(' ').map((word, index) => (
+    <Fragment key={`${word}-${index}`}>
+      {index > 0 ? ' ' : ''}
+      <span style={{ animationDelay: `${(0.1 + index * 0.1).toFixed(2)}s` }}>{word}</span>
+    </Fragment>
+  ));
 
 /**
  * One statistic. A plain definition rather than its own landmark region: three
@@ -90,6 +108,7 @@ export const DashboardScreen = ({
   sessions,
   progression,
   reminder,
+  theme,
 }: DashboardScreenProps) => {
   const weekday = weekdayOf(today);
   const scheduled = workouts.filter((w) => w.kind === 'training');
@@ -137,34 +156,84 @@ export const DashboardScreen = ({
   const nameOf = (id: string | null) =>
     workouts.find((w) => w.id === id)?.name ?? 'Session';
 
+  // The session split into its three blocks, each with its own share of the
+  // minutes — the numbers behind the dial and the contents list.
+  const named: [string, WorkoutItem[]][] = workout
+    ? [
+        ['Warm-up', workout.warmUp],
+        ['Main work', workout.mainWork],
+        ['Mobility', workout.mobility],
+      ]
+    : [];
+
+  let seen = 0;
+  const blockMinutes = named
+    .filter(([, items]) => items.length > 0)
+    .map(([name, items]) => {
+      const offset = seen;
+      seen += items.length;
+      return {
+        name,
+        items,
+        offset,
+        minutes: Math.max(1, Math.round(blockSeconds(items, exerciseById) / 60)),
+      };
+    });
+
+  const totalMinutes = workout ? estimateWorkoutMinutes(workout, exerciseById) : 0;
+
   return (
     <div className="dash">
       {reminder !== null && <ReminderBanner reminder={reminder} />}
 
-      <p className="dash__date">
-        {formatDate(today)}
-        <Link className="dash__settings" to="/settings">
-          Schedule and reminders
-        </Link>
-      </p>
-
       <section className="hero" aria-labelledby="today-heading">
-        <h2 className="hero__eyebrow" id="today-heading">
+        <h2 className="visually-hidden" id="today-heading">
           Today
         </h2>
 
+        <span className="ghost" aria-hidden="true">
+          {today.slice(8).replace(/^0/, '')}
+        </span>
+
+        <div className="dash__head">
+        <div className="dash__headline">
+          <p className="dash__kicker">
+            {formatDate(today)}
+            <ThemeToggle control={theme} />
+          </p>
+
+          {workout && doneToday ? (
+            <h1 className="display">
+              {words(doneToday.status === 'completed' ? 'Done for today.' : 'Partly done.')}
+            </h1>
+          ) : workout ? (
+            <h1 className="display">{words(workout.name)}</h1>
+          ) : (
+            <h1 className="display">{words('Rest day.')}</h1>
+          )}
+
+          <p className="dash__sub">
+            {workout && doneToday
+              ? `${workout.name} · ${completedSetCount(doneToday)} sets logged`
+              : workout
+                ? `${titleCase(spec.title)} · ${workoutBlocks(workout).length} exercises`
+                : 'Nothing scheduled · the next session is the one that counts'}
+          </p>
+        </div>
+
+          {workout && !doneToday && (
+            <div className="dial-wrap" role="img" aria-label={`${totalMinutes} minutes`}>
+              <SessionDial blocks={blockMinutes} total={totalMinutes} />
+              <span className="dial__value" aria-hidden="true">
+                <span className="dial__num">{totalMinutes}</span>
+                <span className="dial__unit">min</span>
+              </span>
+            </div>
+          )}
+        </div>
+
         {workout && doneToday ? (
           <>
-            <h1 className="hero__title">
-              {doneToday.status === 'completed' ? 'Done today' : 'Partly done today'}
-            </h1>
-            <p className="hero__meta">
-              <span>{workout.name}</span>
-              <span>
-                {completedSetCount(doneToday)}{' '}
-                {completedSetCount(doneToday) === 1 ? 'set' : 'sets'}
-              </span>
-            </p>
             <p className="hero__note">
               That is today handled. Anything else is optional &mdash; the next session is the
               one that counts.
@@ -175,26 +244,44 @@ export const DashboardScreen = ({
           </>
         ) : workout ? (
           <>
-            <h1 className="hero__title">{workout.name}</h1>
-            <p className="hero__meta">
-              <span>{estimateWorkoutMinutes(workout, exerciseById)} minutes</span>
-              <span>{LEVEL_LABELS[profile.fitnessLevel] ?? profile.fitnessLevel}</span>
-            </p>
-            {workout.notes && <p className="hero__note">{workout.notes}</p>}
+            {workout.notes && <p className="hero__note dropcap">{workout.notes}</p>}
+
+            <div className="blocks">
+              {blockMinutes.map((block, blockIndex) => (
+                <div className="block" key={block.name}>
+                  <p className="block__head">
+                    <span className="block__roman">{ROMAN[blockIndex]}</span>
+                    <span className="block__name">{block.name}</span>
+                    <span className="block__mins">{block.minutes} min</span>
+                  </p>
+                  {block.items.map((item, itemIndex) => (
+                    <p className="entry" key={`${item.exerciseId}-${itemIndex}`}>
+                      <span className="entry__n">
+                        {String(block.offset + itemIndex + 1).padStart(2, '0')}
+                      </span>
+                      <span className="entry__name">
+                        {exerciseById(item.exerciseId)?.name ?? item.exerciseId}
+                      </span>
+                      <span className="entry__leader" />
+                      <span className="entry__target">
+                        {item.sets} &times; {describeTarget(item)}
+                      </span>
+                    </p>
+                  ))}
+                </div>
+              ))}
+            </div>
+
             <Link className="button button--primary hero__start" to={`/workout/${workout.id}`}>
-              Start workout
+              Begin the session
             </Link>
           </>
         ) : (
-          <>
-            <h1 className="hero__title">Rest day</h1>
-            <p className="hero__meta">
-              <span>Nothing scheduled</span>
-            </p>
-            <p className="hero__note">
-              Recovery is when the training you already did turns into muscle.
-            </p>
-          </>
+          <p className="hero__note dropcap">
+            Nothing is scheduled. Recovery is when the training you already did turns into
+            muscle. If you want to move, a mobility routine takes five to nine minutes and is
+            not counted toward progression.
+          </p>
         )}
       </section>
 

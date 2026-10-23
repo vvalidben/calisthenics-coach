@@ -4,6 +4,7 @@ import type { UserProfile } from '../../domain/profile';
 import type { WorkoutSession } from '../../domain/session';
 import { currentStreak } from '../../domain/stats';
 import type { Workout } from '../../domain/workout';
+import { PageHeader } from '../shell/PageHeader';
 
 interface HistoryScreenProps {
   profile: UserProfile;
@@ -116,11 +117,12 @@ export const HistoryScreen = ({
 
   return (
     <div className="history">
-      <h1 className="page__title">History</h1>
-      <p className="page__lede">
-        Every day of the last {weeks} weeks. A missed session stays missed and is never moved to
+      <PageHeader kicker={`Last ${weeks} weeks`} title="History" watermark={`${weeks}`}>
+        <p className="page__lede">
+          Every day of the last {weeks} weeks. A missed session stays missed and is never moved to
         another day &mdash; the next one is the one that counts.
-      </p>
+        </p>
+      </PageHeader>
 
       <dl className="tiles tiles--pairs">
         <div className="tile" data-testid="history-streak">

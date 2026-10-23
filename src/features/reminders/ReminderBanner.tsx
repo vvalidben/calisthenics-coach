@@ -10,7 +10,7 @@ import type { Reminder } from '../../domain/reminders';
  * athlete nothing.
  *
  * Deliberately without a button of its own. It sits directly above the day's
- * session, which already carries START WORKOUT, and two identical primary
+ * session, which already carries the primary action, and two identical
  * actions a thumb apart is one more than a screen should have.
  */
 export const ReminderBanner = ({ reminder }: { reminder: Reminder }) => (

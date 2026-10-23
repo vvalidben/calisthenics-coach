@@ -57,7 +57,7 @@ describe('a whole workout, through the real app', () => {
     openApp();
     await screen.findByRole('heading', { level: 1 });
 
-    await user.click(screen.getByRole('link', { name: /start workout/i }));
+    await user.click(screen.getByRole('link', { name: /begin the session/i }));
 
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Cat-Cow');
   });
@@ -65,7 +65,7 @@ describe('a whole workout, through the real app', () => {
   it('runs from the first exercise to the completion screen and saves it', async () => {
     openApp();
     await screen.findByRole('heading', { level: 1 });
-    await user.click(screen.getByRole('link', { name: /start workout/i }));
+    await user.click(screen.getByRole('link', { name: /begin the session/i }));
 
     for (let exercise = 0; exercise < 9; exercise += 1) {
       if (/workout complete/i.test(screen.getByRole('heading', { level: 1 }).textContent ?? '')) {
@@ -93,7 +93,7 @@ describe('a whole workout, through the real app', () => {
   it('writes the session to storage after the very first set', async () => {
     openApp();
     await screen.findByRole('heading', { level: 1 });
-    await user.click(screen.getByRole('link', { name: /start workout/i }));
+    await user.click(screen.getByRole('link', { name: /begin the session/i }));
     await user.click(screen.getByRole('button', { name: /start set/i }));
     await logSet();
 
@@ -105,7 +105,7 @@ describe('a whole workout, through the real app', () => {
   it('keeps the logged work when the workout is ended early', async () => {
     openApp();
     await screen.findByRole('heading', { level: 1 });
-    await user.click(screen.getByRole('link', { name: /start workout/i }));
+    await user.click(screen.getByRole('link', { name: /begin the session/i }));
     await user.click(screen.getByRole('button', { name: /start set/i }));
     await logSet();
     await user.click(screen.getByRole('button', { name: /end workout/i }));
@@ -118,7 +118,7 @@ describe('a whole workout, through the real app', () => {
   it('stores a session the storage layer will validate on the way back out', async () => {
     openApp();
     await screen.findByRole('heading', { level: 1 });
-    await user.click(screen.getByRole('link', { name: /start workout/i }));
+    await user.click(screen.getByRole('link', { name: /begin the session/i }));
     await user.click(screen.getByRole('button', { name: /start set/i }));
     await logSet();
     await user.click(screen.getByRole('button', { name: /end workout/i }));
@@ -135,7 +135,7 @@ describe('a whole workout, through the real app', () => {
       </MemoryRouter>,
     );
     await screen.findByRole('heading', { level: 1 });
-    expect(screen.queryByRole('link', { name: /start workout/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /begin the session/i })).not.toBeInTheDocument();
   });
 });
 
@@ -143,7 +143,7 @@ describe('progression, through the real app', () => {
   const runOneSession = async (today: string) => {
     const view = openApp(today);
     await screen.findByRole('heading', { level: 1 });
-    await user.click(screen.getByRole('link', { name: /start workout/i }));
+    await user.click(screen.getByRole('link', { name: /begin the session/i }));
     await playEverything();
     return view;
   };
@@ -205,7 +205,7 @@ describe('progression, through the real app', () => {
     // target where the athlete actually meets it: in the player.
     openApp('2026-10-05');
     await screen.findByRole('heading', { level: 1 });
-    await user.click(screen.getByRole('link', { name: /start workout/i }));
+    await user.click(screen.getByRole('link', { name: /begin the session/i }));
 
     while (!/push-up/i.test(screen.getByRole('heading', { level: 1 }).textContent ?? '')) {
       const setsText = screen.getByTestId('player-set-count').textContent ?? '';
@@ -222,7 +222,7 @@ describe('progression, through the real app', () => {
   it('changes nothing when the workout was missed', async () => {
     openApp(MONDAY);
     await screen.findByRole('heading', { level: 1 });
-    await user.click(screen.getByRole('link', { name: /start workout/i }));
+    await user.click(screen.getByRole('link', { name: /begin the session/i }));
     await user.click(screen.getByRole('button', { name: /start set/i }));
     await user.click(screen.getByRole('button', { name: /skip this set/i }));
     await user.click(screen.getByRole('button', { name: /end workout/i }));

@@ -72,7 +72,7 @@ const playEverything = async (difficulty = 'Moderate', value?: number) => {
 const trainToday = async (today: string, difficulty = 'Moderate', value?: number) => {
   const view = openApp(today);
   await screen.findByRole('heading', { level: 1 });
-  await user.click(screen.getByRole('link', { name: /start workout/i }));
+  await user.click(screen.getByRole('link', { name: /begin the session/i }));
   await playEverything(difficulty, value);
   return view;
 };
@@ -92,7 +92,7 @@ describe('a new athlete, from opening the app to finishing their first session',
     openApp();
     await screen.findByRole('heading', { level: 1 });
     expect(heading()).toBe('Push and Core');
-    expect(screen.getByRole('link', { name: /start workout/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /begin the session/i })).toBeInTheDocument();
   });
 
   it('can read how to do an exercise before committing to anything', async () => {
@@ -224,7 +224,7 @@ describe('progression, earned over two sessions', () => {
 
     openApp('2026-10-05');
     await screen.findByRole('heading', { level: 1 });
-    await user.click(screen.getByRole('link', { name: /start workout/i }));
+    await user.click(screen.getByRole('link', { name: /begin the session/i }));
 
     while (!/push-up/i.test(heading())) {
       const setsText = screen.getByTestId('player-set-count').textContent ?? '';
